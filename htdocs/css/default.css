@@ -288,3 +288,6 @@ h3 {
   margin: 0px;
   padding: 2px;
 }
+a img {
+  border: none;
+}

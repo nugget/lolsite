@@ -75,6 +75,10 @@
 
 ?>
 
+ <a href="logbook_rss.php?pilot=<?php echo pilot_name($rvar_pilot) ?>">
+   <img src="images/xml.png" />
+ </a>
+
  <div id="logbook">
   <table>
    <tr>
