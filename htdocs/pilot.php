@@ -19,24 +19,9 @@
 
   <div class="content">
 
-    <form action="index.php" method ="get">
-      Find a pilot: <input type="text" name="psearch" size="20" />
-    </form>
+   <h3>Stuff Goes Here</h3>
 
-<?php
-
-  if(isset($rvar_psearch)) {
-    print "<table>\n";
-    for($i=0; $i<count($pilotlist); $i++) {
-      print "<tr>";
-      print "<td><a href=\"pilot.php?pilot=$pilotlist[$i]\">" . pilot_name($pilotlist[$i]) . "</a></td>";
-      print "<td>" . hobbs(pilot_hours($pilotlist[$i])) . "</td>";
-      print "</tr>";
-    }
-    print "</table>\n";
-  }
-
-?>
+  </div>
 
 <?php
 

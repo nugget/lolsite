@@ -96,6 +96,7 @@ div#navbar a {
   color: #ffffff;
 }
 div#footer p {
+  clear: left;
   background-color: #c9c9c9;
   border-top: 1px solid black;
   border-bottom: 1px solid black;
@@ -195,9 +196,63 @@ div#logbook input {
   margin: 3px 0px 3px 0px;
 }
 
+div#menu {
+  margin-bottom: 10px;
+}
 div#menu a {
   background-color: #030303;
   color: #ffffff;
-  margin: 0px 0px 0px 0px;
+  margin: 0px;
   padding: 2px;
+}
+
+#block1 {
+  background-color: #c9c9c9;
+  float: left;
+  text-align: center;
+  width: auto;
+  padding: 0px;
+  border: 1px solid black;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+#block1 h3 {
+  background-color: #770000;
+  color: #ffffff;
+  margin: 0px;
+  padding: 2px;
+}
+#block1 form {
+  background-color: #770000;
+  color: #7f7f7f;
+  margin: 0px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid black;
+}
+
+#block2 {
+  background-color: #c9c9c9;
+  float: left;
+  text-align: center;
+  width: auto;
+  border: 1px solid black;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+#block2 h3 {
+  background-color: #000077;
+  color: #ffffff;
+  margin: 0px;
+  padding: 2px;
+}
+#block2 form {
+  background-color: #000077;
+  color: #7f7f7f;
+  margin: 0px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid black;
 }

@@ -167,7 +167,7 @@
     $valb = pilot_hours($b);
 
     if($vala == $valb) return 0;
-    return ($counta > $countb) ? -1 : 1;
+    return ($vala > $valb) ? -1 : 1;
   }
 
   function class_lookup($class) {
