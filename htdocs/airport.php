@@ -12,34 +12,32 @@
 
  include "include/head.inc";
 
- if(is_mine()) {
-   if(is_user()) {
-     if($line['record_exists'] == 0) {
-     ?>
-     <div id="buttonbar">
-      <form action="edit_airports.php">
-       <input type="hidden" value="<?php print $rvar_pilot; ?>" name="pilot">
-       <input type="hidden" value="<?php print $line['ident']; ?>" name="ident">
-       <input type="submit" value="Submit Info"></form>
-     </div>
-     <?php
-     } else {
-       $line['detail'] = $line['detail'] . "\n\n<strong>Information for this airport has been submitted and is pending administrative approval.</strong>";
+ if(is_user()) {
+   if($line['record_exists'] == 0) {
+     if(is_mine()) {
+       ?>
+       <div id="buttonbar">
+         <form action="edit_airports.php">
+         <input type="hidden" value="<?php print $rvar_pilot; ?>" name="pilot">
+         <input type="hidden" value="<?php print $line['ident']; ?>" name="ident">
+         <input type="submit" value="Add Airport"></form>
+       </div>
+       <?php
+     }
+   } else {
+     if(is_mine() or is_admin()) {
+       ?>
+       <div id="buttonbar">
+        <form action="edit_airports.php">
+         <input type="hidden" value="<php print $rvar_pilot; ?>" name="pilot">
+         <input type="hidden" value="<php print $line['ident']; ?>" name="ident">
+         <input type="submit" value="Edit Airport"></form>
+       </div>
+       <?php
      }
    }
- } else {
-   if(is_admin()) {
-     ?>
-     <div id="buttonbar">
-      <form action="edit_airports.php">
-       <input type="hidden" value="<php print $rvar_pilot; ?>" name="pilot">
-       <input type="hidden" value="<php print $line['ident']; ?>" name="ident">
-       <input type="submit" value="Submit Info"></form>
-     </div>
-     <?php
-   }
  }
-  $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
+ $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
 ?>
  <div id="logbook">
  <table>
@@ -81,7 +79,9 @@
    <th colspan="7">Detail:</th>
   </tr>
   <tr>
-   <td colspan="7"><?php print $line['detail']; ?>&nbsp;</td>
+   <td colspan="7">
+    <?php print $line['detail']; ?>&nbsp;
+   </td>
   </tr>
  </table>
  </div>

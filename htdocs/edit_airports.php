@@ -4,10 +4,10 @@
 
  include "include/init.inc";
 
- #if(isset($rvar_scrape)) {
- #  header("Location: scrape_airports.php?ident=$rvar_ident");
- #  exit;
- #}
+ if(isset($rvar_scrape)) {
+   header("Location: scrape_airports.php?ident=$rvar_ident");
+   exit;
+ }
 
  if(!isset($rvar_ident)) {
    $error_title = "No ident Specified";
@@ -16,15 +16,15 @@
    if($rvar_ident == '') {
      if(!isset($rvar_pilot)) {
        $error_title = "No pilot specified";
-       $error_text = "You must specify a pilot in order to add a new airplane entry.";
+       $error_text = "You must specify a pilot in order to add a new airport entry.";
      }
-     $title = "airplane: Submit";
+     $title = "airport: Submit";
    }
    $ident = $rvar_ident;
    $line = airport_detail($ident);
  }
 
- if((!is_mine()) and (!is_admin())) {
+ if((isset($rvar_ident)) and (!is_mine()) and (!is_admin())) {
    $error_title = "Up To No Good";
    $error_text = "I can't edit an entry if you don't own it!";
    unset($rvar_submit);
@@ -112,6 +112,7 @@
   <tr>
    <td colspan="3" align="center">
     <input name="submit" type="submit" value="Save Changes" />
+    <?php if(!isset($rvar_id)) { ?><input name="scrape" type="submit" value="Scrape Data from AirNav.com"><?php } ?>
    </td>
   </tr>
  </table>
