@@ -37,8 +37,6 @@
  $total_landings_day = 0;
  $total_landings_night = 0;
 
- $page = 1;
-
 ?>
 
 
@@ -68,6 +66,9 @@
  $entries = logbook_entries($whereclause);
 
  $pages = (int) ((count($entries)/$rvar_limit)+.5);
+ if($pages == 0) {
+   $pages = 1;
+ }
  if($rvar_page == 0) {
    $rvar_page = $pages;
  }
