@@ -248,7 +248,7 @@
   }
 
   function logbook_recent() {
-    $sql = "select id from logbook order by date desc limit 10";
+    $sql = "select id from logbook order by date desc, id desc limit 10";
     if($sqlresponse = pg_query($sql)) {
       $list = array();
       while($line = pg_fetch_array($sqlresponse)) {
