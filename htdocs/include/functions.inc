@@ -220,6 +220,36 @@
     }
   }
 
+  function pilot_xcstats($pilot_id) {
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and type_xc > 0 order by date limit 1";
+    $first = lol_fetch_array(lol_query($sql));
+    if($first) {
+      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < \"$first[1]\" and id <> $first[0]";
+     $stats = lol_fetch_array(lol_query($sql));
+     return array_merge($first,$stats);
+    }
+  }
+
+  function pilot_solostats($pilot_id) {
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and type_pic > 0 order by date limit 1";
+    $firstsolo = lol_fetch_array(lol_query($sql));
+    if($firstsolo) {
+      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < \"$firstsolo[1]\" and id <> $firstsolo[0]";
+     $solostats = lol_fetch_array(lol_query($sql));
+     return array_merge($firstsolo,$solostats);
+    }
+  }
+
+  function pilot_certstats($pilot_id,$certname) {
+    $sql = "select count(name) as name, min(issued) as date from certifications where pilot_id = $pilot_id and issued > 0 and name = '$certname'";
+    $first = lol_fetch_array(lol_query($sql));
+    if($first) {
+       $sql = "select count(id) as flights, max(id) as id, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as hours from logbook where pilot_id = $pilot_id and date < \"$first[1]\"";
+       $stats = lol_fetch_array(lol_query($sql));
+       return array_merge($first,$stats);
+    }
+  }
+
   function pilot_search($search) {
     $sql = "select id from pilot where username like '%$search%' or displayname like '%$search%'";
     if($sqlresponse = lol_query($sql)) {
