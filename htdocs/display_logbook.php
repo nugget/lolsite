@@ -65,7 +65,7 @@
  $launch = logbook_launches($whereclause);
  $entries = logbook_entries($whereclause);
 
- $pages = (int) ((count($entries)/$rvar_limit) + 1);
+ $pages = (int) ((count($entries) + ($rvar_limit-1)) / $rvar_limit);
  if($pages == 0) {
    $pages = 1;
  }
