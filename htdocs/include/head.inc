@@ -68,4 +68,13 @@
       <p>$notice_text</p>
     </div>";
   }
+  if(isset($error_title)) {
+    print "
+    <div class=\"warning\">
+      <h2>$error_title</h2>
+      <p>$error_text</p>
+    </div>";
+    include "foot.inc";
+    exit;
+  }
 ?>

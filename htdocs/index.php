@@ -14,10 +14,6 @@
   }
   usort($pilotlist,"pilot_cmp");
   $pilotlist = array_slice($pilotlist,0,5);
-  #if(count($pilotlist) == 1) {
-  #  header("Location: pilot.php?pilot=$pilotlist[0]");
-  #  exit;
-  #}
 
   if(isset($rvar_asearch)) {
     $airportdesc = "Airports Matching [$rvar_asearch]";

@@ -2,18 +2,13 @@
  $title = "logbook";
 
  include "init.inc";
- include "head.inc";
 
  if(!isset($rvar_pilot)) {
-   ?>
-   <div class="warning">
-     <h2>No pilot specified</h2>
-     <p>You must specify a pilot in order to view a logbook!</p>
-   </div>
-   <?php
-   include "foot.inc";
-   exit;
+   $error_title = "No pilot specified";
+   $error_text = "You must specify a pilot in order to view a logbook!";
  }
+
+ include "head.inc";
 
  if(is_mine()) {
    ?>

@@ -5,13 +5,10 @@
 
   include "init.inc";
 
-  if(isset($rvar_psearch)) {
-    $pilotlist = pilot_search($rvar_psearch);
-    if(count($pilotlist) == 1) {
-      header("Location: pilot.php?pilot=$pilotlist[0]");
-      exit;
-    }
-  } 
+  if(!isset($rvar_pilot)) {
+    $error_title = "No pilot specified";
+    $error_text = "You must specify a pilot in order to view a logbook!";
+  }
 
   include "head.inc";
 
