@@ -334,9 +334,9 @@
 
 
   function pilot_certstats($pilot_id,$certname) {
-    $sql = "select count(name) as name, min(issued) as date from certifications where pilot_id = $pilot_id and issued > 0 and name = '$certname'";
+    $sql = "select count(certificate_code) as code, min(issued) as date from pilot_certificate where pilot_id = $pilot_id and issued > 0 and certificate_code = '$certname'";
     $first = lol_fetch_array(lol_query($sql));
-    if($first['name']) {
+    if($first['code']) {
        $sql = "select count(id) as flights, max(id) as id, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as hours from logbook where pilot_id = $pilot_id and date < '$first[date]'";
        $stats = lol_fetch_array(lol_query($sql));
        return array_merge($first,$stats);
@@ -378,11 +378,11 @@
   }
 
   function pilot_certlist($pilot_id) {
-    $sql = "select distinct name, issued from certifications where pilot_id = $pilot_id and issued > 0 order by issued";
+    $sql = "select distinct certificate_code, issued from pilot_certificate where pilot_id = $pilot_id and issued > 0 order by issued";
     if($sqlresponse = lol_query($sql)) {
       $list = array();
       while($line = lol_fetch_array($sqlresponse)) {
-        $list[] = $line['name'];
+        $list[] = $line['certificate_code'];
       }
       return $list;
     }
@@ -432,7 +432,7 @@
   }
 
   function class_time($class,$logid) {
-    $sql = "select aircraft_class from aircraft, logbook where logbook.id = $logid and aircraft.ident = logbook.ident and aircraft.pilot_id = logbook.pilot_id";
+    $sql = "select aircraft_class from aircraft, logbook where logbook.id = $logid and aircraft.ident = logbook.ident";
     $buf = lol_fetch_array(lol_query($sql));
     $aircraft_class = (int) $buf['aircraft_class'];
     $hours = logbook_hours($logid);
@@ -490,12 +490,9 @@
   } 
      
   function aircraft_equipment($ident) {
-    global $rvar_pilot;
-    if(isset($rvar_pilot)) {
-      $sql = "select makemodel from aircraft where ident = '$ident' and pilot_id = $rvar_pilot";
-      if($line = lol_fetch_array(lol_query($sql))) {
-        return $line['makemodel'];
-      }
+    $sql = "select makemodel from aircraft where ident = '$ident'";
+    if($line = lol_fetch_array(lol_query($sql))) {
+      return $line['makemodel'];
     }
   }
 
@@ -610,9 +607,10 @@
       }
     }
 
-    $sql = "select distinct ident from aircraft where ident like '%$search%'";
     if(isset($rvar_pilot)) {
-      $sql = $sql . " and pilot_id = " . (int) $rvar_pilot;
+      $sql = "select distinct ident from logbook where ident like '%$search%' and pilot_id = $rvar_pilot";
+    } else {
+      $sql = "select distinct ident from aircraft where ident like '%$search%'";
     }
     if($sqlresponse = lol_query($sql)) {
       while($line = lol_fetch_array($sqlresponse)) {
@@ -667,7 +665,7 @@
     if(!isset($pilot)) {
       $pilot=0;
     }
-    $sql = "select * from aircraft where ident = '$ident' and pilot_id = $pilot";
+    $sql = "select * from aircraft where ident = '$ident'";
     $sqlresponse = lol_query($sql);
     if($buf = lol_fetch_array($sqlresponse)) {
       $detail = $buf;
