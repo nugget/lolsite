@@ -17,8 +17,6 @@
     exit;
   }
  
-  $GLOBALS['dbtype'] = $dbtype;
- 
   // secondly we need version and target schema information for sanity checking
   if(!include "version.inc") {
     print "<html><head><title>Error</title><body><h1>unable to load version.inc</h1></body></html>";
