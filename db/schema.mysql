@@ -144,7 +144,7 @@ CREATE TABLE logbook (
   type_sic decimal(3,2) NOT NULL default 0,
   launch_type varchar(1),
   alt_release int(5),
-  alt_maximum int(5)
+  alt_maximum int(5),
   detail text,
   url text,
   cost decimal(5,2) NOT NULL default 0,
