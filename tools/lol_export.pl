@@ -143,5 +143,10 @@ sub escape {
     s/&/&amp;/g;
     s/</&lt;/g;
     s/°/&amp;deg;/g; # hack hack
+
+    # this is a hack to handle mysql's all-digit date format
+    if (/^\d{14}/) {
+        s/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/$1-$2-$3 $4:$5:$6/;
+    }
     return $_;
 }
