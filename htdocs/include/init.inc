@@ -91,9 +91,6 @@
   // OK, Everything looks healthy, let's pull in our provided stuff from the user
   import_request_variables("cpg","rvar_");
 
-  // optional but worthwhile casting on significant rvars
-  if(isset($rvar_pilot)) $rvar_pilot = (int) $rvar_pilot;
-
   include("functions.inc");
 
 ?>

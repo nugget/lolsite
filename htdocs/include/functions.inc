@@ -208,6 +208,15 @@
     }
   }
 
+  function pilot_lookup($name) {
+    $sql = "select id from pilot where username = '$name'";
+    $r = lol_fetch_row(lol_query($sql));
+    if ($r) {
+      return $r[0];
+    }
+    return 0;
+  }
+
   function pilot_hours($pilot_id,$days) {
     $sql = "select sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) from logbook where pilot_id = $pilot_id";
     if($days > 0) {
@@ -328,7 +337,7 @@
     $sql = "select count(name) as name, min(issued) as date from certifications where pilot_id = $pilot_id and issued > 0 and name = '$certname'";
     $first = lol_fetch_array(lol_query($sql));
     if($first['name']) {
-       $sql = "select count(id) as flights, max(id) as id, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(case when type_dual=type_pic then type_pic else 0 end))) as hours from logbook where pilot_id = $pilot_id and date < '$first[date]'";
+       $sql = "select count(id) as flights, max(id) as id, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as hours from logbook where pilot_id = $pilot_id and date < '$first[date]'";
        $stats = lol_fetch_array(lol_query($sql));
        return array_merge($first,$stats);
     }
@@ -379,12 +388,15 @@
     }
   }
 
-  function pilot_search($search) {
-    $sql = "select id from pilot where username like '%$search%' or displayname like '%$search%'";
+  function pilot_search($search,$limit) {
+    $sql = "select ph.peer_tag, ph.username, ph.hours, p.url from pilot_hours ph left join peers p on ph.peer_tag = p.tag where username like '%$search%' order by hours desc";
+    if ($limit > 0) {
+      $sql .= " limit $limit";
+    }
     if($sqlresponse = lol_query($sql)) {
       $list = array();
       while($line = lol_fetch_array($sqlresponse)) {
-        $list[] = $line['id'];
+        $list[] = $line;
       }
       return $list;
     }
@@ -509,6 +521,7 @@
       $sql .= " limit $count";
     }
     $sqlresponse = lol_query($sql);
+    $airports = array();
     while($line = lol_fetch_array($sqlresponse)) {
       $airports[] = $line['airport'];
     }

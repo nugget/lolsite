@@ -15,11 +15,11 @@
 <lol>
   <pilots>
     <?php
-      $pilotlist = pilot_search("");
-      usort($pilotlist,"pilot_cmp");
-      $pilotlist = array_slice($pilotlist,0,10);
+      $pilotlist = pilot_search("", 0);
       for ($i = 0; $i < count($pilotlist); $i++) {
-        print "<pilot name=\"".pilot_name($pilotlist[$i])."\" hours=\"".pilot_hours($pilotlist[$i], 0)."\" />\n";
+        if (!$pilotlist[$i]['peer_tag']) {
+          print "<pilot name=\"".$pilotlist[$i]['username']."\" hours=\"".$pilotlist[$i]['hours']."\" />\n";
+        }
       }
     ?>
   </pilots>

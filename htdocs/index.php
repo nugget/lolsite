@@ -10,10 +10,8 @@
     $pilotlist = pilot_search($rvar_psearch);
   } else {
     $pilotdesc = "Top Pilots";
-    $pilotlist = pilot_search("");
+    $pilotlist = pilot_search("", 10);
   }
-  usort($pilotlist,"pilot_cmp");
-  $pilotlist = array_slice($pilotlist,0,10);
 
   if(isset($rvar_asearch)) {
     $airportdesc = "Airports Matching [$rvar_asearch]";
@@ -35,13 +33,13 @@
       if(isset($pilotlist)) {
         print "<table>\n<tr><th>Pilot</th><th>Hours</th></tr>";
         for($i=0; $i<count($pilotlist); $i++) {
-          $detaillink = "pilot.php?pilot=$pilotlist[$i]";
+          $detaillink = $pilotlist[$i]['url']."pilot.php?pilot=".$pilotlist[$i]['username'];
           ?>
           <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
-           <td style="width: 100px;"><?php print pilot_name($pilotlist[$i]); ?></td>
-           <td><?php print hobbs(pilot_hours($pilotlist[$i],0)); ?></td>
+           <td style="width: 100px;"><?php print $pilotlist[$i]['username']; ?></td>
+           <td><?php print hobbs($pilotlist[$i]['hours'],0); ?></td>
           </tr>
           <?php
         }

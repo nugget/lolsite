@@ -27,8 +27,8 @@ CREATE TABLE peers (
   url varchar(127) NOT NULL,
   last_contact date NOT NULL default '1970-11-04',
   users int NOT NULL default 0,
-  allow_publish boolean NOT NULL default false;
-  allow_subscribe boolean NOT NULL default false;
+  allow_publish boolean NOT NULL default false,
+  allow_subscribe boolean NOT NULL default false,
   PRIMARY KEY (tag)
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE pilot (
   id serial NOT NULL,
   username varchar(20) NOT NULL,
   fullname varchar(127),
-  server_tag varchar(20) NOT NULL,
+  server_tag varchar(20),
   password varchar(32) NOT NULL,
   displayname varchar(127),
   publish_local boolean NOT NULL default true,
@@ -59,7 +59,7 @@ CREATE TABLE pilot (
 --
 CREATE TABLE certifications (
   id serial NOT NULL,
-  pilot_id integer NOT NULL,
+  pilot_id integer NOT NULL REFERENCES pilot(id) ON DELETE CASCADE,
   name varchar(100) NOT NULL default '',
   issued date default NULL,
   details varchar(100),
@@ -71,7 +71,7 @@ CREATE TABLE certifications (
 --
 CREATE TABLE ratings (
   id serial NOT NULL,
-  pilot_id integer NOT NULL,
+  pilot_id integer NOT NULL REFERENCES pilot(id) ON DELETE CASCADE,
   name varchar(100) NOT NULL default '',
   issued integer,
   PRIMARY KEY  (id)
@@ -99,7 +99,7 @@ CREATE TABLE aircraft (
 CREATE TABLE aircraft_comments (
   id serial NOT NULL,
   aircraft_ident varchar(10) NOT NULL,
-  pilot_id integer NOT NULL,
+  pilot_id integer NOT NULL REFERENCES pilot(id) ON DELETE CASCADE,
   date date NOT NULL default '1970-11-04',
   global boolean NOT NULL default true,
   private boolean NOT NULL default false,
@@ -113,7 +113,7 @@ CREATE TABLE aircraft_comments (
 CREATE TABLE passengers (
   id serial NOT NULL,
   alias varchar(15) NOT NULL,
-  pilot_id integer NOT NULL,
+  pilot_id integer NOT NULL REFERENCES pilot(id) ON DELETE CASCADE,
   is_pilot integer,
   fullname varchar(127),
   image_url varchar(127),
@@ -142,7 +142,7 @@ CREATE TABLE airports (
 CREATE TABLE airport_comments (
   id serial NOT NULL,
   airport_ident varchar(10) NOT NULL,
-  pilot_id integer NOT NULL,
+  pilot_id integer NOT NULL REFERENCES pilot(id) ON DELETE CASCADE,
   date date NOT NULL default '1970-11-04',
   global boolean NOT NULL default true,
   private boolean NOT NULL default false,
@@ -155,7 +155,7 @@ CREATE TABLE airport_comments (
 --
 CREATE TABLE logbook (
   id serial NOT NULL,
-  pilot_id integer NOT NULL,
+  pilot_id integer NOT NULL REFERENCES pilot(id) ON DELETE CASCADE,
   date date NOT NULL default '1970-11-04',
   ident varchar(10) NOT NULL default '',
   passengers varchar(127) NOT NULL default '',
@@ -191,9 +191,30 @@ CREATE TABLE flight_route (
 --
 CREATE TABLE medical (
   id serial NOT NULL,
-  pilot_id integer NOT NULL,
+  pilot_id integer NOT NULL REFERENCES pilot(id) ON DELETE CASCADE,
   date date NOT NULL default '1970-11-04',
   class integer NOT NULL default '0',
   name varchar(20) NOT NULL default '',
   PRIMARY KEY  (id)
 );
+
+--
+-- List of pilot hours from other sites
+--
+CREATE TABLE peer_pilot (
+  peer_tag varchar(20) NOT NULL,
+  username varchar(20) NOT NULL,
+  hours decimal(9,2),
+  PRIMARY KEY (peer_tag, username)
+);
+
+--
+-- Combined view of local and remote pilot hours
+--
+CREATE VIEW pilot_hours AS
+    SELECT NULL as peer_tag, p.username, sum(l.type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as hours
+        FROM pilot p, logbook l
+        WHERE p.id = l.pilot_id
+        GROUP BY p.username
+    UNION
+    SELECT peer_tag, username, hours FROM peer_pilot;

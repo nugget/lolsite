@@ -36,3 +36,5 @@ $Id$
 - Change "top [x]" on index to "most active [x]" and date-limit the queries.
 
 - Fix passenger elite status
+
+- The installer assumes mysql and is now out of date.

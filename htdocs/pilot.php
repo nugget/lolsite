@@ -8,6 +8,12 @@
  if(!isset($rvar_pilot)) {
    $error_title = "No pilot specified";
    $error_text = "You must specify a pilot in order to view a logbook!";
+ } else {
+   $rvar_pilot = pilot_lookup($rvar_pilot);
+   if ($rvar_pilot == 0) {
+     $error_title = "Pilot not found";
+     $error_text = "You must specify a known pilot";
+   }
  }
 
  include "include/head.inc";
