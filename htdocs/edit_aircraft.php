@@ -53,7 +53,7 @@
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where id = $rvar_id";
    }
 
-   $sql_response = pg_query($sql);
+   $sql_response = lol_query($sql);
 
    $target = "detail_aircraft.php?ident=$rvar_ident&pilot=$rvar_pilot";
    header("Location: $target");

@@ -44,7 +44,7 @@
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where id = $rvar_id";
    }
 
-   $sql_response = pg_query($sql);
+   $sql_response = lol_query($sql);
 
    $target = "detail_pax.php?alias=$alias&pilot=$rvar_pilot";
    header("Location: $target");
@@ -63,8 +63,8 @@
 
  if($rvar_id != 0) {
    $sql = "SELECT * FROM passengers WHERE id = $rvar_id";
-   $sqlresponse = pg_query($sql);
-   $line = pg_fetch_array($sqlresponse);
+   $sqlresponse = lol_query($sql);
+   $line = lol_fetch_array($sqlresponse);
  }
 
 ?>

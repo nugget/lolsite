@@ -53,7 +53,7 @@
         "timezone='$rvar_timezone',tower=$rvar_tower, " .
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where ident = '$rvar_ident'";
    }
-   $sql_response = pg_query($sql);
+   $sql_response = lol_query($sql);
 
    $target = "airport.php?ident=$rvar_ident&pilot=$rvar_pilot";
    header("Location: $target");

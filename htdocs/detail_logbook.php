@@ -32,10 +32,10 @@
 
 <?php
  $sql = "SELECT * FROM logbook WHERE id = $rvar_id";
- $sqlresponse = pg_query($sql);
+ $sqlresponse = lol_query($sql);
 
  $num = '';
- while ($line = pg_fetch_array($sqlresponse)) {
+ while ($line = lol_fetch_array($sqlresponse)) {
 
     $equipment = aircraft_equipment($line['ident']);
 
