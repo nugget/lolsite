@@ -1,0 +1,203 @@
+/*
+ * $Id$
+ */
+
+body {
+ background-color: #e0e0e0;
+ font-family: "Trebuchet MS, Verdana, Arial, Helvetica, Sans-Serif, Sans Serif";
+ margin: 0px;
+ padding: 0px;
+ color: #222222;
+ link: #770000;
+}
+h1 {
+  background-color: #c9c9c9;
+  text-align: center;
+  padding: 10px;
+  margin: 0px 0px 0px 0px;
+  border-bottom: 2px solid black;
+}
+p.header {
+  margin: 0px;
+}
+p.warning {
+  color: red;
+  text-align: center;
+}
+p.gaugetitle {
+  font-family: "Arial,Helvetica,Sans-Serif";
+  margin: 0px;
+  font-size: 6pt;
+}
+p.gauge {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1pt solid white;
+  margin: 0px;
+  padding: 2px;
+}
+a.digit {
+  margin: 2px;
+  padding: 1px;
+  background-color: #232323;
+}
+a.digitdec {
+  margin:  1px;
+  padding: 1px;
+  background-color: #e9e9e9;
+  color: #000000;
+}
+div.headerright {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: auto;
+  text-align: center;
+}
+div.headerleft {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: auto;
+  text-align: left;
+}
+#navbar {
+  width: 380px;
+  margin: 10px 20px 10px 20px;
+  border: 2px solid black;
+}
+div#navbar h1 {
+  background-color: #004387;
+  color: #ffff00;
+  margin: 0px;
+  padding: 2px;
+  width: auto;
+  text-align: center;
+  font-size: medium;
+  border-bottom: 1px solid black;
+}
+div#navbar table {
+  background-color: #003377;
+}
+div#navbar th {
+  background-color: #004387;
+  color: #ffffff;
+  font-size: small;
+  font-weight: normal;
+  text-align: right;
+  margin: 0px;
+  padding: 0px 4px 0px 4px;
+}
+div#navbar td {
+  color: #777777;
+  font-size: small;
+}
+div#navbar a {
+  color: #ffffff;
+}
+div#footer p {
+  background-color: #c9c9c9;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  text-align: center;
+  font-size: small;
+  padding: 2px;
+}
+#buttonbar {
+  width: auto;
+  margin: 10px 20px 10px 20px;
+}
+div#buttonbar a {
+  padding: 2px;
+  background-color: #c9c9c9;
+  color: #7f0000;
+  border: 1px dotted black;
+}
+
+#content {
+  margin: 10px 20px 10px 20px;
+}
+div#content table {
+  width: auto;
+  border-spacing: 0px;
+  border: 1px solid black;
+  padding: 1px;
+}
+div#content tr {
+  padding: 1px;
+  background-color: #c9c9c9;
+}
+div#content th {
+  text-align: right;
+  padding: 2px;
+}
+div#content td {
+  text-align: left;
+  padding: 2px;
+}
+
+#logbook {
+  width: auto;
+  margin: 10px 20px 10px 20px;
+  border: 2px solid black;
+  background-color: #aaffaa;
+}
+div#logbook a {
+  color: #c9ffc9;
+}
+div#logbook table {
+  border-spacing: 0px;
+  border: 1px solid black;
+  padding: 0px;
+}
+div#logbook table.embedded {
+  margin-left: -4px;
+  margin-right: -4px;
+}
+div#logbook tr.even {
+  background-color: #88ff88;
+}
+div#logbook th {
+  background-color: #55dd55;
+  font-size: small;
+  color: #000000;
+  padding: 0px 2px 0px 2px;
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+}
+div#logbook td {
+  border-top: 1px solid #000000;
+  border-left: 1px solid #000000;
+  padding: 0px 2px 0px 2px;
+}
+div#logbook td.integer {
+  text-align: right;
+}
+div#logbook td.decimal {
+  border-left: 1px dashed #777777;
+  text-align: right;
+  width: 10px;
+}
+div#logbook td.hidden {
+  border-left: 0px;
+  text-align: right;
+}
+div#logbook th.link {
+  background-color: #000000;
+  color: #ffffff;
+}
+div#logbook td.link {
+  background-color: #000000;
+  color: #ffffff;
+  text-align: right;
+}
+div#logbook input {
+  margin: 3px 0px 3px 0px;
+}
+
+div#menu a {
+  background-color: #030303;
+  color: #ffffff;
+  margin: 0px 0px 0px 0px;
+  padding: 2px;
+}
