@@ -51,13 +51,7 @@
  }
 
  $launch = logbook_launches($whereclause);
-
- $sql = "SELECT * FROM logbook";
- if($whereclause <> '') {
-   $sql = $sql . " WHERE $whereclause";
- }
- $sql = $sql . " ORDER BY date, id";
- $sqlresponse = pg_query($sql);
+ $entries = logbook_entries($whereclause);
 
 ?>
 
@@ -89,10 +83,9 @@
 <?php
  $class = "";
  $flightnum = 1;
- while ($line = pg_fetch_array($sqlresponse)) {
-
-  $ident = pg_fetch_row(pg_query("SELECT makemodel FROM aircraft WHERE ident = '".$line['ident']."';"));
-  $ident = $ident[0];
+ for($ei=0; $ei<count($entries); $ei++) {
+  $line = logbook_detail($entries[$ei]);
+  $ident = aircraft_equipment($line['ident']);
 
   if( $class != "odd" ) {
     $class = "odd";

@@ -189,6 +189,21 @@
     return $launches;
   }
 
+  function logbook_entries($whereclause) {
+    $sql = "SELECT id FROM logbook";
+    if($whereclause <> '') {
+      $sql = $sql . " WHERE $whereclause";
+    }
+    $sql = $sql . " ORDER BY date, id";
+    if($sqlresponse = lol_query($sql)) {
+      $list = array();
+      while($line = lol_fetch_array($sqlresponse)) {
+        $list[] = $line['id'];
+      }
+      return $list;
+    }
+  }
+
   function pilot_hours($pilot_id) {
     $count = lol_fetch_row(lol_query("select sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) from logbook where pilot_id = $pilot_id"));
     $count = $count[0];
