@@ -20,7 +20,11 @@
  if(is_mine()) {
    ?>
    <div id="buttonbar">
-    <form action="edit_logbook.php"><input type="hidden" value="<?php print $rvar_id; ?>" name="id"><input type="submit" value="Edit Entry"></form>
+    <form action="edit_logbook.php">
+     <input type="hidden" value="<?php print $rvar_id; ?>" name="id">
+     <input name="edit" type="submit" value="Edit Entry">
+     <input name="delete" type="submit" value="Delete Entry">
+    </form>
    </div>
    <?php
  }

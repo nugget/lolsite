@@ -22,7 +22,15 @@
    $error_text = "I can't edit an entry if you don't own it!";
    unset($rvar_route);
  }
- if(isset($rvar_route)) {
+ if(isset($rvar_delete)) {
+   if($rvar_id > 0) {
+     $sql = "DELETE FROM logbook WHERE id = $rvar_id";
+     $sql_response = lol_query($sql);
+     $target = "display_logbook.php?pilot=$rvar_pilot";
+     header("Location: $target");
+     exit;
+   }
+ } elseif(isset($rvar_route)) {
    # I see data, we need to insert/update as required.
    $rvar_alt_release = sprintf("%0d",$rvar_alt_release);
    $rvar_alt_maximum = sprintf("%0d",$rvar_alt_maximum);
