@@ -46,7 +46,7 @@
      <?php if($line['image_url'] != '') { print "<img src=\"" . $line['image_url'] . "\" /><br />"; } ?>
      <?php if($line['link_url'] != '') { print "[<a href=\"" . $line['link_url'] . "\">Link</a>]"; } ?>
      <?php if(!strpos($line['link_url'],"airnav.com")) { print "[<a href=\"http://www.airnav.com/airport/" . $line['ident'] . "\">AirNav</a>]"; } ?>
-     <?php print "[<a href=\"display_logbook.php?route=" . $line['ident'] . "\">Log</a>]";  ?>
+     <?php print "[<a href=\"display_logbook.php?pilot=$rvar_pilot&route=" . $line['ident'] . "\">Log</a>]";  ?>
    </th>
    <th>Ident</th>
    <th>Full Name</th>

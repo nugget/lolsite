@@ -53,7 +53,7 @@
    if($whereclause <> '') {
      $whereclause = $whereclause . " and ";
    }
-   $whereclause = "(logbook.route like '%$rvar_route%')";
+   $whereclause = "id in (select logbook_id from flight_route where airport = '$rvar_route')";
  }
  if(isset($rvar_pax)) {
    if($whereclause <> '') {
