@@ -55,7 +55,7 @@
    <th colspan="3">Route of Flight</th>
    <th colspan="2">Landings</th>
    <th rowspan="2">Inst<br />Appr</th>
-   <th colspan="8">Aircraft Category And Class</th>
+   <th colspan="10">Aircraft Category And Class</th>
    <th colspan="2" rowspan="2">Flight Training Device</th>
    <th rowspan="2">Passengers</th>
   </tr>
@@ -72,35 +72,37 @@
    <th colspan="2">AMEL</th>
    <th colspan="2">ASES</th>
    <th colspan="2">AMES</th>
+   <th colspan="2">Glider</th>
   </tr>
 
   <tr>
    <td nowrap="nowrap"><?php echo $line['date']; ?></td>
    <td><?php echo $equipment; ?></td>
-   <td><?php echo $line['ident']; ?></td>
+   <td onMouseOver=this.style.backgroundColor="#ffffff" onMouseOut=this.style.backgroundColor="" onclick="window.location.href='<?php print "detail_aircraft.php?ident=$line[ident]&pilot=$rvar_pilot" ?>'"><?php echo $line['ident']; ?></td>
  
    <?php
     $hops = preg_split("/ +/",$line['route'],-1,PREG_SPLIT_NO_EMPTY);
 
-    $asel = (int) class_time("ASEL",$rvar_id);
-    $amel = (int) class_time("AMEL",$rvar_id);
-    $ases = (int) class_time("ASES",$rvar_id);
-    $ames = (int) class_time("AMES",$rvar_id);
-    $sim  = (int) class_time("Sim",$rvar_id);
+    $asel = class_time("ASEL",$rvar_id);
+    $amel = class_time("AMEL",$rvar_id);
+    $ases = class_time("ASES",$rvar_id);
+    $ames = class_time("AMES",$rvar_id);
+    $glider = class_time("Glider", $rvar_id);
+    $sim  = class_time("Sim",$rvar_id);
 
-    print "<td>$hops[0]</td>";
+    print "<td onMouseOver=this.style.backgroundColor=\"#ffffff\" onMouseOut=this.style.backgroundColor=\"\" onclick=\"window.location.href='airport.php?ident=$hops[0]&pilot=$rvar_pilot'\">$hops[0]</td>";
     $els = sizeof($hops) -1;
     if($els==0) {
       print "<td>&nbsp;</td><td>&nbsp</td>\n";
     } elseif($els==1) {
-      print "<td>&nbsp;</td><td>$hops[1]</td>\n";
+      print "<td>&nbsp;</td><td onMouseOver=this.style.backgroundColor=\"#ffffff\" onMouseOut=this.style.backgroundColor=\"\" onclick=\"window.location.href='airport.php?ident=$hops[1]&pilot=$rvar_pilot'\">$hops[1]</td>\n";
     } else {
       print "<td>";
       for($i=1;$i<$els;$i++) {
-        print "$hops[$i]&nbsp;";
+        print "<span onMouseOver=this.style.backgroundColor=\"#ffffff\" onMouseOut=this.style.backgroundColor=\"\" onclick=\"window.location.href='airport.php?ident=$hops[$i]&pilot=$rvar_pilot'\">$hops[$i]</span>&nbsp;";
       }
       print "</td>";
-      print "<td>$hops[$els]</td>";
+      print "<td onMouseOver=this.style.backgroundColor=\"#ffffff\" onMouseOut=this.style.backgroundColor=\"\" onclick=\"window.location.href='airport.php?ident=$hops[$els]&pilot=$rvar_pilot'\">$hops[$els]</td>";
     }
    ?>
    <td class="integer"><?php echo $line['landings_day']; ?></td>
@@ -110,8 +112,15 @@
    <?php split_decimal($amel); ?>
    <?php split_decimal($ases); ?>
    <?php split_decimal($ames); ?>
+   <?php split_decimal($glider); ?>
    <?php split_decimal($sim); ?>
-   <td width="100%"><?php echo $line['passengers']; ?></td>
+   <td width="100%">
+   <?php
+        $pax = preg_split("/ +/", $line['passengers'], -1, PREG_SPLIT_NO_EMPTY);
+        for ($i = 0; $i < sizeof($pax); $i++) {
+            print "<span onMouseOver=this.style.backgroundColor=\"#ffffff\" onMouseOut=this.style.backgroundColor=\"\" onclick=\"window.location.href='detail_pax.php?alias=$pax[$i]&pilot=$rvar_pilot'\">$pax[$i]</span> ";
+        }
+   ?></td>
   </tr>
   </table><table>
   <tr>
