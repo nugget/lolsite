@@ -419,7 +419,14 @@
   }
 
   function pilot_search($search,$limit = 0) {
-    $sql = "select ph.peer_tag, ph.username, ph.hours, p.url from pilot_hours ph left join peers p on ph.peer_tag = p.tag where username like '%$search%' order by hours desc";
+    $sql = "
+        select
+            ph.peer_tag, ph.username, ph.hours, p.url, pi.publish_global, pi.publish_local
+        from pilot_hours ph
+            left join peers p on ph.peer_tag = p.tag
+            left join pilot pi on (ph.username = pi.username and ph.peer_tag is null)
+        where ph.username like '%$search%'
+        order by hours desc";
     if ($limit > 0) {
       $sql .= " limit $limit";
     }

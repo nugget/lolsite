@@ -17,7 +17,7 @@
     <?php
       $pilotlist = pilot_search("", 0);
       for ($i = 0; $i < count($pilotlist); $i++) {
-        if (!$pilotlist[$i]['peer_tag']) {
+        if ($pilotlist[$i]['publish_global'] == 't' && !$pilotlist[$i]['peer_tag']) {
           print "<pilot name=\"".$pilotlist[$i]['username']."\" hours=\"".$pilotlist[$i]['hours']."\" />\n";
         }
       }
