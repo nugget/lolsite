@@ -447,7 +447,7 @@
   }
 
   function certificate_ratings($pilot_id,$code) {
-    $sql = "select pr.id, pr.rating_code as code, r.name, pr.rating_type_code, pr.issued from pilot_rating pr, pilot_certificate pc, rating r where pc.pilot_id = $pilot_id and pr.certificate_code = '$code' and pr.certificate_code = pc.certificate_code and r.code = pr.rating_code order by r.id";
+    $sql = "select pr.id, pr.rating_code as code, r.name, pr.rating_type_code, pr.issued from pilot_rating pr, pilot_certificate pc, rating r where pc.pilot_id = $pilot_id and pr.pilot_id = $pilot_id and pr.certificate_code = '$code' and pr.certificate_code = pc.certificate_code and r.code = pr.rating_code order by r.id";
     if($sqlresponse = lol_query($sql)) {
       $list = array();
       while($line = lol_fetch_array($sqlresponse)) {
