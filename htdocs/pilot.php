@@ -21,6 +21,7 @@
 
  $firststats = pilot_firststats($rvar_pilot);
  $solostats = pilot_solostats($rvar_pilot);
+ $checkstats= pilot_checkstats($rvar_pilot);
  $xcstats   = pilot_xcstats($rvar_pilot);
  $ifrstats  = pilot_ifrstats($rvar_pilot);
  $pplstats  = pilot_certstats($rvar_pilot,'Private');
@@ -60,6 +61,17 @@
            <td><?php print $solostats['date']; ?></td>
            <td class="integer"><?php print $solostats['flights']; ?></td>
            <?php print split_decimal($solostats['hours']); ?>
+         </tr>
+         <?php } ?>
+
+         <?php if($checkstats['date']) { ?>
+         <tr onMouseOver=this.style.backgroundColor="#ffffff"
+             onMouseOut=this.style.backgroundColor=""
+             onclick="window.location.href='<?php print "detail_logbook.php?id=$checkstats[id]" ?>'" >
+           <td>First Checkride</td>
+           <td><?php print $checkstats['date']; ?></td>
+           <td class="integer"><?php print $checkstats['flights']; ?></td>
+           <?php print split_decimal($checkstats['hours']); ?>
          </tr>
          <?php } ?>
 

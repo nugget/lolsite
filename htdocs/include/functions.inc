@@ -345,6 +345,16 @@
     }
   }
 
+  function pilot_checkstats($pilot_id) {
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and type_pic > 0 and passengers != '' order by date limit 1";
+    $firstcheck = lol_fetch_array(lol_query($sql));
+    if($firstcheck) {
+      $sql = "select count(id) as flights, sum(type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as hours from logbook where pilot_id = $pilot_id and date < '$firstcheck[date]' and id <> $firstcheck[id]";
+     $checkstats = lol_fetch_array(lol_query($sql));
+     return array_merge($firstcheck,$checkstats);
+    }
+  }
+
   function pilot_ifrstats($pilot_id) {
     $sql = "select id, date from logbook where pilot_id = $pilot_id and conditions_actualinstr > 0 order by date limit 1";
     $first = lol_fetch_array(lol_query($sql));
