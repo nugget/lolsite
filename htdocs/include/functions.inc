@@ -390,11 +390,29 @@
   }
 
   function pilot_certlist($pilot_id) {
-    $sql = "select distinct certificate_code, issued from pilot_certificate where pilot_id = $pilot_id and issued > 0 order by issued";
+    $sql = "select id, certificate_code, code, name, details, far_part, number, issued from pilot_certificate, certificate where pilot_id = $pilot_id and issued > 0 and certificate.code = pilot_certificate.certificate_code order by issued";
     if($sqlresponse = lol_query($sql)) {
       $list = array();
       while($line = lol_fetch_array($sqlresponse)) {
-        $list[] = $line['certificate_code'];
+        $list[] = $line;
+      }
+      return $list;
+    }
+  }
+
+  function pilot_certificate_detail($id) {
+    $sql = "select * from pilot_certificate where id = $id";
+    $line = lol_fetch_array(lol_query($sql));
+    return $line;
+  }
+    
+
+  function pilot_valid_certs($pilot_id) {
+    $sql = "select code, name, details from certificate where code not in (select certificate_code from pilot_certificate where pilot_id = $pilot_id) order by bit";
+    if($sqlresponse = lol_query($sql)) {
+      $list = array();
+      while($line = lol_fetch_array($sqlresponse)) {
+        $list[] = $line;
       }
       return $list;
     }
@@ -420,6 +438,38 @@
 
     if($vala == $valb) return 0;
     return ($vala > $valb) ? -1 : 1;
+  }
+
+  function certificate_detail($code) {
+    $sql = "select * from certificate where code = '$code'";
+    $line = lol_fetch_array(lol_query($sql));
+    return $line;
+  }
+
+  function certificate_ratings($code) {
+    $sql = "select pr.id, pr.rating_code as code, r.name, pr.rating_type_code, pr.issued from pilot_rating pr, pilot_certificate pc, rating r where pc.id = '$code' and pr.certificate_code = pc.certificate_code and r.code = pr.rating_code order by r.id";
+    if($sqlresponse = lol_query($sql)) {
+      $list = array();
+      while($line = lol_fetch_array($sqlresponse)) {
+        $list[] = $line;
+      }
+      return $list;
+    }
+  }
+     
+  function certificate_valid_ratings($code) {
+    $sql = "select bit from certificate where code = '$code'";
+    $bit = lol_fetch_row(lol_query($sql));
+    $bit = $bit[0];
+
+    $sql = "select * from rating where certificate_bitmask & $bit > 0";
+    if($sqlresponse = lol_query($sql)) {
+      $list = array();
+      while($line = lol_fetch_array($sqlresponse)) {
+        $list[] = $line;
+      }
+      return $list;
+    }
   }
 
   function class_lookup($class) {
