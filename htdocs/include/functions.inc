@@ -582,7 +582,7 @@
       $first_date = strftime("%Y-%m-%d",time()-($days*86400));
       $where .= " and logbook.date >= '$first_date'";
     }
-    $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route, airports where logbook.id = flight_route.logbook_id and airport <> 'Lcl' and airports.ident = airport $where group by airport order by visits desc";
+    $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route left join airports on airports.ident = flight_route.airport where logbook.id = flight_route.logbook_id and airport <> 'Lcl' $where group by airport order by visits desc";
     if ($count > 0) {
       $sql .= " limit $count";
     }
