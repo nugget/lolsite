@@ -208,11 +208,70 @@
     }
   }
 
-  function pilot_hours($pilot_id) {
-    $count = lol_fetch_row(lol_query("select sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) from logbook where pilot_id = $pilot_id"));
+  function pilot_hours($pilot_id,$days) {
+    $sql = "select sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) from logbook where pilot_id = $pilot_id";
+    if($days > 0) {
+      $lowbound = time()-(86400*$days);
+      $sql = $sql . " and date >= '" . strftime("%Y-%m-%d",$lowbound) . "'";
+    }
+    $count = lol_fetch_row(lol_query($sql));
     $count = $count[0];
     return $count;
   }
+
+  function pilot_pic($pilot_id,$days) {
+    $sql = "select sum(type_pic) from logbook where pilot_id = $pilot_id";
+    if($days > 0) {
+      $lowbound = time()-(86400*$days);
+      $sql = $sql . " and date >= '" . strftime("%Y-%m-%d",$lowbound) . "'";
+    }
+    $count = lol_fetch_row(lol_query($sql));
+    $count = $count[0];
+    return $count;
+  }
+
+  function pilot_xc($pilot_id,$days) {
+    $sql = "select sum(type_xc) from logbook where pilot_id = $pilot_id";
+    if($days > 0) {
+      $lowbound = time()-(86400*$days);
+      $sql = $sql . " and date >= '" . strftime("%Y-%m-%d",$lowbound) . "'";
+    }
+    $count = lol_fetch_row(lol_query($sql));
+    $count = $count[0];
+    return $count;
+  }
+
+  function pilot_flights($pilot_id,$days) {
+    $sql = "select count(*) from logbook where pilot_id = $pilot_id";
+    if($days > 0) {
+      $lowbound = time()-(86400*$days);
+      $sql = $sql . " and date >= '" . strftime("%Y-%m-%d",$lowbound) . "'";
+    }
+    $count = lol_fetch_row(lol_query($sql));
+    $count = $count[0];
+    return $count;
+  }
+
+  function pilot_landings($pilot_id,$days,$type) {
+    if($type == 'D') {
+      $fields = 'landings_day';
+    } elseif($type == 'N') {
+      $fields = 'landings_night';
+    } else {
+      $fields = 'landings_day+landings_night';
+    }
+  
+    $sql = "select sum($fields) from logbook where pilot_id = $pilot_id";
+    if($days > 0) {
+      $lowbound = time()-(86400*$days);
+      $sql = $sql . " and date >= '" . strftime("%Y-%m-%d",$lowbound) . "'";
+    }
+    $count = lol_fetch_row(lol_query($sql));
+    $count = $count[0];
+    return $count;
+  }
+
+
 
   function pilot_name($pilot_id) {
     $sql = "select username, displayname from pilot where id = $pilot_id";
@@ -279,8 +338,8 @@
   }
 
   function pilot_cmp($a,$b) {
-    $vala = pilot_hours($a);
-    $valb = pilot_hours($b);
+    $vala = pilot_hours($a,0);
+    $valb = pilot_hours($b,0);
 
     if($vala == $valb) return 0;
     return ($vala > $valb) ? -1 : 1;

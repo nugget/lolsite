@@ -45,7 +45,7 @@
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
            <td style="width: 100px;"><?php print pilot_name($pilotlist[$i]); ?></td>
-           <td><?php print hobbs(pilot_hours($pilotlist[$i])); ?></td>
+           <td><?php print hobbs(pilot_hours($pilotlist[$i],0)); ?></td>
           </tr>
           <?php
         }

@@ -129,8 +129,54 @@
          </tr>
 
        </table>
+      </div>
 
+      <div id="block3">
+       <h3>Counts and Totals</h3>
+       <table>
+         <tr><th>Activity</th><th colspan="2">&lt;90</th><th colspan="2">Year</th><th colspan="2">Total</th></tr>
 
+         <tr>
+           <td>Flights</td>
+           <td class="integer" colspan="2"><?php print pilot_flights($rvar_pilot,90,'D'); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_flights($rvar_pilot,365,'D'); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_flights($rvar_pilot,0,'D'); ?></td>
+         </tr>
+         <tr>
+           <td>Total Hours</td>
+           <?php split_decimal(pilot_hours($rvar_pilot,90)); ?>
+           <?php split_decimal(pilot_hours($rvar_pilot,365)); ?>
+           <?php split_decimal(pilot_hours($rvar_pilot,0)); ?>
+         </tr>
+
+         <tr>
+           <td>PIC Hours</td>
+           <?php split_decimal(pilot_pic($rvar_pilot,90)); ?>
+           <?php split_decimal(pilot_pic($rvar_pilot,365)); ?>
+           <?php split_decimal(pilot_pic($rvar_pilot,0)); ?>
+         </tr>
+
+         <tr>
+           <td>X/C Hours</td>
+           <?php split_decimal(pilot_xc($rvar_pilot,90)); ?>
+           <?php split_decimal(pilot_xc($rvar_pilot,365)); ?>
+           <?php split_decimal(pilot_xc($rvar_pilot,0)); ?>
+         </tr>
+
+         <tr>
+           <td>Landings (Day)</td>
+           <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,90,'D'); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,365,'D'); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,0,'D'); ?></td>
+         </tr>
+         <tr>
+           <td>Landings (Night)</td>
+           <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,90,'N'); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,365,'N'); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,0,'N'); ?></td>
+         </tr>
+
+       </table>
       </div>
 
     </div>
