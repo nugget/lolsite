@@ -29,14 +29,14 @@
    $rvar_landings_day = sprintf("%0d",$rvar_landings_day);
    $rvar_landings_night = sprintf("%0d",$rvar_landings_night);
    $rvar_instrument_approach = sprintf("%0d",$rvar_instrument_approach);
-   $rvar_conditions_night = sprintf("%02.1f",$rvar_conditions_night);
-   $rvar_conditions_actualinstr = sprintf("%02.1f",$rvar_conditions_actualinstr);
-   $rvar_conditions_simulinstr = sprintf("%02.1f",$rvar_conditions_simulinstr);
-   $rvar_type_xc = sprintf("%02.1f",$rvar_type_xc);
-   $rvar_type_cfi = sprintf("%02.1f",$rvar_type_cfi);
-   $rvar_type_dual = sprintf("%02.1f",$rvar_type_dual);
-   $rvar_type_pic = sprintf("%02.1f",$rvar_type_pic);
-   $rvar_type_sic = sprintf("%02.1f",$rvar_type_sic);
+   $rvar_conditions_night = sprintf("%02.2f",$rvar_conditions_night);
+   $rvar_conditions_actualinstr = sprintf("%02.2f",$rvar_conditions_actualinstr);
+   $rvar_conditions_simulinstr = sprintf("%02.2f",$rvar_conditions_simulinstr);
+   $rvar_type_xc = sprintf("%02.2f",$rvar_type_xc);
+   $rvar_type_cfi = sprintf("%02.2f",$rvar_type_cfi);
+   $rvar_type_dual = sprintf("%02.2f",$rvar_type_dual);
+   $rvar_type_pic = sprintf("%02.2f",$rvar_type_pic);
+   $rvar_type_sic = sprintf("%02.2f",$rvar_type_sic);
    $rvar_cost = sprintf("%04.2f",$rvar_cost);
    if($rvar_id == 0) {
      # new logbiook entry
