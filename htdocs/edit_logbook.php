@@ -17,6 +17,9 @@
      $rvar_pilot = logbook_pilot($rvar_id);
    }
  }
+
+ $pilot_name = pilot_name($rvar_pilot);
+
  if(!is_mine()) {
    $error_title = "Up To No Good";
    $error_text = "I can't edit an entry if you don't own it!";
@@ -28,7 +31,7 @@
      $sql_response = lol_query($sql);
      $sql = "DELETE FROM flight_route WHERE logbook_id = $rvar_id";
      $sql_response = lol_query($sql);
-     $target = "display_logbook.php?pilot=$rvar_pilot";
+     $target = "display_logbook.php?pilot=$pilot_name";
      header("Location: $target");
      exit;
    }
@@ -96,7 +99,7 @@
    if($rvar_id > 0) {
      $target = "detail_logbook.php?id=$rvar_id";
    } else {
-     $target = "display_logbook.php?pilot=$rvar_pilot";
+     $target = "display_logbook.php?pilot=$pilot_name";
    }
    header("Location: $target");
    exit;
