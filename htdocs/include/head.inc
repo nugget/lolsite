@@ -3,8 +3,6 @@
 
   $utime_start = microtime();
 
-  print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-
   if(!isset($template)) $template = "default";
   if(!isset($keywords)) $keywords = "logbook online ityt.com";
   if(isset($rvar_pilot)) {
@@ -17,9 +15,6 @@
 
 
 ?>
-<!DOCTYPE html
-     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
  <head>
   <title><?php print $GLOBALS['server_tag'] . " lol :: " . $working_title; ?></title>
