@@ -22,9 +22,6 @@
     $airportdesc = "Top Airports";
     $airportlist = airport_search("");
   }
-  if(isset($airportlist)) {
-    $airportlist = array_slice($airportlist,0,10);
-  }
 
   include "include/head.inc";
 

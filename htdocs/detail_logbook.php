@@ -35,22 +35,8 @@
  <table>
 
 <?php
- $sql = "SELECT * FROM logbook WHERE id = $rvar_id";
- $sqlresponse = lol_query($sql);
-
- $num = '';
- while ($line = lol_fetch_array($sqlresponse)) {
-
-    $equipment = aircraft_equipment($line['ident']);
-
-   if($num==1) {
-              $class="row1";
-                $num = 0;
-        } else {
-                $class="row2";
-                $num++; 
-        }
-
+ $line = logbook_detail($rvar_id);
+ $equipment = aircraft_equipment($line['ident']);
 ?>
 
   <tr>
@@ -190,7 +176,6 @@
      $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
      print "<tr><th colspan=\"18\">Details</th></tr><tr><td colspan=\"18\">$line[detail]</td></tr>\n";
    }
- };
 
 ?>
  </table>

@@ -15,7 +15,7 @@ INSERT INTO settings VALUES ('mastersite','http://www.slacker.com/lol/');
 INSERT INTO settings VALUES ('publish','no');
 INSERT INTO settings VALUES ('subscribe','no');
 INSERT INTO settings VALUES ('open_registration','yes');
-INSERT INTO settings VALUES ('schema','2');
+INSERT INTO settings VALUES ('schema','4');
 INSERT INTO settings VALUES ('baseurl','/lol');
 INSERT INTO settings VALUES ('error_reporting','0');
 
@@ -158,7 +158,6 @@ CREATE TABLE logbook (
   pilot_id integer NOT NULL,
   date date NOT NULL default '1970-11-04',
   ident varchar(10) NOT NULL default '',
-  route varchar(127) NOT NULL default '',
   passengers varchar(127) NOT NULL default '',
   remarks text,
   landings_day integer NOT NULL default 0,
@@ -179,6 +178,12 @@ CREATE TABLE logbook (
   url text,
   cost decimal(5,2) NOT NULL default 0,
   PRIMARY KEY  (id)
+);
+
+CREATE TABLE flight_route (
+  logbook_id integer NOT NULL,
+  airport varchar(4) NOT NULL,
+  sequence integer NOT NULL
 );
 
 --

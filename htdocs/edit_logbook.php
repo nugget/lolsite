@@ -26,6 +26,8 @@
    if($rvar_id > 0) {
      $sql = "DELETE FROM logbook WHERE id = $rvar_id";
      $sql_response = lol_query($sql);
+     $sql = "DELETE FROM flight_route WHERE logbook_id = $rvar_id";
+     $sql_response = lol_query($sql);
      $target = "display_logbook.php?pilot=$rvar_pilot";
      header("Location: $target");
      exit;
@@ -49,7 +51,7 @@
    if($rvar_id == 0) {
      # new logbiook entry
      $sql = "INSERT INTO logbook (
-            pilot_id, date, ident, route, passengers,
+            pilot_id, date, ident, passengers,
             launch_type, alt_release, alt_maximum,
             remarks, landings_day, landings_night, instrument_approach,
             conditions_night,
@@ -57,17 +59,24 @@
             type_xc, type_cfi, type_dual, type_pic, type_sic,
             detail, url, cost
         ) VALUES " .
-        "($rvar_pilot,'$rvar_date','$rvar_ident','$rvar_route','$rvar_passengers'," .
+        "($rvar_pilot,'$rvar_date','$rvar_ident','$rvar_passengers'," .
         "'$rvar_launch_type',$rvar_alt_release,$rvar_alt_maximum," .
         "'$rvar_remarks',$rvar_landings_day,$rvar_landings_night,$rvar_instrument_approach," .
         "$rvar_conditions_night," .
         "$rvar_conditions_actualinstr,$rvar_conditions_simulinstr," .
         "$rvar_type_xc,$rvar_type_cfi,$rvar_type_dual,$rvar_type_pic,$rvar_type_sic," .
         "'$rvar_detail','$rvar_url',$rvar_cost)";
+     $sql_response = lol_query($sql);
+     // fetch the id of the logbook entry we just added
+     $entry = lol_fetch_array(lol_query("SELECT id FROM logbook WHERE pilot_id = $rvar_pilot ORDER BY id DESC"));
+     $hops = preg_split("/ +/", $rvar_route, -1, PREG_SPLIT_NO_EMPTY);
+     for ($i = 0; $i < sizeof($hops); $i++) {
+       lol_query("INSERT INTO flight_route (logbook_id, airport, sequence) VALUES ($entry[id], '$hops[$i]', $i)");
+     }
    } else {
      # editing an old entry
      $sql = "UPDATE logbook SET " .
-        "date='$rvar_date', ident='$rvar_ident', route='$rvar_route', passengers='$rvar_passengers', " .
+        "date='$rvar_date', ident='$rvar_ident', passengers='$rvar_passengers', " .
         "launch_type='$rvar_launch_type', alt_release=$rvar_alt_release, alt_maximum=$rvar_alt_maximum, " .
         "remarks='$rvar_remarks', landings_day=$rvar_landings_day, landings_night=$rvar_landings_night, " .
         "instrument_approach=$rvar_instrument_approach, " .
@@ -75,9 +84,14 @@
         "conditions_actualinstr=$rvar_conditions_actualinstr, conditions_simulinstr=$rvar_conditions_simulinstr, " .
         "type_xc=$rvar_type_xc, type_cfi=$rvar_type_cfi, type_dual=$rvar_type_dual, type_pic=$rvar_type_pic, " .
         "type_sic=$rvar_type_sic, detail='$rvar_detail', url='$rvar_url', cost=$rvar_cost WHERE id = $rvar_id";
+     $sql_response = lol_query($sql);
+     lol_query("DELETE FROM flight_route WHERE logbook_id = $rvar_id");
+     $hops = preg_split("/ +/", $rvar_route, -1, PREG_SPLIT_NO_EMPTY);
+     for ($i = 0; $i < sizeof($hops); $i++) {
+       lol_query("INSERT INTO flight_route (logbook_id, airport, sequence) VALUES ($rvar_id, '$hops[$i]', $i)");
+     }
    }
 
-   $sql_response = lol_query($sql);
 
    if($rvar_id > 0) {
      $target = "detail_logbook.php?id=$rvar_id";

@@ -454,6 +454,15 @@
   function logbook_detail($logid) {
     $sql = "select * from logbook where id = $logid";
     $line = lol_fetch_array(lol_query($sql));
+    if ($line) {
+      $line['route'] = '';
+      if (array_key_exists('id', $line)) {
+        $rq = lol_query("select * from flight_route where logbook_id = $line[id]");
+        while ($route = lol_fetch_array($rq)) {
+          $line['route'] .= $route['airport'] . ' ';
+        }
+      }
+    }
     return $line;
   }
 
@@ -491,26 +500,17 @@
   function airport_search($search) {
     global $rvar_pilot;
 
-    $buf = '';
-    $sql = "select distinct route from logbook";
+    $where = '';
     if(isset($rvar_pilot)) {
-      $sql = $sql . " where pilot_id = $rvar_pilot";
+      // this doesn't actually work yet
+      $where .= " where pilot_id = $rvar_pilot";
     }
+    $sql = "select airport, count(distinct logbook_id) as visits from flight_route group by airport order by visits desc limit 10";
     $sqlresponse = lol_query($sql);
     while($line = lol_fetch_array($sqlresponse)) {
-      $buf = $buf . " " . $line['route'];
+      $airports[] = $line['airport'];
     }
-    $buf = " " . strtoupper($buf) . " ";
-    $buf = preg_replace("/ LCL /"," ",$buf);
-    $buf=trim($buf);
-    if(strlen($buf)>0) {
-      $elements = explode(" ",$buf);
-      $elements = array_values(array_unique($elements));
-      usort($elements,"airport_cmp");
-      return $elements;
-    } else {
-      return;
-    }
+    return $airports;
   }
 
   function airport_detail($ident) {
@@ -535,12 +535,7 @@
     $sql = "select * from airports where ident = '$ident'";
     $detail = lol_fetch_array(lol_query($sql));
 
-    $sql = "select count(id) as visits, min(date) as first_visit, max(date) as last_visit from logbook";
-    if($GLOBALS['dbtype'] == 'mysql') {
-      $sql = $sql . " WHERE concat(' ',route,' ') like '% $ident %'";
-    } else {
-      $sql = $sql . " WHERE ' '||route||' ' like '% $ident %'";
-    }
+    $sql = "select count(distinct logbook_id) as visits, min(date) as first_visit, max(date) as last_visit from logbook, flight_route where logbook.id = flight_route.logbook_id and airport = '$ident'";
 
     if($pilot > 0) {
       $sql = $sql . " and pilot_id = $pilot";
@@ -576,36 +571,16 @@
   }
 
   function airport_visits($ident,$pilot) {
-    if($GLOBALS['dbtype'] == 'mysql') {
-      $routewhere = "concat(' ',route,' ')";
-    } else {
-      $routewhere = "' '||route||' '";
-    }
     if($pilot > 0) {
       $wherepilot = "pilot_id = $pilot and ";
     } else {
       $wherepilot = '';
     }
-    $sql = "select count(id) as visits from logbook where $wherepilot ($routewhere like '% $ident %' or $routewhere like '% k$ident %')";
+    $sql = "select count(distinct logbook_id) as visits from route_flight where $wherepilot";
     if($line = lol_fetch_array(lol_query($sql))) {
       return $line['visits'];
     }
     return 0;
-  }
-
-  function airport_cmp($a,$b) {
-    global $rvar_pilot;
-
-    $pilot = 0;
-    if(isset($rvar_pilot)) {
-      $pilot = $rvar_pilot;
-    }
-
-    $vala = airport_visits($a,$pilot);
-    $valb = airport_visits($b,$pilot);
-
-    if($vala == $valb) return 0;
-    return ($vala > $valb) ? -1 : 1;
   }
 
   function aircraft_search($search) {
