@@ -124,7 +124,7 @@
     while (strlen($f) > 1 && $f[strlen($f)-1] == '0') { # trim trailing zeros
         $f = substr($f, 0, strlen($f)-1);
     }
-    print "<td class=\"decimal\">$f</td>";
+    print "<td class=\"decimal\" style=\"text-align: left\">$f</td>";
   }
 
   function hobbs($hours) {
@@ -304,7 +304,7 @@
   }
 
   function pilot_solostats($pilot_id) {
-    $sql = "select id, date from logbook where pilot_id = $pilot_id and conditions_actualinst > 0 order by date limit 1";
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and conditions_actualinstr > 0 order by date limit 1";
     $firstsolo = lol_fetch_array(lol_query($sql));
     if($firstsolo) {
       $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < '$firstsolo[date]' and id <> $firstsolo[id]";
@@ -369,7 +369,7 @@
   }
 
   function pilot_certlist($pilot_id) {
-    $sql = "select distinct name from certifications where pilot_id = $pilot_id and issued > 0 order by issued";
+    $sql = "select distinct name, issued from certifications where pilot_id = $pilot_id and issued > 0 order by issued";
     if($sqlresponse = lol_query($sql)) {
       $list = array();
       while($line = lol_fetch_array($sqlresponse)) {
