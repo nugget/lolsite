@@ -28,7 +28,8 @@
 <?php
 
  $class = '';
- foreach(airport_search("") as $ident) {
+ foreach(airport_search("") as $abuf) {
+  $ident = $abuf['airport'];
 
   if( $class != "odd" ) {
     $class = "odd";

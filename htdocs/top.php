@@ -25,10 +25,11 @@
   </pilots>
   <airports>
     <?php
-      $airportlist = airport_search("", $n);
+      $airportlist = airport_search("", $n, 90);
       for ($i = 0; $i < count($airportlist); $i++) {
-        $buf = airport_detail($airportlist[$i]);
-        print "<airport ident=\"$airportlist[$i]\" visits=\"$buf[visits]\" />\n";
+        $buf1 = $airportlist[$i];
+        $buf2 = airport_detail($buf1['airport']);
+        print "<airport ident=\"" . $buf1['airport'] . "\" recent=\"" . $buf1['visits'] . "\" visits=\"" . $buf2['visits'] . "\" fullname=\"" . $buf2['fullname'] . "\" />\n";
       }
     ?>
   </airports>

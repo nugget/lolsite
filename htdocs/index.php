@@ -17,8 +17,8 @@
     $airportdesc = "Airports Matching [$rvar_asearch]";
     $airportlist = airport_search($rvar_asearch, 10);
   } else {
-    $airportdesc = "Top Airports";
-    $airportlist = airport_search("", 10);
+    $airportdesc = "Most Active Airports";
+    $airportlist = airport_search("", 10, 90);
   }
 
   include "include/head.inc";
@@ -55,16 +55,18 @@
     <h3><?php print $airportdesc; ?></h3>
     <?php
       if(isset($airportlist)) {
-        print "<table>\n<tr><th>Airport</th><th>Visits</th></tr>";
+        print "<table>\n<tr><th>Airport</th><th>Total</th><th>Recent</th></tr>";
         for($i=0; $i<count($airportlist); $i++) {
-          $buf2 = airport_detail($airportlist[$i]);
-          $detaillink = "airport.php?ident=$airportlist[$i]";
+          $buf1 = $airportlist[$i];
+          $buf2 = airport_detail($buf1['airport']);
+          $detaillink = "airport.php?ident=" . $buf1['airport'];
           ?>
           <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
-           <td><?php print airport_name($airportlist[$i]); ?></td>
-           <td><?php print $buf2['visits']; ?></td>
+           <td><?php print airport_name($buf1['airport']); ?></td>
+           <td class="integer"><?php print $buf2['visits']; ?></td>
+           <td class="integer"><?php print $buf1['visits']; ?></td>
           </tr>
           <?php
         }

@@ -568,21 +568,26 @@
     }
   }
 
-  function airport_search($search, $count = 0) {
+  function airport_search($search, $count = 0, $days = 0) {
     global $rvar_pilot;
 
     $where = '';
     if(isset($rvar_pilot)) {
       $where .= " and pilot_id = $rvar_pilot";
     }
+    if($days > 0) {
+      $first_date = strftime("%Y-%m-%d",time()-($days*86400));
+      $where .= " and logbook.date >= '$first_date'";
+    }
     $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route where logbook.id = flight_route.logbook_id and airport <> 'Lcl' $where group by airport order by visits desc";
     if ($count > 0) {
       $sql .= " limit $count";
     }
+
     $sqlresponse = lol_query($sql);
     $airports = array();
     while($line = lol_fetch_array($sqlresponse)) {
-      $airports[] = $line['airport'];
+      $airports[] = $line;
     }
     return $airports;
   }
