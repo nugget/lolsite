@@ -576,7 +576,7 @@
       $where .= " and airports.fullname ilike '%$search%'";
     }
     if(isset($rvar_pilot)) {
-      $where .= " and pilot_id = $rvar_pilot";
+      $where .= " and logbook.pilot_id = $rvar_pilot";
     }
     if($days > 0) {
       $first_date = strftime("%Y-%m-%d",time()-($days*86400));
