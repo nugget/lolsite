@@ -1,5 +1,5 @@
 <?php
- $title = "Logbook Entries";
+ $title = "logbook";
 
  include "init.inc";
  include "head.inc";

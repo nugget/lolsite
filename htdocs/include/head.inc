@@ -7,6 +7,14 @@
 
   if(!isset($template)) $template = "default";
   if(!isset($keywords)) $keywords = "logbook online ityt.com";
+  if(isset($rvar_pilot)) {
+    $pilot_name = pilot_name($rvar_pilot);
+    $working_title = $pilot_name . "'s " . $title;
+  } else {
+    $pilot_name = '';
+    $working_title = $title;
+  }
+
 
 ?>
 <!DOCTYPE html
@@ -14,7 +22,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
  <head>
-  <title><?php print $GLOBALS['server_tag'] . " lol :: $title" ?></title>
+  <title><?php print $GLOBALS['server_tag'] . " lol :: " . $working_title; ?></title>
   <meta http-equiv="CVS" content="<?php print $cvs ?>" />
   <meta http-equiv="pragma" content="no-cache" />
   <meta name="keywords" content="<?php print $keywords ?>" />
@@ -27,7 +35,7 @@
  <body>
    <div class="headerleft">
      <p class="header">
-       <strong>lol</strong>
+       <strong><?php print $GLOBALS['server_tag']; ?> lol</strong>
        <br />
        logbook online
      </p>
@@ -35,13 +43,13 @@
    <div class="headerright">
      <?php
        if(isset($rvar_pilot)) {
-         print "<p>pilot is " . $rvar_pilot . "</p>";
+         print hobbs(pilot_hours($rvar_pilot));
        }
      ?>
    </div>
 
 
-   <h1><?php print $title ?></h1>
+   <h1><?php print $working_title ?></h1>
    <div id="menu">
      <a href=".">Main</a>
      <?php if(is_user()) print "<a href=\"logout.php\">Logout</a>"; ?>
