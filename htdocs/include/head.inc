@@ -41,10 +41,4 @@
    <h1><?php print $title ?></h1>
    <div id="menu">
      <a href=".">Main</a>
-     <a href="display_logbook.php">Logbook</a>
-     <a href="display_aircraft.php">Aircraft</a>
-     <a href="display_airports.php">Airports</a>
-     <a href="display_pax.php">Passengers</a>
-     <a href="statistics.php">Statistics</a>
-     <a href="otherusers.php">Other Users</a>
    </div>

@@ -16,7 +16,7 @@ print "1.  Loading configuration\n";
 
 print "2.  Verifying settings: ";
 if(!sanity()) {
-    print "FAILED\n\n";
+    print "\n";
     exit();
 } else {
     print "OK.\n";
@@ -66,6 +66,9 @@ sub create_db() {
         or return $FAIL;
 
     run_sql($dbh,"schema.mysql");
+    $dbh->do("INSERT INTO settings VALUES ('server_tag','$config{server_tag}')");
+    $dbh->do("INSERT INTO settings VALUES ('admin','$config{admin}')");
+    $dbh->do("INSERT INTO settings VALUES ('admin_email','$config{admin_email}')");
     $dbh->disconnect();
     return $SUCCESS;
 }
@@ -118,7 +121,11 @@ sub sanity() {
     my $r = $SUCCESS;
 
     if( $config{do_install} =~ /no/ ) {
-      print " x install.conf not customized.\n";  $r=$FAIL;
+      print "install.conf not customized.\n";  $r=$FAIL;
+    }
+
+    if( $config{server_tag} =~ / / ) {
+      print "server_tag cannot contain whitespace.\n";  $r=$FAIL;
     }
 
     return $r;
@@ -140,6 +147,7 @@ sub load_config() {
 
         if($buf =~ /^\s*([^#][^\s]+)\s+"?([^"]+)"?(\s+)?$/) {
             my ($key, $value) = ($1,$2);
+            chomp $key; chomp $value;
             debug("Loading key [$key] with value [$value]");
             $tmpconfig{$key} = $value;
         }

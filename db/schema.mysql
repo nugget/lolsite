@@ -35,6 +35,7 @@ CREATE TABLE peers (
 CREATE TABLE pilot (
   id mediumint(8) NOT NULL auto_increment,
   username varchar(20) NOT NULL,
+  server_tag varchar(20),
   password varchar(20) NOT NULL,
   displayname varchar(127),
   publish_local tinyint(1) NOT NULL default 1,
