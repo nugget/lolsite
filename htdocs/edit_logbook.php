@@ -24,6 +24,8 @@
  }
  if(isset($rvar_route)) {
    # I see data, we need to insert/update as required.
+   $rvar_alt_release = sprintf("%0d",$rvar_alt_release);
+   $rvar_alt_maximum = sprintf("%0d",$rvar_alt_maximum);
    $rvar_landings_day = sprintf("%0d",$rvar_landings_day);
    $rvar_landings_night = sprintf("%0d",$rvar_landings_night);
    $rvar_instrument_approach = sprintf("%0d",$rvar_instrument_approach);
@@ -38,8 +40,17 @@
    $rvar_cost = sprintf("%04.2f",$rvar_cost);
    if($rvar_id == 0) {
      # new logbiook entry
-     $sql = "INSERT INTO logbook VALUES " .
-        "(default,$rvar_pilot,'$rvar_date','$rvar_ident','$rvar_route','$rvar_passengers'," .
+     $sql = "INSERT INTO logbook (
+            pilot_id, date, ident, route, passengers,
+            launch_type, alt_release, alt_maximum,
+            remarks, landings_day, landings_night, instrument_approach,
+            conditions_night,
+            conditions_actualinstr, conditions_simulinstr,
+            type_xc, type_cfi, type_dual, type_pic, type_sic,
+            detail, url, cost
+        ) VALUES " .
+        "($rvar_pilot,'$rvar_date','$rvar_ident','$rvar_route','$rvar_passengers'," .
+        "'$rvar_launch_type',$rvar_alt_release,$rvar_alt_maximum," .
         "'$rvar_remarks',$rvar_landings_day,$rvar_landings_night,$rvar_instrument_approach," .
         "$rvar_conditions_night," .
         "$rvar_conditions_actualinstr,$rvar_conditions_simulinstr," .
@@ -49,6 +60,7 @@
      # editing an old entry
      $sql = "UPDATE logbook SET " .
         "date='$rvar_date', ident='$rvar_ident', route='$rvar_route', passengers='$rvar_passengers', " .
+        "launch_type='$rvar_launch_type', alt_release=$rvar_alt_release, alt_maximum=$rvar_alt_maximum, " .
         "remarks='$rvar_remarks', landings_day=$rvar_landings_day, landings_night=$rvar_landings_night, " .
         "instrument_approach=$rvar_instrument_approach, " .
         "conditions_night=$rvar_conditions_night, " .
@@ -86,11 +98,15 @@
    <th rowspan="2">Date</th>
    <th rowspan="2">Aircraft</th>
    <th rowspan="2">Route of Flight</th>
+   <th rowspan="2">Glider Launch</th>
+   <th colspan="2">Altitude</th>
    <th colspan="2">Landings</th>
    <th rowspan="2">Inst<br />Appr</th>
   </tr>
 
   <tr>
+   <th>Release</th>
+   <th>Maximum</th>
    <th>Day</th>
    <th>Night</th>
   </tr>
@@ -99,6 +115,13 @@
    <td nowrap="nowrap"><input type="text" name="date" size="11" value="<?php if ($line['date']) echo $line['date']; else echo date("Y-m-d"); ; ?>"></td>
    <td><input type="text" name="ident" size="8" value="<?php print $line['ident']; ?>"></td>
    <td><input type="text" name="route" size="20" value="<?php print $line['route']; ?>"></td>
+   <td>
+        <input type="radio" name="launch_type" value=""<?php if ($line['launch_type'] != 'A' and $line['launch_type'] != 'G') print ' checked="checked"'; ?> />N/A
+        <input type="radio" name="launch_type" value="A"<?php if ($line['launch_type'] == 'A') print ' checked="checked"'; ?> />Air
+        <input type="radio" name="launch_type" value="G"<?php if ($line['launch_type'] == 'G') print ' checked="checked"'; ?> />Ground
+    </td>
+    <td><input type="text" name="alt_release" size="5" value="<?php echo $line['alt_release']; ?>"></td>
+    <td><input type="text" name="alt_maximum" size="5" value="<?php echo $line['alt_maximum']; ?>"></td>
 
    <td class="integer"><input type="text" name="landings_day" size="3" value="<?php echo $line['landings_day']; ?>"></td>
    <td class="integer"><input type="text" name="landings_night" size="3" value="<?php echo $line['landings_night']; ?>"></td>
