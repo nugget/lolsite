@@ -13,6 +13,7 @@
  include "include/head.inc";
 
  if(is_user()) {
+   $rvar_pilot = is_user();
    if($line['record_exists'] == 0) {
      if(is_mine()) {
        ?>
