@@ -8,6 +8,10 @@
   ini_set('register_globals',0);
   
   // test that we can get the base bootstrap configuration information
+  if(!include "constants.inc") {
+    print "<html><head><title>Error</title><body><h1>unable to load constants.inc</h1></body></html>";
+    exit;
+  }
   if(!include "config.inc") {
     print "<html><head><title>Error</title><body><h1>unable to load config.inc</h1></body></html>";
     exit;

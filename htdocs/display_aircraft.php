@@ -13,7 +13,11 @@
  if(is_mine()) {
    ?>
    <div id="buttonbar">
-    <form action="edit_aircraft.php"><input type="hidden" value="<?php print 0; ?>" name="id"><input type="submit" value="Add New Entry"></form>
+    <form action="edit_aircraft.php">
+     <input type="hidden" value="0" name="id">
+     <input type="hidden" value="<?php print $rvar_pilot; ?>" name="pilot">
+     <input type="submit" value="Add Entry">
+    </form>
    </div>
    <?php
  }
@@ -73,7 +77,7 @@
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
    <td><?php print $line['ident']; ?></td>
    <td><?php print $line['makemodel']; ?></td>
-   <td><?php print $line['aircraft_class']; ?></td>
+   <td><?php print class_lookup($line['aircraft_class']); ?></td>
    <td><?php print $line['home_field']; ?></td>
    <td><?php print checkmark($line['complex']); ?></td>
    <td><?php print checkmark($line['high_perf']); ?></td>

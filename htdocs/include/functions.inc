@@ -98,11 +98,6 @@
   }
 
   function hobbs($hours) {
-
-    if(!array_key_exists('hobbsfmt',$GLOBALS)) {
-      $GLOBALS['hobbsfmt'] = "%04.1f";
-    }
-
     $buf = "<p class=\"gaugetitle\">HOBBS METER</p><p class=\"gauge\">";
 
     $hoursstr = sprintf($GLOBALS['hobbsfmt'],$hours);
@@ -198,12 +193,14 @@
   }
 
   function class_lookup($class) {
-    $classtable = array("null","ASEL","ASES","AMES","AMEL","Sim");
+    if(!$class) {
+      return "????";
+    }
     if($class = (int) $class) {
-      return $classtable[$class];
+      return $GLOBALS['classcode'][$class];
     } else {
-      for($i=0; $i<count($classtable); $i++) {
-        if($classtable[$i] == $class) {
+      for($i=0; $i<count($GLOBALS['classcode']); $i++) {
+        if($$GLOBALS['classcode'][$i] == $class) {
           return $i;
         }
       }
@@ -211,17 +208,10 @@
   }
 
   function class_longname($class) {
-    $classtable = array("null",
-                        "Airplane, Single Engine Land",
-                        "Airplane, Single Engine Sea",
-                        "Airplane, Multi Engine Land",
-                        "Airplane, Multi Engine Land",
-                        "Simulator");
     if($class = (int) $class) {
-      return $classtable[$class];
+      return $GLOBALS['classname'][$class];
     }
   }
-  
 
   function class_time($class,$logid) {
     $sql = "select aircraft_class from aircraft, logbook where aircraft.ident = logbook.ident and aircraft.pilot_id = logbook.pilot_id";
@@ -390,11 +380,14 @@
   }
 
   function aircraft_detail($ident,$pilot) {
+    if(!isset($pilot)) {
+      $pilot=0;
+    }
     $sql = "select * from aircraft where ident = '$ident' and pilot_id = $pilot";
     $sqlresponse = mysql_query($sql);
     if($buf = mysql_fetch_array($sqlresponse)) {
       $detail = $buf;
-      $detail['classcode'] = class_longname($detail['aircraft_class']);
+      $detail['classcode'] = class_lookup($detail['aircraft_class']);
       $detail['classname'] = class_longname($detail['aircraft_class']);
     } else {
       $detail['ident'] = $ident;
@@ -405,6 +398,8 @@
       $detail['high_perf'] = '';
       $detail['tailwheel'] = '';
       $detail['detail'] = '';
+      $detail['image_url'] = '';
+      $detail['link_url'] = '';
       $detail['classcode'] = '????';
       $detail['classname'] = 'Unknown';
     }
@@ -494,12 +489,6 @@
   }
 
   function pax_status($alias,$pilot) {
-    $GLOBALS['statusgoals']= array (
-                         "Silver:30:30",
-                         "Gold:60:60",
-                         "Platinum:90:90"
-                        );
-
     $thisyear = date("Y");
     $lastyear = date("Y") - 1;
     $status = "&nbsp;";
