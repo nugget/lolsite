@@ -13,17 +13,20 @@ CREATE TABLE settings (
 
 INSERT INTO settings VALUES ('mastersite','http://www.slacker.com/lol/');
 INSERT INTO settings VALUES ('public','no');
+INSERT INTO settings VALUES ('open_registration','yes');
+INSERT INTO settings VALUES ('schema','1');
 
 #
 # peers - listing of peer servers
 #
 CREATE TABLE peers (
   tag varchar(20) NOT NULL,
-  hostname varchar(127) NOT NULL,
+  url varchar(127) NOT NULL,
   last_poll date NOT NULL default '1970-11-04',
+  users int NOT NULL default 0,
   PRIMARY KEY (tag)
 ) TYPE=MyISAM;
-  
+
 #
 # pilot - stores all pilot user accounts
 #
@@ -34,8 +37,11 @@ CREATE TABLE pilot (
   displayname varchar(127),
   publish_local tinyint(1) NOT NULL default 1,
   publish_global tinyint(1) NOT NULL default 1,
-  email varchar(127)
+  admin tinyint(1) NOT NULL default 1,
+  email varchar(127),
   dob date,
+  added timestamp NOT NULL default 'now()',
+  last_login timestamp,
   PRIMARY KEY (id)
 ) TYPE=MyISAM;
 
@@ -57,7 +63,6 @@ CREATE TABLE certifications (
 CREATE TABLE ratings (
   id mediumint(8) NOT NULL auto_increment,
   pilot_id mediumint(8) NOT NULL,
-  name varchar(100) NOT NULL default '',
   name varchar(100) NOT NULL default '',
   issued mediumint(1),
   PRIMARY KEY  (id)

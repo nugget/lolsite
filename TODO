@@ -1,0 +1,32 @@
+$Id$
+
+- Configuration to select which classes and types you're interested in or
+  perhaps detect that based on your ratings & certs 
+
+- Ratings
+
+- Certifications
+
+- Have configuration item asking for date of birth so that medical
+  calc can see if you are >= 40 years of age when your last medical
+  certificate was issued.
+
+- Little modules that people can use on their web sites to have
+  a few stats in an "about me" page or something
+
+- feature in statistics page or related page of "my flying history"
+  that did some sort of stats based on significant event snapshots.
+  "When I solo'd, I had foo hours, etc..." like logbook totals.
+
+- filters on logbook display to restrict to matching flights.
+  (robust search?)
+
+- Total flight time per aircraft type (paul).
+
+- Totals broken down to per-month and per-year (paul).
+
+- Column totals on the flight detail page (paul).
+
+- Default today's date in new logbook entries (dbaker)
+
+- Drop-down fields of recent airports and aircraft for new logbook entries (dbaker)

@@ -16,6 +16,7 @@ if(!sanity()) {
 }
 
 create_db() if($config{ins_createdb} =~ /y/i);
+apache_conf();
 
 sub create_db() {
     #
@@ -33,9 +34,54 @@ sub create_db() {
     $dbh = DBI->connect("DBI:mysql:host=$config{sqlhost};port=$config{sqlport};database=$config{database}",$config{loluser},$config{lolpasswd})
         or die "Failed to create and connect to database!\n";
 
-    my $sql = `cat $dbdir/schema.mysql`;
-    $dbh->do($sql);
+    run_sql($dbh,"schema.mysql");
+    $dbh->do("INSERT INTO settings VALUES ('lolversion','$config{lolversion}')");
     $dbh->disconnect();
+    return;
+}
+
+sub apache_conf() {
+    my $pwd = `pwd`;
+
+print "\nSuggested Apache Configuration:
+
+Place the following suggested configuration in your apache httpd.conf
+file to enable /lol/ on your webserver:
+
+  Alias /lol/ \"$pwd/\"
+
+  <Directory \"$pwd/\">
+      Options None
+      AllowOverride None
+      Order allow,deny
+      Allow from all
+  </Directory>
+";
+}
+
+sub run_sql() {
+    my ($dbh,$filename) = @_;
+
+    my $sql;
+
+    print "  " .$filename;
+    open SQL, "$dbdir/$filename";
+    while(<SQL>) {
+        next if($_ =~ /^#/);
+        $sql .= $_;
+        if($sql =~ s/;//) {
+            $sql =~ s/\n//g;
+            if($dbh->do($sql)) {
+                print ".";
+            } else {
+                print "\n[$sql]\n";
+            }
+            $sql = '';
+        }
+    }
+    close SQL;
+    print "\n";
+
     return;
 }
 
