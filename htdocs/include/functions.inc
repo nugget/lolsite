@@ -325,7 +325,7 @@
   }
 
   function pilot_solostats($pilot_id) {
-    $sql = "select id, date from logbook where pilot_id = $pilot_id and conditions_actualinstr > 0 order by date limit 1";
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and type_pic > 0 order by date limit 1";
     $firstsolo = lol_fetch_array(lol_query($sql));
     if($firstsolo) {
       $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < '$firstsolo[date]' and id <> $firstsolo[id]";
@@ -335,7 +335,7 @@
   }
 
   function pilot_ifrstats($pilot_id) {
-    $sql = "select id, date from logbook where pilot_id = $pilot_id and type_pic > 0 order by date limit 1";
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and conditions_actualinstr > 0 order by date limit 1";
     $first = lol_fetch_array(lol_query($sql));
     if($first) {
       $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < '$first[date]' and id <> $first[id]";
