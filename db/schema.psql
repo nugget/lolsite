@@ -1,0 +1,161 @@
+--
+-- $Id$
+--
+
+--
+-- settings - stores all server settings and localizations
+--
+CREATE TABLE settings (
+  setting varchar(20) NOT NULL,
+  value varchar(255) NOT NULL,
+  PRIMARY KEY (setting)
+);
+
+INSERT INTO settings VALUES ('mastersite','http://www.slacker.com/lol/');
+INSERT INTO settings VALUES ('public','no');
+INSERT INTO settings VALUES ('open_registration','yes');
+INSERT INTO settings VALUES ('schema','1');
+INSERT INTO settings VALUES ('baseurl','/lol');
+INSERT INTO settings VALUES ('error_reporting','0');
+
+--
+-- peers - listing of peer servers
+--
+CREATE TABLE peers (
+  tag varchar(20) NOT NULL,
+  url varchar(127) NOT NULL,
+  last_poll date NOT NULL default '1970-11-04',
+  users int NOT NULL default 0,
+  PRIMARY KEY (tag)
+);
+
+--
+-- pilot - stores all pilot user accounts
+--
+CREATE TABLE pilot (
+  id serial NOT NULL,
+  username varchar(20) NOT NULL,
+  server_tag varchar(20),
+  password varchar(32) NOT NULL,
+  displayname varchar(127),
+  publish_local boolean NOT NULL default true,
+  publish_global boolean NOT NULL default true,
+  admin boolean NOT NULL default false,
+  email varchar(127),
+  dob date,
+  added timestamp NOT NULL default current_timestamp,
+  last_login timestamp,
+  PRIMARY KEY (id)
+);
+
+--
+-- Table structure for table 'certifications'
+--
+CREATE TABLE certifications (
+  id serial NOT NULL,
+  pilot_id integer NOT NULL,
+  name varchar(100) NOT NULL default '',
+  issued date default NULL,
+  details varchar(100),
+  PRIMARY KEY  (id)
+);
+
+--
+-- Table structure for table 'ratings'
+--
+CREATE TABLE ratings (
+  id serial NOT NULL,
+  pilot_id integer NOT NULL,
+  name varchar(100) NOT NULL default '',
+  issued integer,
+  PRIMARY KEY  (id)
+);
+
+--
+-- Table structure for 'aircraft'
+--
+CREATE TABLE aircraft (
+  id serial NOT NULL,
+  ident varchar(10) NOT NULL,
+  pilot_id integer NOT NULL,
+  makemodel varchar(100) NOT NULL,
+  aircraft_class integer NOT NULL,
+  complex boolean NOT NULL default false,
+  high_perf boolean NOT NULL default false,
+  tailwheel boolean NOT NULL default false,
+  home_field varchar(4),
+  image_url varchar(127),
+  link_url varchar(127),
+  detail text,
+  PRIMARY KEY  (id)
+);
+
+--
+-- Table structure for 'passengers'
+--
+CREATE TABLE passengers (
+  id serial NOT NULL,
+  alias varchar(15) NOT NULL,
+  pilot_id integer NOT NULL,
+  fullname varchar(127),
+  image_url varchar(127),
+  link_url varchar(127),
+  detail text,
+  PRIMARY KEY (id)
+);
+
+--
+-- Table structure for 'airports'
+--
+CREATE TABLE airports (
+  ident varchar(4) NOT NULL,
+  pilot_id integer NOT NULL,
+  fullname varchar(127) NOT NULL,
+  city varchar(127) NOT NULL,
+  timezone varchar(10),
+  tower boolean NOT NULL default false,
+  image_url varchar(127),
+  link_url varchar(127),
+  detail text,
+  PRIMARY KEY (ident)
+);
+
+--
+-- Table structure for table 'logbook'
+--
+CREATE TABLE logbook (
+  id serial NOT NULL,
+  pilot_id integer NOT NULL,
+  date date NOT NULL default '1970-11-04',
+  ident varchar(10) NOT NULL default '',
+  route varchar(127) NOT NULL default '',
+  passengers varchar(127) NOT NULL default '',
+  remarks text,
+  landings_day integer NOT NULL default 0,
+  landings_night integer NOT NULL default 0,
+  instrument_approach integer NOT NULL default 0,
+  conditions_night decimal(3,1) NOT NULL default 0,
+  conditions_actualinstr decimal(3,1) NOT NULL default 0,
+  conditions_simulinstr decimal(3,1) NOT NULL default 0,
+  type_xc decimal(3,1) NOT NULL default 0,
+  type_cfi decimal(3,1) NOT NULL default 0,
+  type_dual decimal(3,1) NOT NULL default 0,
+  type_pic decimal(3,1) NOT NULL default 0,
+  type_sic decimal(3,1) NOT NULL default 0,
+  detail text,
+  url text,
+  cost decimal(5,2) NOT NULL default 0,
+  PRIMARY KEY  (id)
+);
+
+--
+-- Table structure for table 'medical'
+--
+CREATE TABLE medical (
+  id serial NOT NULL,
+  pilot_id integer NOT NULL,
+  date date NOT NULL default '1970-11-04',
+  class integer NOT NULL default '0',
+  name varchar(20) NOT NULL default '',
+  PRIMARY KEY  (id)
+);
