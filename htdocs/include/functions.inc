@@ -242,6 +242,12 @@
     }
   }
 
+  function logbook_detail($logid) {
+    $sql = "select * from logbook where id = $logid";
+    $line = mysql_fetch_array(mysql_query($sql));
+    return $line;
+  }
+     
   function aircraft_equipment($ident) {
     global $rvar_pilot;
     if(isset($rvar_pilot)) {
@@ -366,11 +372,22 @@
     }
   }
 
-  function aircraft_detail($id) {
-    $sql = "select * from aircraft where id = $id";
-    $detail = mysql_fetch_array(mysql_query($sql));
-
-    $sql = "SELECT count(id) as flights, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE ident = '$detail[ident]' and pilot_id = $detail[pilot_id]";
+  function aircraft_detail($ident,$pilot) {
+    $sql = "select * from aircraft where ident = '$ident' and pilot_id = $pilot";
+    $sqlresponse = mysql_query($sql);
+    if($buf = mysql_fetch_array($sqlresponse)) {
+      $detail = $buf;
+    } else {
+      $detail['ident'] = $ident;
+      $detail['makemodel'] = '';
+      $detail['aircraft_class'] = '';
+      $detail['home_field'] = '';
+      $detail['complex'] = '';
+      $detail['high_perf'] = '';
+      $detail['tailwheel'] = '';
+      $detail['detail'] = '';
+    }
+    $sql = "SELECT count(id) as flights, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE ident = '$detail[ident]' and pilot_id = $pilot";
     $totals = mysql_fetch_array(mysql_query($sql));
     return array_merge($detail,$totals);
   }

@@ -20,7 +20,7 @@
  if(is_mine()) {
    ?>
    <div id="buttonbar">
-    <form action="edit_entry.php"><input type="hidden" value="<?php print $rvar_id; ?>" name="id"><input type="submit" value="Edit Entry"></form>
+    <form action="edit_logbook.php"><input type="hidden" value="<?php print $rvar_id; ?>" name="id"><input type="submit" value="Edit Entry"></form>
    </div>
    <?php
  }
@@ -116,7 +116,7 @@
   </table><table>
   <tr>
    <th colspan="6">Conditions of Flight</th>
-   <th colspan="8">Type of Piloting Time</th>
+   <th colspan="10">Type of Piloting Time</th>
    <th rowspan="2">Remarks, Procedures, Maneuvers</th>
    <th rowspan="2" colspan="2">Cost</th>
   </tr>
@@ -127,6 +127,7 @@
    <th colspan="2">Simul Instr</th>
    <th colspan="2">Dual</th>
    <th colspan="2">Solo/PIC</th>
+   <th colspan="2">SIC</th>
    <th colspan="2">X/C</th>
    <th colspan="2">CFI</th>
   </tr>
@@ -137,6 +138,7 @@
    <?php split_decimal($line['conditions_simulinstr']); ?>
    <?php split_decimal($line['type_dual']); ?>
    <?php split_decimal($line['type_pic']); ?>
+   <?php split_decimal($line['type_sic']); ?>
    <?php split_decimal($line['type_xc']); ?>
    <?php split_decimal($line['type_cfi']); ?>
    <td width="100%"><?php echo $line['remarks']; ?></td>

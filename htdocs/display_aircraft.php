@@ -47,8 +47,7 @@
 
   $class = '';
   for($i=0; $i<count($aircraftlist); $i++) { 
-    $id = aircraft_id($aircraftlist[$i],$rvar_pilot);
-    $line = aircraft_detail($id);
+    $line = aircraft_detail($aircraftlist[$i],$rvar_pilot);
 
     if( $class != "odd" ) {
       $class = "odd";
@@ -56,12 +55,16 @@
       $class = "even";
     }
 
-    $detaillink="detail_aircraft.php?id=" . $id;
-
-    if($line['image_url']) {
-      $features = "Image";
+    if(isset($line['id'])) {
+      $detaillink="detail_aircraft.php?id=" . $line['id'];
     } else {
-      $features = "&nbsp;";
+      $detaillink="";
+    }
+    $features = "&nbsp;";
+    if(isset($line['image_url'])) {
+      if($line['image_url']) {
+        $features = "Image";
+      }
     }
 ?>
 
