@@ -210,7 +210,7 @@
   }
 
   function class_time($class,$logid) {
-    $sql = "select aircraft_class from aircraft, logbook where aircraft.ident = logbook.ident and aircraft.pilot_id = logbook.pilot_id";
+    $sql = "select aircraft_class from aircraft, logbook where logbook.id = $logid and aircraft.ident = logbook.ident and aircraft.pilot_id = logbook.pilot_id";
     $buf = pg_fetch_array(pg_query($sql));
     $aircraft_class = (int) $buf['aircraft_class'];
     $hours = logbook_hours($logid);
