@@ -56,7 +56,7 @@
     $features = "&nbsp;";
     if(isset($line['image_url'])) {
       if($line['image_url']) {
-        $features = "Image";
+        $features = "<img src=\"images/image.gif\" height=\"15\" width=\"64\"/>";
       }
     }
 

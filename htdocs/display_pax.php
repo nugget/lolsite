@@ -57,7 +57,7 @@
 
   $features = "&nbsp;";
   if($line['image_url']) {
-    $features = "Image";
+    $features = "<img src=\"images/image.gif\" height=\"15\" width=\"64\"/>";
   }
   $name = $alias;
   if($line['fullname']) {
