@@ -124,7 +124,7 @@
     while (strlen($f) > 1 && $f[strlen($f)-1] == '0') { # trim trailing zeros
         $f = substr($f, 0, strlen($f)-1);
     }
-    print "<td class=\"decimal\" style=\"text-align: left\">$f</td>";
+    print "<td class=\"decimal\">$f</td>";
   }
 
   function hobbs($hours) {

@@ -53,7 +53,7 @@ td.integer {
 }
 td.decimal {
   border-left: 1px dashed #777777;
-  text-align: right;
+  text-align: left;
   width: 1px;
 }
 div.headerright {
