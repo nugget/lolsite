@@ -23,7 +23,6 @@
     $airportlist = airport_search("");
   }
   if(isset($airportlist)) {
-    usort($airportlist,"airport_cmp");
     $airportlist = array_slice($airportlist,0,10);
   }
 
