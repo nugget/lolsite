@@ -615,6 +615,12 @@
       $pilot = $rvar_pilot;
     }
 
+    $filler = array(); 
+    $detail = array(); 
+    $totals = array(); 
+    $recs = array(); 
+
+
     $filler['pilot_id'] = $pilot;
     $filler['ident'] = $ident;
     $filler['image_url'] = '';
@@ -651,7 +657,8 @@
       }
     }
 
-   
+    $totals['moo'] = 'aroo';
+    $detail['moo'] = 'aroo';
     return array_merge($filler,$detail,$totals, $recs);
   }
 
