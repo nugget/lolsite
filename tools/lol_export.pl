@@ -111,7 +111,7 @@ sub dump_aircraft {
         my $t = $db->prepare("select * from aircraft_comments where aircraft_ident = ?");
         $t->execute($$a{ident});
         while (my $c = $t->fetchrow_hashref) {
-            print "      <comment pilot=\"$pilot{$$c{pilot_id}}\" date=\"$$c{date}\" global=\"$$c{global}\" private=\"$$c{private}\">$$c{detail}</comment>\n";
+            print "      <comment pilot=\"$pilot{$$c{pilot_id}}\" date=\"$$c{date}\" global=\"$$c{global}\" private=\"$$c{private}\">".escape($$c{detail})."</comment>\n";
         }
         print "    </aircraft>\n";
     }
@@ -131,7 +131,7 @@ sub dump_airports {
         my $t = $db->prepare("select * from airport_comments where airport_ident = ?");
         $t->execute($$a{ident});
         while (my $c = $t->fetchrow_hashref) {
-            print "      <comment pilot=\"$pilot{$$c{pilot_id}}\" date=\"$$c{date}\" global=\"$$c{global}\" private=\"$$c{private}\">$$c{detail}</comment>\n";
+            print "      <comment pilot=\"$pilot{$$c{pilot_id}}\" date=\"$$c{date}\" global=\"$$c{global}\" private=\"$$c{private}\">".escape($$c{detail})."</comment>\n";
         }
         print "    </airport>\n";
     }
