@@ -1,0 +1,78 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+require DBI::DBD;
+require DBD::mysql;
+
+my $dbdir = "./db";
+
+my %config = load_config("install.conf");
+print "Loaded configuration\n";
+
+if(!sanity()) {
+  print "Installer failed sanity checks!  Aborting.\n\n";
+  exit();
+}
+
+create_db() if($config{ins_createdb} =~ /y/i);
+
+sub create_db() {
+    #
+    # This procedure creates the database, adds a user to mysql, and tests the connection.
+    # Then it runs the schema file to create and prepopulate all the tables.
+    #
+    print "Creating database [$config{database}]\n";
+    my $dbh = DBI->connect("DBI:mysql:database=mysql;host=$config{sqlhost};port=$config{sqlport}",$config{sqluser},$config{sqlpasswd});
+    $dbh->do("DROP DATABASE IF EXISTS $config{database}");
+    $dbh->do("DELETE FROM user WHERE user = '$config{loluser}'");
+    $dbh->do("CREATE DATABASE $config{database}");
+    $dbh->do("GRANT ALL ON $config{database}.* TO $config{loluser} IDENTIFIED BY '$config{lolpasswd}'");
+    $dbh->do("FLUSH PRIVILEGES");
+    $dbh->disconnect();
+    $dbh = DBI->connect("DBI:mysql:host=$config{sqlhost};port=$config{sqlport};database=$config{database}",$config{loluser},$config{lolpasswd})
+        or die "Failed to create and connect to database!\n";
+
+    my $sql = `cat $dbdir/schema.mysql`;
+    $dbh->do($sql);
+    $dbh->disconnect();
+    return;
+}
+
+sub sanity() {
+    my $r = (1==1);
+
+    print "Performing system sanity checks\n";
+
+    if( $config{do_install} =~ /no/ ) {
+      print " x install.conf not customized.\n";  $r=0;
+    }
+
+    return $r;
+}
+
+sub load_config() {
+    my ($filename) = @_;
+    my %tmpconfig;
+
+    open CF, $filename or die "Cannot load confg file: $filename";
+    while(<CF>) {
+        my $buf = $_;
+        chomp $buf;
+
+        if($buf =~ /^\s*([^#][^\s]+)\s+"?([^"]+)"?(\s+)?$/) {
+            my ($key, $value) = ($1,$2);
+            debug("Loading key [$key] with value [$value]");
+            $tmpconfig{$key} = $value;
+        }
+    }
+    close CF;
+    return %tmpconfig;
+}
+
+sub debug() {
+    my ($buf) = @_;
+    chomp($buf);
+
+    # print "$buf\n";
+}
