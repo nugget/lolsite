@@ -13,7 +13,7 @@
     $pilotlist = pilot_search("");
   }
   usort($pilotlist,"pilot_cmp");
-  $pilotlist = array_slice($pilotlist,0,5);
+  $pilotlist = array_slice($pilotlist,0,10);
 
   if(isset($rvar_asearch)) {
     $airportdesc = "Airports Matching [$rvar_asearch]";
