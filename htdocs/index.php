@@ -71,6 +71,7 @@
   </div>
 
   <div id="block3">
+   <div id="logbook">
     <h3>Most Recent Flights</h3>
     <?php
       if(isset($flightslist)) {
@@ -85,13 +86,14 @@
            <td><?php print $buf3['date']; ?></td>
            <td><?php print pilot_name($buf3['pilot_id']); ?></td>
            <td><?php print $buf3['route']; ?></td>
-           <td><?php print split_decimal(logbook_hours($flightslist[$i])); ?></td>
+           <?php print split_decimal(logbook_hours($flightslist[$i])); ?>
           </tr>
           <?php
         }
         print "</table>\n";
       }
     ?>
+   </div>
   </div>
 
 <?php
