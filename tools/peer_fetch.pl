@@ -39,8 +39,11 @@ sub fetch {
     my $top = $parser->parse($xml);
     my $s = $db->prepare("delete from peer_pilot where peer_tag = ?");
     $s->execute($tag);
+    my $n = 0;
     foreach my $pilot (@{$top->getDocumentElement->getElementsByTagName('pilots')}[0]->getElementsByTagName('pilot')) {
         my $s = $db->prepare("insert into peer_pilot (peer_tag, username, hours) values (?, ?, ?)");
         $s->execute($tag, $pilot->getAttribute('name'), $pilot->getAttribute('hours'));
+        $n++;
     }
+    return $n;
 }
