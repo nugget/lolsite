@@ -30,7 +30,7 @@
         if($pilot_id = is_user()) {
           setcookie("lol_username",$rvar_lol_username,time()+86400);
           setcookie("lol_passhash",$rvar_lol_passhash,time()+86400);
-          header("Location: " . $GLOBALS['baseurl'] . "/pilot.php?pilot=$pilot_id");
+          header("Location: " . $GLOBALS['baseurl'] . "/pilot.php?pilot=$rvar_lol_username");
         }
   
         $notice_title = "Login Incorrect";
