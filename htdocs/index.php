@@ -17,10 +17,10 @@
 
   if(isset($rvar_asearch)) {
     $airportdesc = "Airports Matching [$rvar_asearch]";
-    $airportlist = airport_search($rvar_asearch);
+    $airportlist = airport_search($rvar_asearch, 10);
   } else {
     $airportdesc = "Top Airports";
-    $airportlist = airport_search("");
+    $airportlist = airport_search("", 10);
   }
 
   include "include/head.inc";

@@ -497,15 +497,17 @@
     }
   }
 
-  function airport_search($search) {
+  function airport_search($search, $count = 0) {
     global $rvar_pilot;
 
     $where = '';
     if(isset($rvar_pilot)) {
-      // this doesn't actually work yet
-      $where .= " where pilot_id = $rvar_pilot";
+      $where .= " and pilot_id = $rvar_pilot";
     }
-    $sql = "select airport, count(distinct logbook_id) as visits from flight_route group by airport order by visits desc limit 10";
+    $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route where logbook.id = flight_route.logbook_id $where group by airport order by visits desc";
+    if ($count > 0) {
+      $sql .= " limit $count";
+    }
     $sqlresponse = lol_query($sql);
     while($line = lol_fetch_array($sqlresponse)) {
       $airports[] = $line['airport'];
@@ -571,12 +573,10 @@
   }
 
   function airport_visits($ident,$pilot) {
+    $sql = "select count(distinct logbook_id) as visits from logbook, flight_route where logbook.id = flight_route.logbook_id and airport = '$ident'";
     if($pilot > 0) {
-      $wherepilot = "pilot_id = $pilot and ";
-    } else {
-      $wherepilot = '';
+      $sql .= " and pilot_id = $pilot";
     }
-    $sql = "select count(distinct logbook_id) as visits from route_flight where $wherepilot";
     if($line = lol_fetch_array(lol_query($sql))) {
       return $line['visits'];
     }
