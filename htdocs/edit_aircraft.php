@@ -1,5 +1,7 @@
 <?php
  $title = "airplane: Edit";
+ $cvs="\$Id$";
+ $keywords="logbook online";
 
  include "init.inc";
 
@@ -32,16 +34,16 @@
  if(isset($rvar_aircraft_class)) {
    # I see data, we need to insert/update as required.
    $rvar_aircraft_class = (int) $rvar_aircraft_class;
-   $rvar_complex = (int) $rvar_complex;
-   $rvar_high_perf = (int) $rvar_high_perf;
-   $rvar_tailwheel = (int) $rvar_tailwheel;
+   if(!isset($rvar_complex)) { $rvar_complex = 0; } else { $rvar_complex = 1; }
+   if(!isset($rvar_high_perf)) { $rvar_high_perf = 0; } else { $rvar_high_perf = 1; }
+   if(!isset($rvar_tailwheel)) { $rvar_tailwheel = 0; } else { $rvar_tailwheel = 1; }
    $rvar_ident = strtoupper($rvar_ident);
    $rvar_home_field = strtoupper($rvar_home_field);
    if($rvar_id == 0) {
      # new logbiook entry
      $sql = "INSERT INTO aircraft VALUES " .
         "(NULL,'$rvar_ident', $rvar_pilot, '$rvar_makemodel', $rvar_aircraft_class, " .
-        "$rvar_complex,$rvar_high_perf,NULL,$rvar_tailwheel, '$rvar_home_field', " .
+        "$rvar_complex,$rvar_high_perf,$rvar_tailwheel, '$rvar_home_field', " .
         "'$rvar_image_url','$rvar_link_url','$rvar_detail')";
    } else {
      # editing an old entry
@@ -51,12 +53,13 @@
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where id = $rvar_id";
    }
 
+   print "<p>$sql</p>";
    $sql_response = mysql_query($sql);
 
    if($rvar_id > 0) {
      $target = "detail_aircraft.php?id=$rvar_id";
    } else {
-     $target = "display_aircraft.php";
+     $target = "display_aircraft.php?pilot=$rvar_pilot";
    }
    header("Location: $target");
    exit;
@@ -88,8 +91,8 @@
   </tr>
 
   <tr>
-   <td><input type="text" name="ident" size="11" value="<?php print $line['ident']; ?>"></td>
-   <td><input type="text" name="makemodel" size="8" value="<?php print $line['makemodel']; ?>"></td>
+   <td><input type="text" name="ident" size="11" value="<?php print $line['ident']; ?>" /></td>
+   <td><input type="text" name="makemodel" size="8" value="<?php print $line['makemodel']; ?>" /></td>
    <td><?php print $classlist; ?></td>
   </tr>
 
@@ -99,23 +102,23 @@
   </tr>
 
   <tr>
-   <td><input type="text" name="home_field" size="11" value="<?php print $line['home_field']; ?>"></td>
+   <td><input type="text" name="home_field" size="11" value="<?php print $line['home_field']; ?>" /></td>
    <td colspan="2">
-    Complex: <input name="complex" type="checkbox" value="1" <?php if($line['complex']>0) { print "checked=\"checked\""; } ?>/>
-    High Performance: <input name="high_perf" type="checkbox" value="1" <?php if($line['high_perf']>0) { print "checked=\"checked\""; } ?>/>
-    Tailwheel: <input name="tailwheel" type="checkbox" value="1" <?php if($line['tailwheel']>0) { print "checked=\"checked\""; } ?>/>
+    Complex: <input name="complex" type="checkbox" value="1" <?php if($line['complex']>0) { print "checked=\"checked\""; } ?> />
+    High Performance: <input name="high_perf" type="checkbox" value="1" <?php if($line['high_perf']>0) { print "checked=\"checked\""; } ?> />
+    Tailwheel: <input name="tailwheel" type="checkbox" value="1" <?php if($line['tailwheel']>0) { print "checked=\"checked\""; } ?> />
    </td>
   </tr>
 
   <tr>
    <th colspan="3">Image URL:</th>
   </tr><tr>
-   <td colspan="3"><input type="text" name="image_url" size="80" value="<?php echo $line['image_url']; ?>"></td>
+   <td colspan="3"><input type="text" name="image_url" size="80" value="<?php echo $line['image_url']; ?>" /></td>
   </tr>
   <tr>
    <th colspan="3">Image Link:</th>
   </tr><tr>
-   <td colspan="3"><input type="text" name="link_url" size="80" value="<?php echo $line['link_url']; ?>"></td>
+   <td colspan="3"><input type="text" name="link_url" size="80" value="<?php echo $line['link_url']; ?>" /></td>
   </tr>
   <tr>
    <th colspan="3">Detail:</th>
@@ -129,6 +132,7 @@
  </table>
  </div>
  <input type="hidden" name="id" value="<?php print $rvar_id; ?>" />
+ <input type="hidden" name="pilot" value="<?php print $rvar_pilot; ?>" />
  </form>
 
 <?

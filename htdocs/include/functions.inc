@@ -283,7 +283,13 @@
   }
 
   function airport_detail($ident) {
-    $sql = "select * from airports where ident = '$ident'";
+    global $rvar_pilot;
+    if(!isset($rvar_pilot)) {
+      $pilot = 0;
+    } else {
+      $pilot = $rvar_pilot;
+    }
+    $sql = "select * from airports where ident = '$ident' and (pilot_id = 0 or pilot_id = $pilot)";
     $detail = mysql_fetch_array(mysql_query($sql));
 
     return $detail;
@@ -328,18 +334,32 @@
 
   function aircraft_search($search) {
     global $rvar_pilot;
+    $list = array();
 
     $sql = "select distinct ident from logbook where ident like '%$search%'";
     if(isset($rvar_pilot)) {
       $sql = $sql . " and pilot_id = " . (int) $rvar_pilot;
     }
     if($sqlresponse = mysql_query($sql)) {
-      $list = array();
       while($line = mysql_fetch_array($sqlresponse)) {
         $list[] = $line['ident'];
       }
-      return $list;
     }
+
+    $sql = "select distinct ident from aircraft where ident like '%$search%'";
+    if(isset($rvar_pilot)) {
+      $sql = $sql . " and pilot_id = " . (int) $rvar_pilot;
+    }
+    if($sqlresponse = mysql_query($sql)) {
+      while($line = mysql_fetch_array($sqlresponse)) {
+        $list[] = $line['ident'];
+      }
+    }
+
+    $list = array_values(array_unique($list));
+    usort($list,"aircraft_cmp");
+
+    return $list;
   }
 
   function aircraft_cmp($a,$b) {

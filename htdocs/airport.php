@@ -4,10 +4,9 @@
  include "init.inc";
 
  if(isset($rvar_ident)) {
-   $sql = "SELECT * from airports WHERE ident = '$rvar_ident'";
-   if(!$line = mysql_fetch_array(mysql_query($sql))) {
-     $error_title ="Airport not in Database";
-     $error_text = "$rvar_ident is not in the lol database yet.";
+   if(!$line = airport_detail($rvar_ident)) {
+     $notice_title ="Airport not in Database";
+     $notice_text = "$rvar_ident is not in the lol database yet.";
    } else {
      $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
    }
