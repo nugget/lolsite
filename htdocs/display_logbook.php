@@ -36,6 +36,7 @@
  $total_duration = 0;
  $total_landings_day = 0;
  $total_landings_night = 0;
+ $total_instrument_approach = 0;
 
 ?>
 
@@ -98,6 +99,7 @@
     <th colspan="3">Route of Flight</th>
     <th rowspan="2" colspan="2">Duration of Flight</th>
     <th colspan="2">Landings</th>
+    <th rowspan="2">Inst<br />Apch</th>
     <th rowspan="2"># of<br />Pax</th>
     <th rowspan="2" colspan="2" width="100%">Remarks, Procedures, Maneuvers</th>
    </tr>
@@ -195,10 +197,12 @@
 
    $total_landings_day += $line['landings_day'];
    $total_landings_night += $line['landings_night'];
+   $total_instrument_approach += $line['instrument_approach'];
 
    ?> 
    <td class="integer"><?php echo $line['landings_day']; ?></td>
    <td class="integer"><?php echo $line['landings_night']; ?></td>
+   <td class="integer"><?php echo $line['instrument_approach']; ?></td>
    <td class="integer"><?php echo count_elements($line['passengers']); ?></td>
    <td><?php echo $line['remarks']; ?>&nbsp;</td
   </tr>
@@ -211,7 +215,8 @@
     <?php split_decimal($total_duration); ?>
     <td class="integer"><?php print $total_landings_day; ?></td>
     <td class="integer"><?php print $total_landings_night; ?></td>
-    <td colspan="3">&nbsp;</td>
+    <td class="integer"><?php print $total_instrument_approach; ?></td>
+    <td colspan="2">&nbsp;</td>
    </tr>
 
 
