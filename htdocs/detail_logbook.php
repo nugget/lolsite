@@ -1,15 +1,21 @@
 <?php
  $title = "Logbook Detail";
  include "init.inc";
+
+ if(isset($rvar_id)) {
+   $rvar_id = (int) $rvar_id;
+   $rvar_pilot = logbook_pilot($rvar_id);
+ } else {
+   $notice_title = "No Entry Selected";
+   $notice_text = "You must supply a logbook id.";
+ }
+
  include "head.inc";
 
- if(!$rvar_id) {
-   print "<h2>No entry selected</h2>";
+ if(!isset($rvar_id)) {
    include "foot.inc";
    exit;
  }
-
- $rvar_id = (int) $rvar_id;
 
  if(is_mine()) {
    ?>
@@ -31,11 +37,10 @@
  $num = '';
  while ($line = mysql_fetch_array($sqlresponse)) {
 
-  $ident = mysql_fetch_row(mysql_query("SELECT makemodel FROM aircraft WHERE ident = '".$line['ident']."';"));
-  $ident = $ident[0];
+    $equipment = aircraft_equipment($line['ident']);
 
-        if($num==1) {
-                $class="row1";
+   if($num==1) {
+              $class="row1";
                 $num = 0;
         } else {
                 $class="row2";
@@ -43,8 +48,6 @@
         }
 
 ?>
-
-
 
   <tr>
    <th rowspan="2">Date</th>
@@ -73,16 +76,16 @@
 
   <tr>
    <td nowrap="nowrap"><?php echo $line['date']; ?></td>
-   <td><?php echo $ident; ?></td>
+   <td><?php echo $equipment; ?></td>
    <td><?php echo $line['ident']; ?></td>
  
    <?php
     $hops = preg_split("/ +/",$line['route'],-1,PREG_SPLIT_NO_EMPTY);
 
-    $asel = class_time("ASEL",$rvar_id);
-    $amel = class_time("AMEL",$rvar_id);
-    $ases = class_time("ASES",$rvar_id);
-    $ames = class_time("AMES",$rvar_id);
+    $asel = (int) class_time("ASEL",$rvar_id);
+    $amel = (int) class_time("AMEL",$rvar_id);
+    $ases = (int) class_time("ASES",$rvar_id);
+    $ames = (int) class_time("AMES",$rvar_id);
     $sim  = (int) class_time("Sim",$rvar_id);
 
     print "<td>$hops[0]</td>";
@@ -140,7 +143,7 @@
    <td><?php print "$"; printf("%.2f",$line['cost']); ?></td>
   </tr>
 <?php
-   if($line[detail]) {
+   if($line['detail']) {
      print "<tr><th colspan=\"16\">Details</th></tr><tr><td colspan=\"16\">$line[detail]</td></tr>\n";
    }
  };

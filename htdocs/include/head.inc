@@ -52,6 +52,10 @@
    <h1><?php print $working_title ?></h1>
    <div id="menu">
      <a href=".">Main</a>
+
+     <?php if(is_valid()) print "<a href=\"pilot.php?pilot=$rvar_pilot\">" . pilot_name($rvar_pilot)  . "'s lol</a>"; ?>
+     <?php if(is_valid()) print "<a href=\"display_logbook.php?pilot=$rvar_pilot\">logbook</a>"; ?>
+
      <?php if(is_user()) print "<a href=\"logout.php\">Logout</a>"; ?>
      <?php if(!is_user()) print "<a href=\"login.php\">Login/Register</a>"; ?>
    </div>

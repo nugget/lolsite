@@ -115,11 +115,9 @@
       print "<td>$hops[$els]</td>";
     }
 
-   $duration = $line['type_cfi']+$line['type_dual']+$line['type_pic']+$line['type_sic'];
-   if($line['type_dual'] == $line['type_pic']) {
-     $duration = $duration - $line['type_dual'];
-   }
+   $duration = logbook_hours($line['id']);
    split_decimal($duration);
+
    ?> 
    <td class="integer"><?php echo $line['landings_day']; ?></td>
    <td class="integer"><?php echo $line['landings_night']; ?></td>

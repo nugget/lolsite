@@ -47,6 +47,17 @@
     return FALSE;
   }
 
+  function is_valid() {
+    global $rvar_pilot;
+    if(isset($rvar_pilot)) {
+      $sql = "select id from pilot where id = $rvar_pilot";
+      if(mysql_fetch_array(mysql_query($sql))) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
   function username_exists($username) {
     $sql = "select id from pilot where username = '$username'";
     if($id = mysql_fetch_array(mysql_query($sql))) {
@@ -125,19 +136,93 @@
   // Data functions
 
   function pilot_hours($pilot_id) {
-        $count = mysql_fetch_row(mysql_query("select sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) from logbook where pilot_id = $pilot_id"));
-        $count = $count[0];
-        return $count;
+    $count = mysql_fetch_row(mysql_query("select sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) from logbook where pilot_id = $pilot_id"));
+    $count = $count[0];
+    return $count;
   }
 
   function pilot_name($pilot_id) {
-        $sql = "select username, displayname from pilot where id = $pilot_id";
-        $pinfo = mysql_fetch_array(mysql_query($sql));
-        if(isset($pinfo{'displayname'})) {
-          return $pinfo{'displayname'};
-        } else {
-          return $pinfo{'username'};
+    $sql = "select username, displayname from pilot where id = $pilot_id";
+    $pinfo = mysql_fetch_array(mysql_query($sql));
+    if(isset($pinfo{'displayname'})) {
+      return $pinfo{'displayname'};
+    } else {
+      return $pinfo{'username'};
+    }
+  }
+
+  function pilot_search($psearch) {
+    $sql = "select id from pilot where username like '%$psearch%' or displayname like '%$psearch%'";
+    if($sqlresponse = mysql_query($sql)) {
+      $plist = array();
+      while($pilot = mysql_fetch_array($sqlresponse)) {
+        $plist[] = $pilot['id'];
+      }
+      return $plist;
+    }
+  }
+
+  function pilot_cmp($a,$b) {
+    $vala = pilot_hours($a);
+    $valb = pilot_hours($b);
+
+    if($vala == $valb) return 0;
+    return ($counta > $countb) ? -1 : 1;
+  }
+
+  function class_lookup($class) {
+    $classtable = array("null","ASEL","ASES","AMES","AMEL","Sim");
+    if($class = (int) $class) {
+      return $classtable[$class];
+    } else {
+      for($i=0; $i<count($classtable); $i++) {
+        if($classtable[$i] == $class) {
+          return $i;
         }
+      }
+    }
+  }
+
+  function class_time($class,$logid) {
+    $sql = "select aircraft_class from aircraft, logbook where aircraft.ident = logbook.ident and aircraft.pilot_id = logbook.pilot_id";
+    $buf = mysql_fetch_array(mysql_query($sql));
+    $aircraft_class = (int) $buf['aircraft_class'];
+    $hours = logbook_hours($logid);
+    if($class == class_lookup($aircraft_class)) {
+      return $hours;
+    } else {
+      return 0;
+    }
+  }
+
+  function logbook_hours($logid) {
+    $sql = "select type_cfi, type_dual, type_pic, type_sic from logbook where id = $logid";
+    if($line = mysql_fetch_array(mysql_query($sql))) {
+      $duration = (int) $line['type_cfi']+$line['type_dual']+$line['type_pic']+$line['type_sic'];
+      if($line['type_dual'] == $line['type_pic']) {
+        $duration = (int) $duration - $line['type_dual'];
+      }
+    } else {
+      $duration = 0;
+    }
+    return $duration;
+  }  
+
+  function logbook_pilot($logid) {
+    $sql = "select pilot_id from logbook where id = $logid";
+    if($line = mysql_fetch_array(mysql_query($sql))) {
+      return (int) $line['pilot_id'];
+    }
+  }
+
+  function aircraft_equipment($ident) {
+    global $rvar_pilot;
+    if(isset($rvar_pilot)) {
+      $sql = "select makemodel from aircraft where ident = '$ident' and pilot_id = $rvar_pilot";
+      if($line = mysql_fetch_array(mysql_query($sql))) {
+        return $line['makemodel'];
+      }
+    }
   }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-  $title = "main page";
+  $title = "pilot page";
   $cvs="\$Id$";
   $keywords="logbook online";
 
