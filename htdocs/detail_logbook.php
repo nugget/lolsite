@@ -57,6 +57,8 @@
    <th rowspan="2">Inst<br />Appr</th>
    <th colspan="10">Aircraft Category And Class</th>
    <th colspan="2" rowspan="2">Flight Training Device</th>
+   <?php if ($line['launch_type']) echo '<th colspan="2">Launch</th>'; ?>
+   <?php if ($line['launch_type']) echo '<th colspan="2">Altitude</th>'; ?>
    <th rowspan="2">Passengers</th>
   </tr>
 
@@ -73,6 +75,8 @@
    <th colspan="2">ASES</th>
    <th colspan="2">AMES</th>
    <th colspan="2">Glider</th>
+   <?php if ($line['launch_type']) echo '<th>A</th><th>G</th>'; ?>
+   <?php if ($line['launch_type']) echo '<th>Release</th><th>Maximum</th>'; ?>
   </tr>
 
   <tr>
@@ -114,6 +118,30 @@
    <?php split_decimal($ames); ?>
    <?php split_decimal($glider); ?>
    <?php split_decimal($sim); ?>
+   <?php
+    if ($line['launch_type']) {
+        if ($line['launch_type'] == 'A') {
+            echo '<td align="center">&#x2022;</td>';
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+        if ($line['launch_type'] == 'G') {
+            echo '<td align="center">&#x2022;</td>';
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+        if ($line['alt_release'] > 0) {
+            echo "<td class=\"integer\">$line[alt_release]</td>";
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+        if ($line['alt_maximum'] > 0) {
+            echo "<td class=\"integer\">$line[alt_maximum]</td>";
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+    }
+   ?>
    <td width="100%">
    <?php
         $pax = preg_split("/ +/", $line['passengers'], -1, PREG_SPLIT_NO_EMPTY);
