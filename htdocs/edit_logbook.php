@@ -163,7 +163,7 @@
    <th>Actual Instr</th>
    <th>Simul Instr</th>
    <th>Dual</th>
-   <th>Solo/PIC</th>
+   <th>PIC</th>
    <th>SIC</th>
    <th>X/C</th>
    <th>CFI</th>

@@ -153,7 +153,7 @@
    <th colspan="2">Actual Instr</th>
    <th colspan="2">Simul Instr</th>
    <th colspan="2">Dual</th>
-   <th colspan="2">Solo/PIC</th>
+   <th colspan="2">PIC</th>
    <th colspan="2">SIC</th>
    <th colspan="2">X/C</th>
    <th colspan="2">CFI</th>
