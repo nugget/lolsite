@@ -3,10 +3,21 @@
 
  include "include/init.inc";
 
+ # run the redirect, after which we can safely assume that $rvar_pilot is a username.
+ pilot_id_redirect($rvar_pilot);
+ $rvar_pilot = pilot_lookup($rvar_pilot);
+
  # if(!isset($rvar_pilot)) {
  #   $error_title = "No pilot specified";
  #   $error_text = "You must specify a pilot in order to view a logbook!";
  # }
+
+ if(!isset($rvar_limit)) {
+   $rvar_limit = 16;
+ }
+ if(!isset($rvar_page)) {
+   $rvar_page = 0;
+ }
 
  include "include/head.inc";
 
@@ -25,6 +36,9 @@
  $total_duration = 0;
  $total_landings_day = 0;
  $total_landings_night = 0;
+
+ $page = 1;
+
 ?>
 
 
@@ -53,8 +67,18 @@
  $launch = logbook_launches($whereclause);
  $entries = logbook_entries($whereclause);
 
+ $pages = (int) ((count($entries)/$rvar_limit)+.5);
+ if($rvar_page == 0) {
+   $rvar_page = $pages;
+ }
+
 ?>
 
+ <p>
+   <?php if($rvar_page > 1) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page - 1) . "\">Prev</a>"; } ?>
+   Page <?php print $rvar_page; ?> of <?php print $pages; ?>
+   <?php if($rvar_page < $pages) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page + 1) . "\">Next</a>"; } ?>
+ </p>
  <div id="logbook">
   <table>
    <tr>
@@ -83,8 +107,19 @@
 
 <?php
  $class = "";
- $flightnum = 1;
+ $flightnum = 0;
+ $pagenum = 0;
+ $curpage = 1;
  for($ei=0; $ei<count($entries); $ei++) {
+  $flightnum++;
+  $pagenum++;
+  if($pagenum > $rvar_limit) {
+    $pagenum = 1;
+    $curpage++;
+  }
+  if($curpage <> $rvar_page) {
+    continue;
+  }
   $line = logbook_detail($entries[$ei]);
   $ident = aircraft_equipment($line['ident']);
 
@@ -100,7 +135,7 @@
   <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
-   <td class="integer"><?php echo $flightnum++; ?></td>
+   <td class="integer"><?php echo $flightnum; ?></td>
    <?php if(!isset($rvar_pilot)) { print "<td>" . pilot_name($line['pilot_id']) . "</th>"; } ?>
    <td nowrap="nowrap"><?php echo $line['date']; ?></td>
    <td><?php echo $line['ident']; ?></td>
@@ -165,7 +200,7 @@
 
 ?>
    <tr class="totals">
-    <td colspan="<?php echo $launch ? 10 : 6; ?>">&nbsp;</td>
+    <td colspan="<?php echo $launch ? 10 : 6; ?>">Page totals:</td>
     <?php split_decimal($total_duration); ?>
     <td class="integer"><?php print $total_landings_day; ?></td>
     <td class="integer"><?php print $total_landings_night; ?></td>
