@@ -418,7 +418,7 @@
     }
   }
 
-  function pilot_search($search,$limit) {
+  function pilot_search($search,$limit = 0) {
     $sql = "select ph.peer_tag, ph.username, ph.hours, p.url from pilot_hours ph left join peers p on ph.peer_tag = p.tag where username like '%$search%' order by hours desc";
     if ($limit > 0) {
       $sql .= " limit $limit";
@@ -572,6 +572,9 @@
     global $rvar_pilot;
 
     $where = '';
+    if($search<>'') {
+      $where .= " and airports.fullname ilike '%$search%'";
+    }
     if(isset($rvar_pilot)) {
       $where .= " and pilot_id = $rvar_pilot";
     }
@@ -579,7 +582,7 @@
       $first_date = strftime("%Y-%m-%d",time()-($days*86400));
       $where .= " and logbook.date >= '$first_date'";
     }
-    $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route where logbook.id = flight_route.logbook_id and airport <> 'Lcl' $where group by airport order by visits desc";
+    $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route, airports where logbook.id = flight_route.logbook_id and airport <> 'Lcl' and airports.ident = airport $where group by airport order by visits desc";
     if ($count > 0) {
       $sql .= " limit $count";
     }

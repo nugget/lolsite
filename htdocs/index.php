@@ -15,7 +15,7 @@
 
   if(isset($rvar_asearch)) {
     $airportdesc = "Airports Matching [$rvar_asearch]";
-    $airportlist = airport_search($rvar_asearch, 10);
+    $airportlist = airport_search($rvar_asearch, 10 , 90);
   } else {
     $airportdesc = "Most Active Airports";
     $airportlist = airport_search("", 10, 90);

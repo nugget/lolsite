@@ -39,7 +39,7 @@
    
  if(isset($rvar_submit)) {
    # I see data, we need to insert/update as required.
-   if(!isset($rvar_tower)) { $rvar_tower = 0; } else { $rvar_tower = 1; }
+   if(!isset($rvar_tower)) { $rvar_tower = 'false'; } else { $rvar_tower = 'true'; }
    if(!airport_exists($rvar_ident)) {
      # new logbook entry
      $sql = "INSERT INTO airports VALUES " .
@@ -89,7 +89,7 @@
   <tr>
    <td><input type="text" name="timezone" size="11" value="<?php print $line['timezone']; ?>"></td>
    <td colspan="2">
-    Tower Controlled: <input name="tower" type="checkbox" value="1" <?php if($line['tower']>0) { print "checked=\"checked\""; } ?>/>
+    Tower Controlled: <input name="tower" type="checkbox" value="true" <?php if($line['tower']=='t') { print "checked=\"checked\""; } ?>/>
    </td>
   </tr>
 
