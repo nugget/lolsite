@@ -39,6 +39,7 @@
    <h1><?php print $title ?></h1>
    <div id="menu">
      <a href=".">Main</a>
+     <?php if(is_user()) print "<a href=\"logout.php\">Logout</a>"; ?>
      <?php if(!is_user()) print "<a href=\"login.php\">Login/Register</a>"; ?>
    </div>
 
