@@ -146,7 +146,7 @@
   }
 
   function yesno($bool) {
-    if($bool == 0) {
+    if($bool === 0 || $bool == 'f') {
       return "N";
     } else {
       return "Y";
@@ -154,7 +154,7 @@
   }
 
   function checkmark($bool) {
-    if($bool == 0) {
+    if($bool === 0 || $bool == 'f') {
       return "&nbsp;";
     } else {
       return "X";
