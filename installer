@@ -7,15 +7,29 @@ require DBD::mysql;
 
 my $dbdir = "./db";
 
-my %config = load_config("install.conf");
-print "Loaded configuration\n";
+my $FAIL = 0;
+my $SUCCESS = -1;
 
+print "Installing LoL!\n\n";
+my %config = load_config("install.conf");
+print "1.  Loading configuration\n";
+
+print "2.  Verifying settings: ";
 if(!sanity()) {
-  print "Installer failed sanity checks!  Aborting.\n\n";
-  exit();
+    print "FAILED\n\n";
+    exit();
+} else {
+    print "OK.\n";
 }
 
-create_db() if($config{ins_createdb} =~ /y/i);
+print "3.  Creating database: ";
+if(!$config{ins_createdb} =~ /y/i) {
+    print "Skipping.\n";
+} else {
+    create_db() or exit();
+}
+
+print "4.  Preparing Apache Conf:\n";
 apache_conf();
 
 sub create_db() {
@@ -23,7 +37,8 @@ sub create_db() {
     # This procedure creates the database, adds a user to mysql, and tests the connection.
     # Then it runs the schema file to create and prepopulate all the tables.
     #
-    print "Creating database [$config{database}]\n";
+    print "\n";
+    print "    o Creating database [$config{database}]\n";
     my $dbh = DBI->connect("DBI:mysql:database=mysql;host=$config{sqlhost};port=$config{sqlport}",$config{sqluser},$config{sqlpasswd});
     $dbh->do("DROP DATABASE IF EXISTS $config{database}");
     $dbh->do("DELETE FROM user WHERE user = '$config{loluser}'");
@@ -32,30 +47,29 @@ sub create_db() {
     $dbh->do("FLUSH PRIVILEGES");
     $dbh->disconnect();
     $dbh = DBI->connect("DBI:mysql:host=$config{sqlhost};port=$config{sqlport};database=$config{database}",$config{loluser},$config{lolpasswd})
-        or die "Failed to create and connect to database!\n";
+        or return $FAIL;
 
     run_sql($dbh,"schema.mysql");
     $dbh->do("INSERT INTO settings VALUES ('lolversion','$config{lolversion}')");
     $dbh->disconnect();
-    return;
+    return $SUCCESS;
 }
 
 sub apache_conf() {
     my $pwd = `pwd`;
     chomp $pwd;
 
-print "Place the following suggested configuration in your apache httpd.conf
-file to enable /lol/ on your webserver:
+    print "    o Place the following fragment into your httpd.conf and restart apache:
 
-  Alias /lol/ \"$pwd/\"
+      Alias /lol/ \"$pwd/htdocs/\"
+      <Directory \"$pwd/htdocs/\">
+          Options None
+          AllowOverride None
+          Order allow,deny
+          Allow from all
+      </Directory>
 
-  <Directory \"$pwd/\">
-      Options None
-      AllowOverride None
-      Order allow,deny
-      Allow from all
-  </Directory>
-";
+    ";
 }
 
 sub run_sql() {
@@ -63,7 +77,7 @@ sub run_sql() {
 
     my $sql;
 
-    print "  " .$filename;
+    print "    o Running " .$filename;
     open SQL, "$dbdir/$filename";
     while(<SQL>) {
         next if($_ =~ /^#/);
@@ -74,6 +88,7 @@ sub run_sql() {
                 print ".";
             } else {
                 print "\n[$sql]\n";
+                print $FAIL;
             }
             $sql = '';
         }
@@ -81,16 +96,14 @@ sub run_sql() {
     close SQL;
     print "\n";
 
-    return;
+    return $SUCCESS;
 }
 
 sub sanity() {
-    my $r = (1==1);
-
-    print "Performing system sanity checks\n";
+    my $r = $SUCCESS;
 
     if( $config{do_install} =~ /no/ ) {
-      print " x install.conf not customized.\n";  $r=0;
+      print " x install.conf not customized.\n";  $r=$FAIL;
     }
 
     return $r;
