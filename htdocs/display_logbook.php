@@ -3,10 +3,10 @@
 
  include "include/init.inc";
 
- if(!isset($rvar_pilot)) {
-   $error_title = "No pilot specified";
-   $error_text = "You must specify a pilot in order to view a logbook!";
- }
+ # if(!isset($rvar_pilot)) {
+ #   $error_title = "No pilot specified";
+ #   $error_text = "You must specify a pilot in order to view a logbook!";
+ # }
 
  include "include/head.inc";
 
@@ -59,6 +59,7 @@
   <table>
    <tr>
     <th rowspan="2">Flight</th>
+    <?php if(!isset($rvar_pilot)) { print "<th rowspan=\"2\">Pilot</th>"; } ?>
     <th rowspan="2">Date</th>
     <th rowspan="2">Aircraft</th>
     <?php if ($launch) echo '<th colspan="2">Launch</th>'; ?>
@@ -100,6 +101,7 @@
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
    <td class="integer"><?php echo $flightnum++; ?></td>
+   <?php if(!isset($rvar_pilot)) { print "<td>" . pilot_name($line['pilot_id']) . "</th>"; } ?>
    <td nowrap="nowrap"><?php echo $line['date']; ?></td>
    <td><?php echo $line['ident']; ?></td>
  
