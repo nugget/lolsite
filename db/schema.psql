@@ -68,14 +68,14 @@ CREATE TABLE certificate (
 );
 CREATE TABLE rating (
   id serial NOT NULL,
-  code varchar(10) NOT NULL,
+  code varchar(10) NOT NULL UNIQUE,
   name varchar(40) NOT NULL,
-  certificate_bitmask integer NOT NULL REFERENCES certificate(group),
+  certificate_bitmask integer NOT NULL,
   PRIMARY KEY (id)
 );
 CREATE TABLE rating_type (
   code varchar(10) NOT NULL,
-  type varchar(40) NOT NULL,
+  type varchar(60) NOT NULL,
   PRIMARY KEY (code)
 );
 CREATE TABLE pilot_certificate (
@@ -95,6 +95,7 @@ CREATE TABLE pilot_rating (
   rating_type_code varchar(10) REFERENCES rating_type(code),
   issued date NOT NULL default '1970-11-04',
   valid boolean NOT NULL default true,
+  PRIMARY KEY (id)
 );
 
 --
@@ -109,34 +110,34 @@ INSERT INTO certificate VALUES ('CFI','Flight Instructor',NULL,'61.181',32,NULL)
 INSERT INTO certificate VALUES ('GI','Ground Instructor',NULL,'61.211',64,NULL);
 INSERT INTO certificate VALUES ('Medical','Medical',NULL,'61.23',128,NULL);
 
-INSERT INTO rating VALUES (NULL,'1','First-class',128);
-INSERT INTO rating VALUES (NULL,'2','Second-class',128);
-INSERT INTO rating VALUES (NULL,'3','Third-class',128);
+INSERT INTO rating VALUES (default,'1','First-class',128);
+INSERT INTO rating VALUES (default,'2','Second-class',128);
+INSERT INTO rating VALUES (default,'3','Third-class',128);
 
-INSERT INTO rating VALUES (NULL,'ASEL','Airplane, Single-engine land',(2+4+8+16));
-INSERT INTO rating VALUES (NULL,'AMEL','Airplane, Multiengine land',(4+8+16));
-INSERT INTO rating VALUES (NULL,'ASES','Airplane, Single-engine sea',(2+4+8+16));
-INSERT INTO rating VALUES (NULL,'AMES','Airplane, Multiengine sea',(4+8+16));
+INSERT INTO rating VALUES (default,'ASEL','Airplane, Single-engine land',(2+4+8+16));
+INSERT INTO rating VALUES (default,'AMEL','Airplane, Multiengine land',(4+8+16));
+INSERT INTO rating VALUES (default,'ASES','Airplane, Single-engine sea',(2+4+8+16));
+INSERT INTO rating VALUES (default,'AMES','Airplane, Multiengine sea',(4+8+16));
 
-INSERT INTO rating VALUES (NULL,'HELI','Rotorcraft, Helicopter',(4+8+16+32));
-INSERT INTO rating VALUES (NULL,'GYRO','Rotorcraft, Gyroplane',(4+8+16+32));
-INSERT INTO rating VALUES (NULL,'Glider','Glider',(4+8+16+32));
-INSERT INTO rating VALUES (NULL,'Lift','Powered-lift',(4+8+16+32));
+INSERT INTO rating VALUES (default,'HELI','Rotorcraft, Helicopter',(4+8+16+32));
+INSERT INTO rating VALUES (default,'GYRO','Rotorcraft, Gyroplane',(4+8+16+32));
+INSERT INTO rating VALUES (default,'Glider','Glider',(4+8+16+32));
+INSERT INTO rating VALUES (default,'Lift','Powered-lift',(4+8+16+32));
 
-INSERT INTO rating VALUES (NULL,'Airship','Lighter-than-air, Airship',(4+8+16));
-INSERT INTO rating VALUES (NULL,'Balloon','Lighter-than-air, Balloon',(4+8+16));
-INSERT INTO rating VALUES (NULL,'Aircraft','Aircraft',(4+8+16));
+INSERT INTO rating VALUES (default,'Airship','Lighter-than-air, Airship',(4+8+16));
+INSERT INTO rating VALUES (default,'Balloon','Lighter-than-air, Balloon',(4+8+16));
+INSERT INTO rating VALUES (default,'Aircraft','Aircraft',(4+8+16));
 
-INSERT INTO rating VALUES (NULL,'IA','Instrument Airplane',(4+8+32));
-INSERT INTO rating VALUES (NULL,'IH','Instrument Helicopter',(4+8+32));
-INSERT INTO rating VALUES (NULL,'IP','Instrument Powered-lift',(4+8+32));
+INSERT INTO rating VALUES (default,'IA','Instrument Airplane',(4+8+32));
+INSERT INTO rating VALUES (default,'IH','Instrument Helicopter',(4+8+32));
+INSERT INTO rating VALUES (default,'IP','Instrument Powered-lift',(4+8+32));
 
-INSERT INTO rating VALUES (NULL,'ASE','Airplane, Single-engine',32);
-INSERT INTO rating VALUES (NULL,'AME','Airplane, Multiengine',32);
+INSERT INTO rating VALUES (default,'ASE','Airplane, Single-engine',32);
+INSERT INTO rating VALUES (default,'AME','Airplane, Multiengine',32);
 
-INSERT INTO rating VALUES (NULL,'Basic','Basic',64);
-INSERT INTO rating VALUES (NULL,'Advanced','Advanced',64);
-INSERT INTO rating VALUES (NULL,'Instrument','Instrument',64);
+INSERT INTO rating VALUES (default,'Basic','Basic',64);
+INSERT INTO rating VALUES (default,'Advanced','Advanced',64);
+INSERT INTO rating VALUES (default,'Instrument','Instrument',64);
 
 INSERT INTO rating_type VALUES ('Large','Large aircraft other than lighter-than-air');
 INSERT INTO rating_type VALUES ('Turbojet','Turbojet-powered airplanes');
@@ -146,7 +147,7 @@ INSERT INTO rating_type VALUES ('Turbojet','Turbojet-powered airplanes');
 --
 CREATE TABLE endorsement (
   id serial NOT NULL,
-  code varchar(10) NOT NULL,
+  code varchar(10) NOT NULL UNIQUE,
   name varchar(100) NOT NULL,
   detail text,
   far_part varchar(20),
@@ -164,32 +165,32 @@ CREATE TABLE pilot_endorsement (
   valid boolean NOT NULL default true,
   PRIMARY KEY (id)
 );
-INSERT INTO endorsement VALUES (NULL,'PSK','Presolo aeronautical knowledge',NULL,'61.87(b)',0);
-INSERT INTO endorsement VALUES (NULL,'PSFT','Presolo flight training',NULL,'61.87(c)',0);
-INSERT INTO endorsement VALUES (NULL,'SOLO','First Solo',NULL,'61.87(l)',0);
-INSERT INTO endorsement VALUES (NULL,'SSOLO','Supplemental Solo',NULL,'61.87(l)',0);
-INSERT INTO endorsement VALUES (NULL,'SLTO','Solo landings and takeoffs at another airport',NULL,'61.93(b)(1)',0);
-INSERT INTO endorsement VALUES (NULL,'SXCF','Solo cross country flight',NULL,'61.93(c)(2)',0);
-INSERT INTO endorsement VALUES (NULL,'SCLASSB','Solo flight in Class B airspace',NULL,'61.95(a)',0);
-INSERT INTO endorsement VALUES (NULL,'SBAIR','Solo flight, airport within Class B',NULL,'61.95(b)(1)',0);
-INSERT INTO endorsement VALUES (NULL,'SXC50','Repeated solo cross country flights <50nm',NULL,'61.93(b)(2)',0);
-INSERT INTO endorsement VALUES (NULL,'NIGHT','Solo flight at night',NULL,'61.87(m)',0);
-INSERT INTO endorsement VALUES (NULL,'SXCA','Solo cross country in specific make/model',NULL,'61.93(2)(i)',0);
-INSERT INTO endorsement VALUES (NULL,'PPK','Private Pilot aeronautical knowledge',NULL,'61.35(a)(1)',0);
-INSERT INTO endorsement VALUES (NULL,'PPPP','Private Pilot practical prerequisites',NULL,'61.39(a)(6)',0);
-INSERT INTO endorsement VALUES (NULL,'PPFP','Private Pilot flight proficiency',NULL,'61.107(b)(1)',0);
-INSERT INTO endorsement VALUES (NULL,'IRK','Instrument rating aeronautical knowledge',NULL,'61.35(a)(1)',4);
-INSERT INTO endorsement VALUES (NULL,'IRP','Instrument rating practical prerequisites',NULL,'61.39(a)(6)',4);
-INSERT INTO endorsement VALUES (NULL,'IRFP','Instrument rating flight proficiency',NULL,'61.65(c)(1)',4);
-INSERT INTO endorsement VALUES (NULL,'CPK','Commercial Pilot aeronautical knowledge',NULL,'61.125(b)(1)',4);
-INSERT INTO endorsement VALUES (NULL,'CPP','Commercial Pilot practical prerequisites',NULL,'61.39(a)(6)',4);
-INSERT INTO endorsement VALUES (NULL,'CPFP','Commercial Pilot flight proficiency',NULL,'61.127(b)(1)',4);
-INSERT INTO endorsement VALUES (NULL,'PIC-CX','Pilot In Command, Complex',NULL,'61.31(e)',4);
-INSERT INTO endorsement VALUES (NULL,'PIC-TW','Pilot In Command, Tailwheel',NULL,'61.31(i)(1)',4);
-INSERT INTO endorsement VALUES (NULL,'PIC-HP','Pilot In Command, High Performance',NULL,'61.31(f)',4);
-INSERT INTO endorsement VALUES (NULL,'HAO','High altitude operations',NULL,'61.31(g)',4);
-INSERT INTO endorsement VALUES (NULL,'FR','Flight Review',NULL,'61.56',4);
-INSERT INTO endorsement VALUES (NULL,'IPC','Instrument proficiency check',NULL,'61.57(d)',4);
+INSERT INTO endorsement VALUES (default,'PSK','Presolo aeronautical knowledge',NULL,'61.87(b)',0);
+INSERT INTO endorsement VALUES (default,'PSFT','Presolo flight training',NULL,'61.87(c)',0);
+INSERT INTO endorsement VALUES (default,'SOLO','First Solo',NULL,'61.87(l)',0);
+INSERT INTO endorsement VALUES (default,'SSOLO','Supplemental Solo',NULL,'61.87(l)',0);
+INSERT INTO endorsement VALUES (default,'SLTO','Solo landings and takeoffs at another airport',NULL,'61.93(b)(1)',0);
+INSERT INTO endorsement VALUES (default,'SXCF','Solo cross country flight',NULL,'61.93(c)(2)',0);
+INSERT INTO endorsement VALUES (default,'SCLASSB','Solo flight in Class B airspace',NULL,'61.95(a)',0);
+INSERT INTO endorsement VALUES (default,'SBAIR','Solo flight, airport within Class B',NULL,'61.95(b)(1)',0);
+INSERT INTO endorsement VALUES (default,'SXC50','Repeated solo cross country flights <50nm',NULL,'61.93(b)(2)',0);
+INSERT INTO endorsement VALUES (default,'NIGHT','Solo flight at night',NULL,'61.87(m)',0);
+INSERT INTO endorsement VALUES (default,'SXCA','Solo cross country in specific make/model',NULL,'61.93(2)(i)',0);
+INSERT INTO endorsement VALUES (default,'PPK','Private Pilot aeronautical knowledge',NULL,'61.35(a)(1)',0);
+INSERT INTO endorsement VALUES (default,'PPPP','Private Pilot practical prerequisites',NULL,'61.39(a)(6)',0);
+INSERT INTO endorsement VALUES (default,'PPFP','Private Pilot flight proficiency',NULL,'61.107(b)(1)',0);
+INSERT INTO endorsement VALUES (default,'IRK','Instrument rating aeronautical knowledge',NULL,'61.35(a)(1)',4);
+INSERT INTO endorsement VALUES (default,'IRP','Instrument rating practical prerequisites',NULL,'61.39(a)(6)',4);
+INSERT INTO endorsement VALUES (default,'IRFP','Instrument rating flight proficiency',NULL,'61.65(c)(1)',4);
+INSERT INTO endorsement VALUES (default,'CPK','Commercial Pilot aeronautical knowledge',NULL,'61.125(b)(1)',4);
+INSERT INTO endorsement VALUES (default,'CPP','Commercial Pilot practical prerequisites',NULL,'61.39(a)(6)',4);
+INSERT INTO endorsement VALUES (default,'CPFP','Commercial Pilot flight proficiency',NULL,'61.127(b)(1)',4);
+INSERT INTO endorsement VALUES (default,'PIC-CX','Pilot In Command, Complex',NULL,'61.31(e)',4);
+INSERT INTO endorsement VALUES (default,'PIC-TW','Pilot In Command, Tailwheel',NULL,'61.31(i)(1)',4);
+INSERT INTO endorsement VALUES (default,'PIC-HP','Pilot In Command, High Performance',NULL,'61.31(f)',4);
+INSERT INTO endorsement VALUES (default,'HAO','High altitude operations',NULL,'61.31(g)',4);
+INSERT INTO endorsement VALUES (default,'FR','Flight Review',NULL,'61.56',4);
+INSERT INTO endorsement VALUES (default,'IPC','Instrument proficiency check',NULL,'61.57(d)',4);
 
 --
 -- Table structure for 'aircraft'
