@@ -1,6 +1,7 @@
 <?php
  // $Id$
 
+ $dbtype="%sqltype%";	// type of database
  $dbhost="%sqlhost%";	// The fully qualified domain name (localhost is OK) of your mysql server
  $dbport="%sqlport%";	// The port for the mysql server
  $dbname="%database%";		// Name of database (should be 'lol' unless you run multiple LOL instances)

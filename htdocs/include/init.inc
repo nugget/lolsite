@@ -16,7 +16,9 @@
     print "<html><head><title>Error</title><body><h1>unable to load config.inc</h1></body></html>";
     exit;
   }
-
+ 
+  $GLOBALS['dbtype'] = $dbtype;
+ 
   // secondly we need version and target schema information for sanity checking
   if(!include "version.inc") {
     print "<html><head><title>Error</title><body><h1>unable to load version.inc</h1></body></html>";
@@ -24,19 +26,40 @@
   }
 
   // at this point we have enough to connect to the database
-  if(!$dbh = pg_connect("dbname=$dbname user=$dbuser password=$dbpasswd")) {
-    print "<html><head><title>Error</title><body><h1>unable to connect to the database server</h1></body></html>";
-    exit;
+  if($dbtype == 'mysql') {
+    if(!$dbh = @mysql_connect("$dbhost:$dbport",$dbuser,$dbpasswd)) {
+      print "<html><head><title>Error</title><body><h1>unable to connect to the database server</h1></body></html>";
+      exit;
+    }
+    if(!@mysql_select_db($dbname)) {
+      print "<html><head><title>Error</title><body><h1>unable to connect to the lol database</h1></body></html>";
+      exit;
+    }
+  } else {
+    if(!$dbh = pg_connect("dbname=$dbname user=$dbuser password=$dbpasswd")) {
+      print "<html><head><title>Error</title><body><h1>unable to connect to the database server</h1></body></html>";
+      exit;
+    }
   }
 
   // we're connected, let's populate our config variables
   $sql = "select * from settings";
-  if(!$sqlresponse=pg_query($sql)) {
-    print "<html><head><title>Error</title><body><h1>unable to retrieve site settings</h1></body></html>";
-    exit;
-  }
-  while ($buf = pg_fetch_array($sqlresponse)) {
-    $GLOBALS[$buf['setting']] = $buf['value'];
+  if($dbtype == 'mysql') {
+    if(!$sqlresponse=mysql_query($sql)) {
+      print "<html><head><title>Error</title><body><h1>unable to retrieve site settings</h1></body></html>";
+      exit;
+    }
+    while ($buf = mysql_fetch_array($sqlresponse)) {
+      $GLOBALS[$buf['setting']] = $buf['value'];
+    }
+  } else {
+    if(!$sqlresponse=pg_query($sql)) {
+      print "<html><head><title>Error</title><body><h1>unable to retrieve site settings</h1></body></html>";
+      exit;
+    }
+    while ($buf = pg_fetch_array($sqlresponse)) {
+      $GLOBALS[$buf['setting']] = $buf['value'];
+    }
   }
 
   // if our target schema differs from our current schema, abort for migration
