@@ -69,7 +69,7 @@
         "type_sic=$rvar_type_sic, detail='$rvar_detail', url='$rvar_url', cost=$rvar_cost WHERE id = $rvar_id";
    }
 
-   $sql_response = pg_query($sql);
+   $sql_response = lol_query($sql);
 
    if($rvar_id > 0) {
      $target = "detail_logbook.php?id=$rvar_id";
