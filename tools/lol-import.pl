@@ -94,7 +94,7 @@ sub craft_logbook {
      $route = $route_from." ".$route_to." ".$route_to2." ".$route_to3." ".$route_to4;
      $route =~ s/  / /g;
   } else {
-    ($date,$ident,$route_from,$route,$passengers,
+    ($date,$ident,$route,$passengers,
      $remarks,$landings_day,$landings_night,$instrument_approach,
      $conditions_night,
      $conditions_actualinstr,$conditions_simulinstr,
@@ -250,6 +250,7 @@ sub craft_passengers {
 sub dosql {
   my ($buf) = @_;
 
+  print "$buf\n";
   $dbh->do($buf) or die "SQL Failed";
 }
 sub usage {
