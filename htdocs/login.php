@@ -34,7 +34,7 @@
 
       $notice_title = "Login Incorrect";
       $notice_text  = "The login credentials you supplied were not valid.
-                       Please enter a valid username and password. ($rvar_lol_username/$rvar_lol_password/$rvar_lol_passhash)";
+                       Please enter a valid username and password.";
     }
   }
 
