@@ -546,6 +546,7 @@
     }
     $buf = " " . strtolower($buf) . " ";
     $buf = preg_replace("/ LCL /"," ",$buf);
+    $buf = preg_replace("/  /"," ",$buf);
     $buf=trim($buf);
     $elements = explode(" ",$buf);
     $elements = array_values(array_unique($elements));

@@ -58,7 +58,7 @@
       <th>Segments</th>
       <th>Landings</th>
       <th colspan="2">Hours</th>
-      <th>Airports</th>
+      <th>&nbsp;</th>
      </tr>
   <?php
      $mindate = substr($line['first_flight'],0,strpos($line['first_flight'],"-"));
@@ -74,7 +74,7 @@
        <td class="integer"><?php print $yeartotals['segments']; ?></td>
        <td class="integer"><?php print $yeartotals['landings']; ?></td>
        <?php split_decimal($yeartotals['total_hours']); ?>
-       <td width="100%"></td>
+       <td width="100%">&nbsp;</td>
       </tr>
 
    <?php
@@ -88,7 +88,7 @@
       <td class="integer"><?php print $yeartotals['segments']; ?></td>
       <td class="integer"><?php print $yeartotals['landings']; ?></td>
       <?php split_decimal($yeartotals['total_hours']); ?>
-      <td width="100%"></td>
+      <td width="100%">&nbsp;</td>
      </tr>
     </table>
    </td>
