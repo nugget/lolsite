@@ -5,7 +5,7 @@
 
   include "include/init.inc";
 
-  if(isset($rvar_lol_username) and isset($rvar_lol_password)) {
+  if(strlen($rvar_lol_username)>0 and strlen($rvar_lol_password)>0) {
     if(isset($rvar_register)) {
       if(array_key_exists('phpbb_database',$GLOBALS)) {
         if(list($phpbb_host,$phpbb_port,$phpbb_user,$phpbb_password) = split(":",$GLOBALS['phpbb_database'])) {
