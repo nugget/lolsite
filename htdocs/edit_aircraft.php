@@ -41,8 +41,8 @@
    $rvar_home_field = strtoupper($rvar_home_field);
    if($rvar_id == 0) {
      # new logbiook entry
-     $sql = "INSERT INTO aircraft VALUES " .
-        "(default,'$rvar_ident', $rvar_pilot, '$rvar_makemodel', $rvar_aircraft_class, " .
+     $sql = "INSERT INTO aircraft (id, ident, makemodel, aircraft_class, complex, high_perf, tailwheel, home_field, image_url, link_url, detail) VALUES " .
+        "(default,'$rvar_ident', '$rvar_makemodel', $rvar_aircraft_class, " .
         "$rvar_complex,$rvar_high_perf,$rvar_tailwheel, '$rvar_home_field', " .
         "'$rvar_image_url','$rvar_link_url','$rvar_detail')";
    } else {
