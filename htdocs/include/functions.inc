@@ -118,7 +118,25 @@
     }
     $buf = $buf . $hobbsified . "</p>\n";
     return $buf;
-}
+  }
+
+  function yesno($bool) {
+    if($bool == 0) {
+      return "N";
+    } else {
+      return "Y";
+    }
+  }
+
+  function checkmark($bool) {
+    if($bool == 0) {
+      return "&nbsp;";
+    } else {
+      return "X";
+    }
+  }
+
+
 
   // Math functions
 
@@ -131,6 +149,15 @@
       return 0;
     }
   }
+
+  function larger($a,$b) {
+    if($a > $b) {
+      return $a;
+    } else {
+      return $b;
+    }
+  }       
+
 
 
   // Data functions
@@ -226,6 +253,8 @@
   }
 
   function airport_search($search) {
+    global $rvar_pilot;
+
     $buf = '';
     $sql = "select distinct route from logbook";
     if(isset($rvar_pilot)) {
@@ -242,6 +271,13 @@
     $elements = array_values(array_unique($elements));
     usort($elements,"airport_cmp");
     return $elements;
+  }
+
+  function airport_detail($ident) {
+    $sql = "select * from airports where ident = '$ident'";
+    $detail = mysql_fetch_array(mysql_query($sql));
+
+    return $detail;
   }
 
   function airport_name($ident) {
@@ -279,6 +315,178 @@
 
     if($vala == $valb) return 0;
     return ($vala > $valb) ? -1 : 1;
+  }
+
+  function aircraft_search($search) {
+    global $rvar_pilot;
+
+    $sql = "select distinct ident from logbook where ident like '%$search%'";
+    if(isset($rvar_pilot)) {
+      $sql = $sql . " and pilot_id = " . (int) $rvar_pilot;
+    }
+    if($sqlresponse = mysql_query($sql)) {
+      $list = array();
+      while($line = mysql_fetch_array($sqlresponse)) {
+        $list[] = $line['ident'];
+      }
+      return $list;
+    }
+  }
+
+  function aircraft_cmp($a,$b) {
+    global $rvar_pilot;
+
+    $pilot = 0;
+    if(isset($rvar_pilot)) {
+      $pilot = $rvar_pilot;
+    }
+
+    $vala = aircraft_flights($a,$pilot);
+    $valb = aircraft_flights($b,$pilot);
+
+    if($vala == $valb) return 0;
+    return ($vala > $valb) ? -1 : 1;
+  }
+
+  function aircraft_flights($ident,$pilot) {
+    $sql = "select count(id) as flights from logbook where ident = '$ident'";
+    if($pilot > 0) {
+      $sql = $sql . " and pilot_id = $pilot";
+    }
+    if($line = mysql_fetch_array(mysql_query($sql))) {
+      return $line['flights'];
+    }
+    return 0;
+  }
+
+  function aircraft_id($ident,$pilot) {
+    $sql = "select id from aircraft where ident = '$ident' and pilot_id = $pilot";
+    if($line = mysql_fetch_array(mysql_query($sql))) {
+      return $line['id'];
+    }
+  }
+
+  function aircraft_detail($id) {
+    $sql = "select * from aircraft where id = $id";
+    $detail = mysql_fetch_array(mysql_query($sql));
+
+    $sql = "SELECT count(id) as flights, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE ident = '$detail[ident]' and pilot_id = $detail[pilot_id]";
+    $totals = mysql_fetch_array(mysql_query($sql));
+    return array_merge($detail,$totals);
+  }
+
+  function pax_search($search) {
+    global $rvar_pilot;
+
+    $buf = '';
+    $sql = "select distinct passengers from logbook";
+    if(isset($rvar_pilot)) {
+      $sql = $sql . " where pilot_id = $rvar_pilot";
+    }
+    $sqlresponse = mysql_query($sql);
+    while($line = mysql_fetch_array($sqlresponse)) {
+      $buf = $buf . " " . $line['passengers'];
+    }
+    $buf = " " . strtoupper($buf) . " ";
+    $buf = preg_replace("/ LCL /"," ",$buf);
+    $buf=trim($buf);
+    $elements = explode(" ",$buf);
+    $elements = array_values(array_unique($elements));
+    usort($elements,"pax_cmp");
+    return $elements;
+  }
+
+  function pax_cmp($a,$b) {
+    global $rvar_pilot;
+
+    $pilot = 0;
+    if(isset($rvar_pilot)) {
+      $pilot = $rvar_pilot;
+    }
+
+    $vala = pax_flights($a,$pilot);
+    $valb = pax_flights($b,$pilot);
+
+    if($vala == $valb) return 0;
+    return ($vala > $valb) ? -1 : 1;
+  }
+
+  function pax_flights($alias,$pilot) {
+    $sql = "select count(id) as flights from logbook where concat(' ',passengers,' ') like '% $alias %'";
+    if($pilot > 0) {
+      $sql = $sql . " and pilot_id = $pilot";
+    }
+    if($line = mysql_fetch_array(mysql_query($sql))) {
+      return $line['flights'];
+    }
+    return 0;
+  }
+
+  function pax_detail($alias,$pilot,$whereclause) {
+    $filler['id'] = 0;
+    $filler['detail'] = '';
+    $filler['image_url'] = '';
+    $filler['fullname'] = '';
+
+    $sql = "select * from passengers where alias = '$alias' and pilot_id = $pilot";
+    if($sqlresponse=mysql_query($sql)) {
+      $line = mysql_fetch_array($sqlresponse);
+    }
+
+    $wherebuf = "where concat(' ',passengers,' ') like '% $alias %' and pilot_id = $pilot";
+    if($whereclause) {
+      $wherebuf = $wherebuf . " and " . $whereclause;
+    }
+
+    $sql = "SELECT count(id) as flights, sum(landings_day+landings_night) as landings, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook $wherebuf";
+    if($sqlresponse=mysql_query($sql)) {
+      $totals = mysql_fetch_array($sqlresponse);
+    }
+
+    $segments = 0;
+    $sql = "select route from logbook $wherebuf";
+    $sqlresponse = mysql_query($sql);
+    while($segs = mysql_fetch_array($sqlresponse)) {
+      $hops = preg_split("/ +/",$segs['route'],-1,PREG_SPLIT_NO_EMPTY);
+      $segments = $segments + count($hops)-1;
+    }
+    $line['segments'] = $segments;
+
+    return array_merge($filler,$line,$totals);
+  }
+
+  function pax_status($alias,$pilot) {
+    $GLOBALS['statusgoals']= array (
+                         "Silver:30:30",
+                         "Gold:60:60",
+                         "Platinum:90:90"
+                        );
+
+    $thisyear = date("Y");
+    $lastyear = date("Y") - 1;
+    $status = "&nbsp;";
+        
+    $paxalias = "concat(' ',passengers,' ') like '% $alias %' and pilot_id=$pilot";
+        
+    $sql = "select count(id) as flights, sum(landings_day+landings_night) as segments, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE $paxalias and date >= '$thisyear-01-01'";
+    $yeartotals = mysql_fetch_array(mysql_query($sql));
+    $sql = "select count(id) as flights, sum(landings_day+landings_night) as segments, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE $paxalias and date >= '$lastyear-01-01' and date <= '$lastyear-12-31'";
+    $lasttotals = mysql_fetch_array(mysql_query($sql));
+        
+    $flights = larger($yeartotals['flights'],$lasttotals['flights']);
+    $segments = larger($yeartotals['segments'],$lasttotals['segments']);
+    $total_hours = larger($yeartotals['total_hours'],$lasttotals['total_hours']);
+                
+    for($i=0; $i<count($GLOBALS['statusgoals']); $i++) {
+      list($tiername,$tiersegments,$tierhours) = preg_split("/:/",$GLOBALS['statusgoals'][$i]);
+      if($segments > $tiersegments) {
+        $status = $tiername;
+      }
+      if($total_hours > $tierhours) {
+         $status = $tiername;
+      }
+    }
+    return $status;
   }
 
 ?>
