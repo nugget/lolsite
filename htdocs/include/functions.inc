@@ -86,10 +86,9 @@
   function split_decimal($num) {
     $i = (int)$num;
     print "<td class=\"integer\">$i</td>";
-    $f = (int)(($num - $i) * 100 + 0.5);
-    # this logic breaks with fractions x.0 < f < x.1, oh well
-    while ($f > 0 && $f % 10 == 0) { # trim trailing zeros
-        $f /= 10;
+    $f = sprintf("%02d", (int)(($num - $i) * 100 + 0.5));
+    while (strlen($f) > 1 && $f[strlen($f)-1] == '0') { # trim trailing zeros
+        $f = substr($f, 0, strlen($f)-1);
     }
     print "<td class=\"decimal\">$f</td>";
   }
