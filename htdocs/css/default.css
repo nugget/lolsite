@@ -179,7 +179,7 @@ div#logbook td.integer {
 }
 div#logbook td.decimal {
   border-left: 1px dashed #777777;
-  text-align: right;
+  text-align: left;
   width: 10px;
 }
 div#logbook td.hidden {

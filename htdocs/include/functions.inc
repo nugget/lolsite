@@ -84,17 +84,14 @@
   // Formatting and display functions
 
   function split_decimal($num) {
-    $buf = sprintf("%4.1f",$num);
-    print "<td class=\"integer\">";
-    for($i=0; $i<strlen($buf); $i++) {
-      $c = substr($buf,$i,1);
-      if($c == '.') {
-        print "</td><td class=\"decimal\">";
-      } else {
-        print $c;
-      }
+    $i = (int)$num;
+    print "<td class=\"integer\">$i</td>";
+    $f = (int)(($num - $i) * 100 + 0.5);
+    # this logic breaks with fractions x.0 < f < x.1, oh well
+    while ($f > 0 && $f % 10 == 0) { # trim trailing zeros
+        $f /= 10;
     }
-    print "</td>";
+    print "<td class=\"decimal\">$f</td>";
   }
 
   function hobbs($hours) {
