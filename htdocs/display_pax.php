@@ -1,7 +1,7 @@
 <?php
  $title = "Passengers Database";
 
- $year = date("Y");
+ $thisyear = date("Y");
 
  include "init.inc";
 
@@ -54,8 +54,9 @@
   }
 
   $status = pax_status($alias,$rvar_pilot,"");
-
   $line = pax_detail($alias,$rvar_pilot,"");
+  $year = pax_detail($alias,$rvar_pilot,"date >= '$thisyear-01-01' and date <= '$thisyear-12-31'");
+
   $id = $line['id'];
   if($id > 0) {
     $detaillink="detail_pax.php?id=$id";

@@ -387,7 +387,7 @@
     while($line = mysql_fetch_array($sqlresponse)) {
       $buf = $buf . " " . $line['passengers'];
     }
-    $buf = " " . strtoupper($buf) . " ";
+    $buf = " " . strtolower($buf) . " ";
     $buf = preg_replace("/ LCL /"," ",$buf);
     $buf=trim($buf);
     $elements = explode(" ",$buf);
