@@ -759,25 +759,24 @@
     }
 
     if($GLOBALS['dbtype'] == 'mysql') {
-      $wherebuf = "where concat(' ',passengers,' ') like '% $alias %' and pilot_id = $pilot";
+      $wherebuf = "concat(' ',passengers,' ') like '% $alias %' and pilot_id = $pilot";
     } else {
-      $wherebuf = "where ' '||passengers||' ' like '% $alias %' and pilot_id = $pilot";
+      $wherebuf = "' '||passengers||' ' like '% $alias %' and pilot_id = $pilot";
     }
     if($whereclause) {
       $wherebuf = $wherebuf . " and " . $whereclause;
     }
 
-    $sql = "SELECT count(id) as flights, sum(landings_day+landings_night) as landings, min(date) as first_flight, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook $wherebuf";
+    $sql = "SELECT count(id) as flights, sum(landings_day+landings_night) as landings, min(date) as first_flight, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook where $wherebuf";
     if($sqlresponse=lol_query($sql)) {
       $totals = lol_fetch_array($sqlresponse);
     }
 
     $segments = 0;
-    $sql = "select route from logbook $wherebuf";
+    $sql = "select count(logbook_id) - 1 from logbook, flight_route where logbook.id = flight_route.logbook_id and $wherebuf group by logbook_id";
     $sqlresponse = lol_query($sql);
-    while($segs = lol_fetch_array($sqlresponse)) {
-      $hops = preg_split("/ +/",$segs['route'],-1,PREG_SPLIT_NO_EMPTY);
-      $segments = $segments + count($hops)-1;
+    while ($segs = lol_fetch_array($sqlresponse)) {
+      $segments += $segs[0];
     }
     $line['segments'] = $segments;
 
