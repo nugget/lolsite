@@ -34,7 +34,7 @@
 
       $notice_title = "Login Incorrect";
       $notice_text  = "The login credentials you supplied were not valid.
-                       Please enter a valid username and password.";
+                       Please enter a valid username and password. ($rvar_lol_username/$rvar_lol_password/$rvar_lol_passhash)";
     }
   }
 
@@ -46,7 +46,7 @@
 
     <h2>Login/Register</h2>
 
-    <form action="login.php" method="post">
+    <form action="login.php" method="get">
       <table class="tightbox">
         <tr>
           <th>Login:</th>
