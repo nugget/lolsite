@@ -256,3 +256,14 @@ div#menu a {
   padding-bottom: 4px;
   border-bottom: 1px solid black;
 }
+
+#block3 {
+  background-color: #c9c9c9;
+  float: left;
+  text-align: center;
+  width: auto;
+  padding: 0px;
+  border: 1px solid black;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}

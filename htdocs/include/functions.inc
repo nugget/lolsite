@@ -250,6 +250,17 @@
     $line = mysql_fetch_array(mysql_query($sql));
     return $line;
   }
+
+  function logbook_recent() {
+    $sql = "select id from logbook order by date desc limit 10";
+    if($sqlresponse = mysql_query($sql)) {
+      $list = array();
+      while($line = mysql_fetch_array($sqlresponse)) {
+        $list[] = $line['id'];
+      }
+      return $list;
+    }
+  } 
      
   function aircraft_equipment($ident) {
     global $rvar_pilot;
@@ -258,6 +269,16 @@
       if($line = mysql_fetch_array(mysql_query($sql))) {
         return $line['makemodel'];
       }
+    }
+  }
+
+  function airport_exists($ident) {
+    $buf = mysql_fetch_array(mysql_query("select count(ident) as num from airports where ident = '$ident'"));
+    $buf = $buf['num'];
+    if($buf > 0) {
+      return TRUE;
+    } else {
+      return FALSE;
     }
   }
 
@@ -289,10 +310,30 @@
     } else {
       $pilot = $rvar_pilot;
     }
+
+    $filler['pilot_id'] = $pilot;
+    $filler['ident'] = $ident;
+    $filler['image_url'] = '';
+    $filler['link_url'] = '';
+    $filler['fullname'] = '';
+    $filler['city'] = '';
+    $filler['timezone'] = '';
+    $filler['tower'] = 0;
+    $filler['detail'] = '';
+
     $sql = "select * from airports where ident = '$ident' and (pilot_id = 0 or pilot_id = $pilot)";
     $detail = mysql_fetch_array(mysql_query($sql));
 
-    return $detail;
+    $sql = "select count(id) as visits, min(date) first_visit, max(date) as last_visit from logbook where concat(' ',route,' ') like '% $ident %'";
+    if($pilot > 0) {
+      $sql = $sql . " and pilot_id = $pilot";
+    }
+    $totals = mysql_fetch_array(mysql_query($sql));
+
+    $sql = "select count(*) as record_exists from airports where ident = '$ident'";
+    $recs = mysql_fetch_array(mysql_query($sql));
+   
+    return array_merge($filler,$detail,$totals, $recs);
   }
 
   function airport_name($ident) {
@@ -300,7 +341,7 @@
     $sql = "select ident, fullname from airports where ident = '$ident' or ident = 'K$ident'";
     if($line = mysql_fetch_array(mysql_query($sql))) {
       if(isset($line['fullname'])) {
-        return $line['fullname'] . " (" . $line['visits'] . ")";
+        return $line['fullname'] . " (" . $line['ident'] . ")";
       } else {
         return $line['ident'];
       }

@@ -10,14 +10,6 @@
 
  include "head.inc";
 
- if(is_user()) {
-   ?>
-   <div id="buttonbar">
-    <form action="edit_airport.php"><input type="hidden" value="<?php print 0; ?>" name="id"><input type="submit" value="Submit an Entry"></form>
-   </div>
-   <?php
- }
-
 ?>
 
  <div id="logbook">

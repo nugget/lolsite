@@ -3,28 +3,43 @@
 
  include "init.inc";
 
- if(isset($rvar_ident)) {
-   if(!$line = airport_detail($rvar_ident)) {
-     $error_title ="Airport not in Database";
-     $error_text = "$rvar_ident is not in the lol database yet.";
-   } else {
-     $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
-   }
- } else {
+ if(!isset($rvar_ident)) {
    $error_title ="No Airport Specified";
    $error_text = "You must specify an Airport Code";
  }
+ $line = airport_detail($rvar_ident);
+ $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
 
  include "head.inc";
 
- if(is_admin()) {
-   ?>
-   <div id="buttonbar">
-    <form action="edit_airports.php"><input type="hidden" value="<?php print $rvar_id; ?>" name="id"><input type="submit" value="Edit Entry"></form>
-   </div>
-   <?php
+ if(is_mine()) {
+   if(is_user()) {
+     if($line['record_exists'] == 0) {
+     ?>
+     <div id="buttonbar">
+      <form action="edit_airports.php">
+       <input type="hidden" value="<?php print $rvar_pilot; ?>" name="pilot">
+       <input type="hidden" value="<?php print $line['ident']; ?>" name="ident">
+       <input type="submit" value="Submit Info"></form>
+     </div>
+     <?php
+     } else {
+       $line['detail'] = $line['detail'] . "\n\n<strong>Information for this airport has been submitted and is pending administrative approval.</strong>";
+     }
+   }
+ } else {
+   if(is_admin()) {
+     ?>
+     <div id="buttonbar">
+      <form action="edit_airports.php">
+       <input type="hidden" value="<php print $rvar_pilot; ?>" name="pilot">
+       <input type="hidden" value="<php print $line['ident']; ?>" name="ident">
+       <input type="submit" value="Submit Info"></form>
+     </div>
+     <?php
+   }
  }
-
+  $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
 ?>
  <div id="logbook">
  <table>
@@ -46,8 +61,8 @@
    <td><?php print $line['ident']; ?></td>
    <td><?php print $line['fullname']; ?></td>
    <td><?php print $line['city']; ?></td>
-   <td><?php print $totals['last_visit']; ?></td>
-   <td class="integer"><?php print $totals['visits']; ?></td>
+   <td><?php print $line['last_visit']; ?></td>
+   <td class="integer"><?php print $line['visits']; ?></td>
   </tr>
 
   <tr>
@@ -58,7 +73,7 @@
   <tr>
    <td><?php print $line['timezone']; ?></td>
    <td colspan="6">
-    Tower-Controlled: <?php print yesno($line[tower]); ?>
+    Tower-Controlled: <?php print yesno($line['tower']); ?>
    </td>
   </tr>
 

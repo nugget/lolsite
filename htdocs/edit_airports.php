@@ -1,55 +1,64 @@
 <?php
- $title = "Edit Airport";
+ $title = "airport: Edit";
+ $cvs="\$Id$";
 
  include "init.inc";
 
- import_request_variables("gpc","rvar_");
- if(isset($rvar_scrape)) {
-   header("Location: scrape_airports.php?ident=$rvar_ident");
-   exit;
+ #if(isset($rvar_scrape)) {
+ #  header("Location: scrape_airports.php?ident=$rvar_ident");
+ #  exit;
+ #}
+
+ if(!isset($rvar_ident)) {
+   $error_title = "No ident Specified";
+   $error_text = "I can't continue if you don't tell me which airport!";
+ } else {
+   if($rvar_ident == '') {
+     if(!isset($rvar_pilot)) {
+       $error_title = "No pilot specified";
+       $error_text = "You must specify a pilot in order to add a new airplane entry.";
+     }
+     $title = "airplane: Submit";
+   }
+   $ident = $rvar_ident;
+   $line = airport_detail($ident);
  }
- $rvar_id = (int) $rvar_id;
- if($rvar_id == 0) {
-   $title = "Add New Airport";
+
+ if((!is_mine()) and (!is_admin())) {
+   $error_title = "Up To No Good";
+   $error_text = "I can't edit an entry if you don't own it!";
+   unset($rvar_submit);
  }
- if(!$rvar_pilot = is_user()) {
-   $error_title = "Must be logged in";
-   $error_text = "You must be logged in to submit an airport.";
-   unset($rvar_pilot);
- }
+
  if(isset($rvar_ident)) {
    $rvar_ident=strtoupper($rvar_ident);
-   if(!$rvar_link_url) {
+   if(!isset($rvar_link_url)) {
      $rvar_link_url = "http://www.airnav.com/airport/" . $rvar_ident;
    }
  }
    
  if(isset($rvar_submit)) {
    # I see data, we need to insert/update as required.
-   $rvar_tower = (int) $rvar_tower;
-   if($rvar_id == 0) {
+   if(!isset($rvar_tower)) { $rvar_tower = 0; } else { $rvar_tower = 1; }
+   if(!airport_exists($rvar_ident)) {
      # new logbook entry
      $sql = "INSERT INTO airports VALUES " .
-        "(NULL,'$rvar_ident', $rvar_pilot, '$rvar_fullname', '$rvar_city', " .
+        "('$rvar_ident',$rvar_pilot,'$rvar_fullname', '$rvar_city', " .
         "'$rvar_timezone',$rvar_tower, " .
         "'$rvar_image_url','$rvar_link_url','$rvar_detail')";
    } else {
      # editing an old entry
      $sql = "UPDATE airports SET " .
-        "ident='$rvar_ident', pilot_id=$rvar_pilot, fullname='$rvar_fullname', city='$rvar_city', " .
+        "pilot_id=$rvar_pilot, fullname='$rvar_fullname', city='$rvar_city', " .
         "timezone='$rvar_timezone',tower=$rvar_tower, " .
-        "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where id = $rvar_id";
+        "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where ident = '$rvar_ident'";
    }
    $sql_response = mysql_query($sql);
 
-   if($rvar_id > 0) {
-      $target = "detail_airports.php?id=$rvar_id";
-   } else {
-      $target = "display_airports.php";
-   }
-   header("Location: target");
+   $target = "airport.php?ident=$rvar_ident&pilot=$rvar_pilot";
+   header("Location: $target");
 
-   include "foot.php";
+   include "foot.inc";
    exit;
  }
 
@@ -60,13 +69,6 @@
  <form method="get" action="edit_airports.php">
  <div id="logbook">
  <table width="100%">
-
-<?php
-
- $line = airport_detail($rvar_id);
-
-?>
-
   <tr>
    <th>Ident</th>
    <th>Name</th>
@@ -74,7 +76,7 @@
   </tr>
 
   <tr>
-   <td><input type="text" name="ident" size="11" value="<?php print $line['ident']; ?>"></td>
+   <td><strong><?php print $rvar_ident; ?></strong></td>
    <td><input type="text" name="fullname" size="40" value="<?php print $line['fullname']; ?>"></td>
    <td><input type="text" name="city" size="40" value="<?php print $line['city']; ?>"></td>
   </tr>
@@ -110,14 +112,14 @@
   <tr>
    <td colspan="3" align="center">
     <input name="submit" type="submit" value="Save Changes" />
-    <?php if($rvar_id == 0) { ?><input name="scrape" type="submit" value="Scrape Data from AirNav.com"><?php } ?>
    </td>
   </tr>
  </table>
  </div>
- <input type="hidden" name="id" value="<?php print $rvar_id; ?>" />
+ <input type="hidden" name="pilot" value="<?php print $rvar_pilot; ?>" />
+ <input type="hidden" name="ident" value="<?php print $rvar_ident; ?>" />
  </form>
 
 <?
- include "foot.php";
+ include "foot.inc";
 ?>
