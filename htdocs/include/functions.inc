@@ -408,7 +408,12 @@
   }
 
   function airport_visits($ident,$pilot) {
-    $sql = "select count(id) as visits from logbook where ' '||route||' ' like '% $ident %' or ' '||route||' ' like '% k$ident %'";
+    if($GLOBALS['dbtype'] == 'mysql') {
+      $routewhere = "concat(' ',route,' ')";
+    } else {
+      $routewhere = "' '||route||' '";
+    }
+    $sql = "select count(id) as visits from logbook where $routewhere like '% $ident %' or $routewhere like '% k$ident %'";
     if($line = lol_fetch_array(lol_query($sql))) {
       return $line['visits'];
     }
@@ -556,15 +561,23 @@
       $pilot = $rvar_pilot;
     }
 
-    $vala = pax_flights($a,$pilot);
-    $valb = pax_flights($b,$pilot);
+    $bufa = pax_detail($a,$pilot,"");
+    $bufb = pax_detail($b,$pilot,"");
+
+    $vala = $bufa['total_hours'];
+    $valb = $bufb['total_hours'];
 
     if($vala == $valb) return 0;
     return ($vala > $valb) ? -1 : 1;
   }
 
   function pax_flights($alias,$pilot) {
-    $sql = "select count(id) as flights from logbook where ' '||passengers||' ' like '% $alias %'";
+    if($GLOBALS['dbtype'] == 'mysql') {
+      $paxwhere = "concat(' ',passengers,' ')";
+    } else {
+      $paxwhere = "' '||passengers||' '";
+    }
+    $sql = "select count(id) as flights from logbook where $paxwhere like '% $alias %'";
     if($pilot > 0) {
       $sql = $sql . " and pilot_id = $pilot";
     }
@@ -588,7 +601,11 @@
       $line = lol_fetch_array($sqlresponse);
     }
 
-    $wherebuf = "where ' '||passengers||' ' like '% $alias %' and pilot_id = $pilot";
+    if($GLOBALS['dbtype'] == 'mysql') {
+      $wherebuf = "where concat(' ',passengers,' ') like '% $alias %' and pilot_id = $pilot";
+    } else {
+      $wherebuf = "where ' '||passengers||' ' like '% $alias %' and pilot_id = $pilot";
+    }
     if($whereclause) {
       $wherebuf = $wherebuf . " and " . $whereclause;
     }
@@ -615,7 +632,12 @@
     $lastyear = date("Y") - 1;
     $status = "&nbsp;";
         
-    $paxalias = "' '||passengers||' ' like '% $alias %' and pilot_id=$pilot";
+    if($GLOBALS['dbtype'] == 'mysql') {
+      $paxwhere = "concat(' ',passengers,' ')";
+    } else {
+      $paxwhere = "' '||passengers||' '";
+    }
+    $paxalias = "$paxwhere like '% $alias %' and pilot_id=$pilot";
         
     $sql = "select count(id) as flights, sum(landings_day+landings_night) as segments, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook WHERE $paxalias and date >= '$thisyear-01-01'";
     $yeartotals = lol_fetch_array(lol_query($sql));
