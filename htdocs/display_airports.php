@@ -61,7 +61,7 @@
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
    <td nowrap="nowrap"><?php print $name; ?></td>
-   <td nowrap="nowrap"><?php print $line['city']; ?></td>
+   <td nowrap="nowrap"><?php print $line['city']; ?>&nbsp;</td>
    <td><?php print airport_visits($ident,$rvar_pilot); ?></td>
    <td><?php print $line['detail']; ?>&nbsp;</td>
    <td class="hidden"><?php print $features; ?></td>

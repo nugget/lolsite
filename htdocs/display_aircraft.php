@@ -69,9 +69,9 @@
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
    <td><?php print $line['ident']; ?></td>
-   <td><?php print $line['makemodel']; ?></td>
+   <td><?php print $line['makemodel']; ?>&nbsp;</td>
    <td><?php print class_lookup($line['aircraft_class']); ?></td>
-   <td><?php print $line['home_field']; ?></td>
+   <td><?php print $line['home_field']; ?>&nbsp;</td>
    <td><?php print checkmark($line['complex']); ?></td>
    <td><?php print checkmark($line['high_perf']); ?></td>
    <td><?php print checkmark($line['tailwheel']); ?></td>

@@ -50,7 +50,7 @@
 
   <tr>
    <td><?php print $line['ident']; ?></td>
-   <td><?php print $line['makemodel']; ?></td>
+   <td><?php print $line['makemodel']; ?>&nbsp;</td>
    <td><?php print $line['classname']; ?></td>
    <td><?php print $line['last_flight']; ?></td>
    <td class="integer"><?php print $line['flights']; ?></td>
@@ -63,7 +63,7 @@
   </tr>
 
   <tr>
-   <td><?php print $line['home_field']; ?></td>
+   <td><?php print $line['home_field']; ?>&nbsp;</td>
    <td colspan="6">
     Complex: <?php print yesno($line['complex']); ?>
     High Performance: <?php print yesno($line['high_perf']); ?>

@@ -156,7 +156,7 @@
    <td class="integer"><?php echo $line['landings_day']; ?></td>
    <td class="integer"><?php echo $line['landings_night']; ?></td>
    <td class="integer"><?php echo count_elements($line['passengers']); ?></td>
-   <td><?php echo $line['remarks']; ?></td
+   <td><?php echo $line['remarks']; ?>&nbsp;</td
   </tr>
 <?php
  };

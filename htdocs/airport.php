@@ -59,8 +59,8 @@
 
   <tr>
    <td><?php print $line['ident']; ?></td>
-   <td><?php print $line['fullname']; ?></td>
-   <td><?php print $line['city']; ?></td>
+   <td><?php print $line['fullname']; ?>&nbsp;</td>
+   <td><?php print $line['city']; ?>&nbsp;</td>
    <td><?php print $line['last_visit']; ?></td>
    <td class="integer"><?php print $line['visits']; ?></td>
   </tr>
@@ -71,7 +71,7 @@
   </tr>
 
   <tr>
-   <td><?php print $line['timezone']; ?></td>
+   <td><?php print $line['timezone']; ?>&nbsp;</td>
    <td colspan="6">
     Tower-Controlled: <?php print yesno($line['tower']); ?>
    </td>
