@@ -146,7 +146,7 @@
 
          <tr>
            <th style="text-align: right;">Certifications</th>
-           <td><?php for($i=0; $i<count($certlist); $i++) { print $certlist[$i] . " "; } ?></td>
+           <td><?php for($i=0; $i<count($certlist); $i++) { print $certlist[$i]['code'] . " "; } ?></td>
          </tr>
 
        </table>

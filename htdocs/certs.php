@@ -1,5 +1,5 @@
 <?php
- $title = "certificates";
+ $title = "certificates and endorsements";
  $cvs="\$Id$";
  $keywords="logbook online";
 
@@ -53,11 +53,14 @@
    ?>
 
     <tr>
-     <th><font size="+2"><?php print $certlist[$i]['name']; ?></font></th>
+     <th colspan="2">
+      <font size="+2"><?php print $certlist[$i]['name']; ?></font>
+      (CFR 14 &sect; <?php print $certlist[$i]['far_part']; ?>)
+     </th>
+    </tr><tr>
      <td>
       Certificate #<?php print $certlist[$i]['number']; ?>
-      <br />
-      Issued on <?php print $certlist[$i]['issued']; ?>
+      issued on <?php print $certlist[$i]['issued']; ?>
       <br />
       <?php print $ratinglist; ?>
      </td>
@@ -78,6 +81,7 @@
  ?>
 
   </table>
+
  </div>
 
  <?php
