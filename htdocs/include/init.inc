@@ -3,7 +3,7 @@
   // $Id$
 
   // guard against local php setting deviations
-  error_reporting(0);
+  error_reporting(E_ALL);
   ini_set('safe_mode',1);
   ini_set('register_globals',0);
   
@@ -63,5 +63,15 @@
   if(array_key_exists('error_reporting',$GLOBALS)) {
     error_reporting((int) $GLOBALS['error_reporting']);
   }
+
+  // REMOVE THIS
+  error_reporting(E_ALL);
+
+  // OK, Everything looks healthy, let's pull in our provided stuff from the user
+  import_request_variables("gpc","rvar_");
+
+  // optional but worthwhile casting on significant rvars
+
+  include("functions.inc");
 
 ?>

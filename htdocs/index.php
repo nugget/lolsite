@@ -8,6 +8,10 @@
 
 ?>
 
+  <h2>Testing</h2>
+
+  <p> is_user() = <?php print is_user(); ?></p>
+  <p> is_admin() = <?php print is_admin(); ?></p>
 
 <?php
 

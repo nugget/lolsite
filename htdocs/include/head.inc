@@ -3,8 +3,6 @@
 
   $utime_start = microtime();
 
-  import_request_variables("gpc","rvar_");
-
   print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
   if(!isset($template)) $template = "default";
@@ -16,7 +14,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
  <head>
-  <title><?php print "lol :: $title" ?></title>
+  <title><?php print $GLOBALS['server_tag'] . " lol :: $title" ?></title>
   <meta http-equiv="CVS" content="<?php print $cvs ?>" />
   <meta http-equiv="pragma" content="no-cache" />
   <meta name="keywords" content="<?php print $keywords ?>" />
@@ -41,4 +39,15 @@
    <h1><?php print $title ?></h1>
    <div id="menu">
      <a href=".">Main</a>
+     <?php if(!is_user()) print "<a href=\"login.php\">Login/Register</a>"; ?>
    </div>
+
+<?php
+  if(isset($notice_title)) {
+    print "
+    <div class=\"warning\">
+      <h2>$notice_title</h2>
+      <p>$notice_text</p>
+    </div>";
+  }
+?>
