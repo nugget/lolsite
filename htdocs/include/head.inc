@@ -1,5 +1,4 @@
 <?php
-
   // $Id$
 
   $utime_start = microtime();
@@ -8,8 +7,9 @@
 
   print "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 
-  if(!$template) $template = "default";
-  if(!$keywords) $keywords = "logbook online ityt.com";
+  if(!isset($template)) $template = "default";
+  if(!isset($keywords)) $keywords = "logbook online ityt.com";
+
 ?>
 <!DOCTYPE html
      PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -21,26 +21,12 @@
   <meta http-equiv="pragma" content="no-cache" />
   <meta name="keywords" content="<?php print $keywords ?>" />
   <meta name="copyright" content="Copyright 2002-<?php print date ("Y"); ?> Daniel A. Baker and David C. McNett.  All Rights Reserved." />
-  <link rel="stylesheet" href="<?php print "$baseurl/css/$template.css" ?>" type="text/css" />
-  <?php if($cssstyle) { print "<link rel=\"stylesheet\" href=\"$baseurl/css/$cssstyle.css\" type=\"text/css\" />\n"; } ?>
-  <?php if($refresh) { print "<meta http-equiv=\"refresh\" content=\"$refresh\">\n"; } ?>
-
+  <link rel="stylesheet" href="<?php print "$GLOBALS[baseurl]/css/$template.css" ?>" type="text/css" />
+  <?php if(isset($cssstyle)) { print "<link rel=\"stylesheet\" href=\"$GLOBALS[baseurl]/css/$cssstyle.css\" type=\"text/css\" />\n"; } ?>
+  <?php if(isset($refresh)) { print "<meta http-equiv=\"refresh\" content=\"$refresh\">\n"; } ?>
  </head>
 
  <body>
-
-<?php
-
- $checkconfig = is_readable("include/config.inc");
- if (!$checkconfig) {
-  echo "<p><strong>Fatal Error</strong></p>";
-  echo "<p>Unable to read configuration file.  Did you read <strong>docs/INSTALL</strong>?</p>";
-  echo "</body></html>";
-  die;
- };
-
-?>
-
    <div class="headerleft">
      <p class="header">
        <strong>lol</strong>
