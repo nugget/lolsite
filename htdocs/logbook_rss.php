@@ -22,7 +22,7 @@
 <rss version="2.0">
     <channel>
         <title><?php echo $pilot_name ?>'s logbook</title>
-        <link><?php print $_SERVER['SERVER_NAME'] . '/' . $GLOBALS['baseurl']; ?>/display_logbook.php?pilot=<?php print $pilot_name; ?></link>
+        <link><?php echo "http://$host$GLOBALS[baseurl]/display_logbook.php?pilot=$pilot_name" ?></link>
         <description>Logbook for <?php echo $pilot_name ?></description>
 <?php
     $n = 0;
