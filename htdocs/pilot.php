@@ -12,6 +12,7 @@
 
  include "include/head.inc";
 
+ $firststats = pilot_firststats($rvar_pilot);
  $solostats = pilot_solostats($rvar_pilot);
  $xcstats   = pilot_xcstats($rvar_pilot);
  $pplstats  = pilot_certstats($rvar_pilot,'Private');
@@ -28,8 +29,19 @@
        <table>
          <tr><th>Achievement</th><th>Date</th><th>Flight</th><th colspan="2">Hours</th></tr>
 
+         <tr onMouseOver=this.style.backgroundColor="#ffffff"
+             onMouseOut=this.style.backgroundColor=""
+             onclick="window.location.href='<?php print "detail_logbook.php?id=$firststats[id]" ?>'" >
+           <td>First Flight</td>
+           <td><?php print $firststats['date']; ?></td>
+           <td class="integer"><?php print $firststats['flights']; ?></td>
+           <?php print split_decimal($firststats['hours']); ?>
+         </tr>
+
          <?php if($solostats['date']) { ?>
-         <tr>
+         <tr onMouseOver=this.style.backgroundColor="#ffffff"
+             onMouseOut=this.style.backgroundColor=""
+             onclick="window.location.href='<?php print "detail_logbook.php?id=$solostats[id]" ?>'" >
            <td>First Solo</td>
            <td><?php print $solostats['date']; ?></td>
            <td class="integer"><?php print $solostats['flights']; ?></td>
@@ -38,7 +50,9 @@
          <?php } ?>
 
          <?php if($xcstats['date']) { ?>
-         <tr>
+         <tr onMouseOver=this.style.backgroundColor="#ffffff"
+             onMouseOut=this.style.backgroundColor=""
+             onclick="window.location.href='<?php print "detail_logbook.php?id=$xcstats[id]" ?>'" >
            <td>First Cross Country</td>
            <td><?php print $xcstats['date']; ?></td>
            <td class="integer"><?php print $xcstats['flights']; ?></td>
@@ -47,7 +61,9 @@
          <?php } ?>
 
          <?php if($pplstats['date']) { ?>
-          <tr>
+         <tr onMouseOver=this.style.backgroundColor="#ffffff"
+             onMouseOut=this.style.backgroundColor=""
+             onclick="window.location.href='<?php print "detail_logbook.php?id=$pplstats[id]" ?>'" >
             <td>Private Pilots License</td>
             <td><?php print $pplstats['date']; ?></td>
             <td class="integer"><?php print $pplstats['flights']; ?></td>
@@ -56,7 +72,9 @@
           <?php } ?>
 
           <?php if($gliderstats['date']) { ?>
-          <tr>
+          <tr onMouseOver=this.style.backgroundColor="#ffffff"
+              onMouseOut=this.style.backgroundColor=""
+              onclick="window.location.href='<?php print "detail_logbook.php?id=$gliderstats[id]" ?>'" >
             <td>Glider Pilots License</td>
             <td><?php print $gliderstats['date']; ?></td>
             <td class="integer"><?php print $gliderstats['flights']; ?></td>
@@ -65,7 +83,9 @@
           <?php } ?>
 
           <?php if($comstats['date']) { ?>
-          <tr>
+          <tr onMouseOver=this.style.backgroundColor="#ffffff"
+              onMouseOut=this.style.backgroundColor=""
+              onclick="window.location.href='<?php print "detail_logbook.php?id=$comstats[id]" ?>'" >
             <td>Commercial Pilots License</td>
             <td><?php print $comstats['date']; ?></td>
             <td class="integer"><?php print $comstats['flights']; ?></td>
@@ -74,7 +94,9 @@
           <?php } ?>
 
           <?php if($cfistats['date']) { ?>
-          <tr>
+          <tr onMouseOver=this.style.backgroundColor="#ffffff"
+              onMouseOut=this.style.backgroundColor=""
+              onclick="window.location.href='<?php print "detail_logbook.php?id=$cfistats[id]" ?>'" >
             <td>CFI License</td>
             <td><?php print $cfistats['date']; ?></td>
             <td class="integer"><?php print $cfistats['flights']; ?></td>
@@ -83,7 +105,9 @@
           <?php } ?>
 
           <?php if($atpstats['date']) { ?>
-          <tr>
+          <tr onMouseOver=this.style.backgroundColor="#ffffff"
+              onMouseOut=this.style.backgroundColor=""
+              onclick="window.location.href='<?php print "detail_logbook.php?id=$atpstats[id]" ?>'" >
             <td>ATP License</td>
             <td><?php print $atpstats['date']; ?></td>
             <td class="integer"><?php print $atpstats['flights']; ?></td>
