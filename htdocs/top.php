@@ -10,8 +10,8 @@
     $n = $rvar_n;
   }
 
+  print "<?xml version=\"1.0\"?>\n";
 ?>
-<?xml version="1.0"?>
 <lol>
   <pilots>
     <?php
