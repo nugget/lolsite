@@ -13,10 +13,21 @@
     $pilotlist = pilot_search("");
   }
   usort($pilotlist,"pilot_cmp");
-  if(count($pilotlist) == 1) {
-    header("Location: pilot.php?pilot=$pilotlist[0]");
-    exit;
+  $pilotlist = array_slice($pilotlist,0,5);
+  #if(count($pilotlist) == 1) {
+  #  header("Location: pilot.php?pilot=$pilotlist[0]");
+  #  exit;
+  #}
+
+  if(isset($rvar_asearch)) {
+    $airportdesc = "Airports Matching [$rvar_asearch]";
+    $airportlist = airport_search($rvar_asearch);
+  } else {
+    $airportdesc = "Top Airports";
+    $airportlist = airport_search("");
   }
+  usort($airportlist,"airport_cmp");
+  $airportlist = array_slice($airportlist,0,10);
 
   include "head.inc";
 
@@ -42,10 +53,21 @@
   </div>
 
   <div id="block2">
-    <h3>Top Airports</h3>
+    <h3><?php print $airportdesc; ?></h3>
     <form action="index.php" method ="get">
       Search: <input type="text" name="asearch" size="20" />
     </form>
+    <?php
+      if(isset($airportlist)) {
+        print "<table>\n";
+        for($i=0; $i<count($airportlist); $i++) {
+          print "<tr>";
+          print "<td><a href=\"airport.php?ident=$airportlist[$i]\">" . airport_name($airportlist[$i]) . "</a></td>";
+          print "</tr>";
+        }
+        print "</table>\n";
+      }
+    ?>
   </div>
 
 <?php

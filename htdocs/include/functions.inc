@@ -151,14 +151,14 @@
     }
   }
 
-  function pilot_search($psearch) {
-    $sql = "select id from pilot where username like '%$psearch%' or displayname like '%$psearch%'";
+  function pilot_search($search) {
+    $sql = "select id from pilot where username like '%$search%' or displayname like '%$search%'";
     if($sqlresponse = mysql_query($sql)) {
-      $plist = array();
-      while($pilot = mysql_fetch_array($sqlresponse)) {
-        $plist[] = $pilot['id'];
+      $list = array();
+      while($line = mysql_fetch_array($sqlresponse)) {
+        $list[] = $line['id'];
       }
-      return $plist;
+      return $list;
     }
   }
 
@@ -223,6 +223,62 @@
         return $line['makemodel'];
       }
     }
+  }
+
+  function airport_search($search) {
+    $buf = '';
+    $sql = "select distinct route from logbook";
+    if(isset($rvar_pilot)) {
+      $sql = $sql . " where pilot_id = $rvar_pilot";
+    }
+    $sqlresponse = mysql_query($sql);
+    while($line = mysql_fetch_array($sqlresponse)) {
+      $buf = $buf . " " . $line['route'];
+    }
+    $buf = " " . strtoupper($buf) . " ";
+    $buf = preg_replace("/ LCL /"," ",$buf);
+    $buf=trim($buf);
+    $elements = explode(" ",$buf);
+    $elements = array_values(array_unique($elements));
+    usort($elements,"airport_cmp");
+    return $elements;
+  }
+
+  function airport_name($ident) {
+    $ident = strtoupper($ident);
+    $sql = "select ident, fullname from airports where ident = '$ident' or ident = 'K$ident'";
+    if($line = mysql_fetch_array(mysql_query($sql))) {
+      if(isset($line['fullname'])) {
+        return $line['fullname'] . " (" . $line['visits'] . ")";
+      } else {
+        return $line['ident'];
+      }
+    } else {
+      return $ident;
+    }
+  }
+
+  function airport_visits($ident,$pilot) {
+    $sql = "select count(id) as visits from logbook where concat(' ',route,' ') like '% $ident %' or concat(' ',route,' ') like '% k$ident %'";
+    if($line = mysql_fetch_array(mysql_query($sql))) {
+      return $line['visits'];
+    }
+    return 0;
+  }
+
+  function airport_cmp($a,$b) {
+    global $rvar_pilot;
+
+    $pilot = 0;
+    if(isset($rvar_pilot)) {
+      $pilot = $rvar_pilot;
+    }
+
+    $vala = airport_visits($a,$pilot);
+    $valb = airport_visits($b,$pilot);
+
+    if($vala == $valb) return 0;
+    return ($vala > $valb) ? -1 : 1;
   }
 
 ?>
