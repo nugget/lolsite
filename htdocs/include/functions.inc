@@ -3,26 +3,32 @@
   // Authentication functions
 
   function lol_query($querystring) {
-    if($GLOBALS['dbtype'] == 'mysql') {
-      return mysql_query($querystring);
-    } else {
-      return pg_query($querystring);
+    if($querystring) {
+      if($GLOBALS['dbtype'] == 'mysql') {
+        return mysql_query($querystring);
+      } else {
+        return pg_query($querystring);
+      }
     }
   }
 
   function lol_fetch_array($qbuf) {
-    if($GLOBALS['dbtype'] == 'mysql') {
-      return mysql_fetch_array($qbuf);
-    } else {
-      return pg_fetch_array($qbuf);
+    if($qbuf) {
+      if($GLOBALS['dbtype'] == 'mysql') {
+        return mysql_fetch_array($qbuf);
+      } else {
+        return pg_fetch_array($qbuf);
+      }
     }
   }
 
   function lol_fetch_row($qbuf) {
-    if($GLOBALS['dbtype'] == 'mysql') {
-      return mysql_fetch_row($qbuf);
-    } else {
-      return pg_fetch_row($qbuf);
+    if($qbuf) {
+      if($GLOBALS['dbtype'] == 'mysql') {
+        return mysql_fetch_row($qbuf);
+      } else {
+        return pg_fetch_row($qbuf);
+      }
     }
   }
 
@@ -177,6 +183,12 @@
 
   // Data functions
 
+  function logbook_launches($whereclause) {
+    $launches = lol_fetch_row(lol_query("SELECT count(launch_type) FROM logbook WHERE $whereclause"));
+    $launches = $launches[0];
+    return $launches;
+  }
+
   function pilot_hours($pilot_id) {
     $count = lol_fetch_row(lol_query("select sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) from logbook where pilot_id = $pilot_id"));
     $count = $count[0];
@@ -317,10 +329,14 @@
     $buf = " " . strtoupper($buf) . " ";
     $buf = preg_replace("/ LCL /"," ",$buf);
     $buf=trim($buf);
-    $elements = explode(" ",$buf);
-    $elements = array_values(array_unique($elements));
-    usort($elements,"airport_cmp");
-    return $elements;
+    if(strlen($buf)>0) {
+      $elements = explode(" ",$buf);
+      $elements = array_values(array_unique($elements));
+      usort($elements,"airport_cmp");
+      return $elements;
+    } else {
+      return;
+    }
   }
 
   function airport_detail($ident) {

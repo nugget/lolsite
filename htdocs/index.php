@@ -22,13 +22,14 @@
     $airportdesc = "Top Airports";
     $airportlist = airport_search("");
   }
-  usort($airportlist,"airport_cmp");
-  $airportlist = array_slice($airportlist,0,10);
+  if(isset($airportlist)) {
+    usort($airportlist,"airport_cmp");
+    $airportlist = array_slice($airportlist,0,10);
+  }
 
   include "include/head.inc";
 
   $flightslist = logbook_recent();
-
 ?>
 
   <div id="block1">

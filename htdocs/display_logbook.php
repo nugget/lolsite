@@ -50,9 +50,7 @@
    $whereclause = $whereclause . "(logbook.passengers like '%$rvar_pax%')";
  }
 
- $sql = "SELECT count(launch_type) FROM logbook WHERE $whereclause";
- $r = pg_fetch_row(pg_query($sql));
- $launch = $r[0] > 0;
+ $launch = logbook_launches($whereclause);
 
  $sql = "SELECT * FROM logbook";
  if($whereclause <> '') {
