@@ -46,7 +46,11 @@
 
    <h1><?php print $working_title ?></h1>
    <div id="menu">
-     <a href=".">Main</a>
+     <a class="global" href=".">Main</a>
+     <?php if(is_user()) print "<a class=\"global\" href=\"logout.php\">Logout</a>"; ?>
+     <?php if(!is_user()) print "<a class=\"global\" href=\"login.php\">Login</a>"; ?>
+
+     <?php if(is_valid()) print "&nbsp;"; ?>
 
      <?php if(is_valid()) print "<a href=\"pilot.php?pilot=$rvar_pilot\">" . pilot_name($rvar_pilot)  . "'s lol</a>"; ?>
      <?php if(is_valid()) print "<a href=\"display_logbook.php?pilot=$rvar_pilot\">Logbook</a>"; ?>
@@ -54,9 +58,6 @@
      <?php if(is_valid()) print "<a href=\"display_airports.php?pilot=$rvar_pilot\">Airports</a>"; ?>
      <?php if(is_valid()) print "<a href=\"display_pax.php?pilot=$rvar_pilot\">Passengers</a>"; ?>
      <?php if(is_valid()) print "<a href=\"statistics.php?pilot=$rvar_pilot\">Statistics</a>"; ?>
-
-     <?php if(is_user()) print "<a href=\"logout.php\">Logout</a>"; ?>
-     <?php if(!is_user()) print "<a href=\"login.php\">Login/Register</a>"; ?>
    </div>
 
 <?php

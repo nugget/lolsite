@@ -208,6 +208,9 @@ div#menu a {
   margin: 0px;
   padding: 2px;
 }
+div#menu a.global {
+  color: #ffff00;
+}
 
 #block1 {
   background-color: #c9c9c9;
