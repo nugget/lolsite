@@ -434,9 +434,9 @@
   function logbook_hours($logid) {
     $sql = "select type_cfi, type_dual, type_pic, type_sic from logbook where id = $logid";
     if($line = lol_fetch_array(lol_query($sql))) {
-      $duration = (int) $line['type_cfi']+$line['type_dual']+$line['type_pic']+$line['type_sic'];
+      $duration = $line['type_cfi']+$line['type_dual']+$line['type_pic']+$line['type_sic'];
       if($line['type_dual'] == $line['type_pic']) {
-        $duration = (int) $duration - $line['type_dual'];
+        $duration = $duration - $line['type_dual'];
       }
     } else {
       $duration = 0;
