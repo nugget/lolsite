@@ -3,10 +3,6 @@ $Id$
 - Configuration to select which classes and types you're interested in or
   perhaps detect that based on your ratings & certs 
 
-- Ratings
-
-- Certifications
-
 - Have configuration item asking for date of birth so that medical
   calc can see if you are >= 40 years of age when your last medical
   certificate was issued.

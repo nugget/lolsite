@@ -31,6 +31,10 @@
 
  $certlist = pilot_certlist($rvar_pilot);
 
+ $currency_text = "Not implemented";
+
+ $medical_text  = "Not implemented";
+
 ?>
 
    <div id="block">
@@ -142,11 +146,24 @@
       <div id="block2">
        <h3>At A Glance...</h3>
        <table>
-         <tr><th colspan="2">Moo</th></tr>
+         <tr><th>Certifications</th></tr>
 
          <tr>
-           <th style="text-align: right;">Certifications</th>
-           <td><?php for($i=0; $i<count($certlist); $i++) { print $certlist[$i]['code'] . " "; } ?></td>
+           <td><?php for($i=0; $i<count($certlist); $i++) { if($certlist[$i]['code'] <> 'Medical') { print $certlist[$i]['code'] . " "; } } ?></td>
+         </tr>
+
+         <tr>
+          <th>Passenger Currency</th>
+         </tr>
+         <tr>
+          <td><?php print $currency_text; ?></td>
+         </tr>
+
+         <tr>
+          <th>Medical Currency</th>
+         </tr>
+         <tr>
+          <td><?php print $medical_text; ?></td>
          </tr>
 
        </table>
