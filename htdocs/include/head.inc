@@ -38,6 +38,7 @@
    <div class="headerright">
      <?php
        if(isset($rvar_pilot)) {
+         print "<p class=\"gaugetitle\">HOBBS METER</p>";
          print hobbs(pilot_hours($rvar_pilot));
        }
      ?>

@@ -32,47 +32,57 @@
   $flightslist = logbook_recent();
 ?>
 
+  <div id="block">
   <div id="block1">
     <h3><?php print $pilotdesc; ?></h3>
-    <form action="index.php" method ="get">
-      Search: <input type="text" name="psearch" size="20" />
-    </form>
     <?php
       if(isset($pilotlist)) {
-        print "<table>\n";
+        print "<table>\n<tr><th>Pilot</th><th>Hours</th></tr>";
         for($i=0; $i<count($pilotlist); $i++) {
-          print "<tr>";
-          print "<td><a href=\"pilot.php?pilot=$pilotlist[$i]\">" . pilot_name($pilotlist[$i]) . "</a></td>";
-          print "<td>" . hobbs(pilot_hours($pilotlist[$i])) . "</td>";
-          print "</tr>";
+          $detaillink = "pilot.php?pilot=$pilotlist[$i]";
+          ?>
+          <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
+                                     onMouseOut=this.style.backgroundColor=""
+                                     onclick="window.location.href='<?php print $detaillink; ?>'" >
+           <td style="width: 100px;"><?php print pilot_name($pilotlist[$i]); ?></td>
+           <td><?php print hobbs(pilot_hours($pilotlist[$i])); ?></td>
+          </tr>
+          <?php
         }
         print "</table>\n";
       }
     ?>
+    <form action="index.php" method ="get">
+      Search: <input type="text" name="psearch" size="10" />
+    </form>
   </div>
 
   <div id="block2">
     <h3><?php print $airportdesc; ?></h3>
-    <form action="index.php" method ="get">
-      Search: <input type="text" name="asearch" size="20" />
-    </form>
     <?php
       if(isset($airportlist)) {
-        print "<table>\n";
+        print "<table>\n<tr><th>Airport</th><th>Visits</th></tr>";
         for($i=0; $i<count($airportlist); $i++) {
           $buf2 = airport_detail($airportlist[$i]);
-          print "<tr>";
-          print "<td><a href=\"airport.php?ident=$airportlist[$i]\">" . airport_name($airportlist[$i]) . "</a></td>";
-          print "<td class=\"integer\">$buf2[visits]</td>";
-          print "</tr>";
+          $detaillink = "airport.php?ident=$airportlist[$i]";
+          ?>
+          <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
+                                     onMouseOut=this.style.backgroundColor=""
+                                     onclick="window.location.href='<?php print $detaillink; ?>'" >
+           <td><?php print airport_name($airportlist[$i]); ?></td>
+           <td><?php print $buf2['visits']; ?></td>
+          </tr>
+          <?php
         }
         print "</table>\n";
       }
     ?>
+    <form action="index.php" method ="get">
+      Search: <input type="text" name="asearch" size="10" />
+    </form>
   </div>
 
   <div id="block3">
-   <div id="logbook">
     <h3>Most Recent Flights</h3>
     <?php
       if(isset($flightslist)) {
@@ -94,7 +104,7 @@
         print "</table>\n";
       }
     ?>
-   </div>
+  </div>
   </div>
 
 <?php

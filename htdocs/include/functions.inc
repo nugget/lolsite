@@ -124,7 +124,7 @@
   }
 
   function hobbs($hours) {
-    $buf = "<p class=\"gaugetitle\">HOBBS METER</p><p class=\"gauge\">";
+    $buf = "<p class=\"gauge\">";
 
     $hoursstr = sprintf($GLOBALS['hobbsfmt'],$hours);
     $hobbsified = "";
