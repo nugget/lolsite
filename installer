@@ -29,8 +29,24 @@ if(!$config{ins_createdb} =~ /y/i) {
     create_db() or exit();
 }
 
-print "4.  Preparing Apache Conf:\n";
+print "4.  Preparing Apache Conf: \n";
 apache_conf();
+
+print "5.  Generating config.inc: ";
+if(!make_file("./htdocs/include/config.inc")) {
+    print "FAILED\n\n";
+    exit();
+} else {
+    print "OK.\n";
+}
+
+print "6.  Cleaning up file permissions:";
+if(!clean_permissions()) {
+    print "FAILED\n\n";
+    exit();
+} else {
+    print "OK.\n";
+}
 
 sub create_db() {
     #
@@ -64,12 +80,12 @@ sub apache_conf() {
       Alias /lol/ \"$pwd/htdocs/\"
       <Directory \"$pwd/htdocs/\">
           Options None
-          AllowOverride None
+          AllowOverride All
           Order allow,deny
           Allow from all
       </Directory>
 
-    ";
+";
 }
 
 sub run_sql() {
@@ -109,6 +125,11 @@ sub sanity() {
     return $r;
 }
 
+sub clean_permissions() {
+    system "/bin/sh ./tools/fixperms.sh";
+    return $SUCCESS;
+}
+
 sub load_config() {
     my ($filename) = @_;
     my %tmpconfig;
@@ -126,6 +147,27 @@ sub load_config() {
     }
     close CF;
     return %tmpconfig;
+}
+
+sub make_file() {
+    my ($target) = @_;
+    my $source = $target . ".default";
+
+    open SOURCE, $source or return $FAIL;
+    open TARGET, ">$target";
+    while(<SOURCE>) {
+        my $buf = $_;
+        foreach my $term (%config) {
+            $buf =~ s/%$term%/$config{$term}/gi;
+        }
+        print TARGET $buf;
+    }
+    close TARGET;
+    close SOURCE;
+
+    system "chmod 0644 $target";
+
+    return $SUCCESS;
 }
 
 sub debug() {

@@ -72,6 +72,7 @@ CREATE TABLE ratings (
 # Table structure for 'aircraft'
 #
 CREATE TABLE aircraft (
+  id mediumint(8) NOT NULL auto_increment,
   ident varchar(10) NOT NULL,
   pilot_id mediumint(8) NOT NULL,
   makemodel varchar(100) NOT NULL,
@@ -83,20 +84,21 @@ CREATE TABLE aircraft (
   image_url varchar(127),
   link_url varchar(127),
   detail text,
-  PRIMARY KEY  (ident)
+  PRIMARY KEY  (id)
 ) TYPE=MyISAM;
 
 #
 # Table structure for 'passengers'
 #
 CREATE TABLE passengers (
+  id mediumint(8) NOT NULL auto_increment,
   alias varchar(15) NOT NULL,
   pilot_id mediumint(8) NOT NULL,
   fullname varchar(127),
   image_url varchar(127),
   link_url varchar(127),
   detail text,
-  PRIMARY KEY (alias)
+  PRIMARY KEY (id)
 ) TYPE=MyISAM;
 
 #
