@@ -504,7 +504,7 @@
     if(isset($rvar_pilot)) {
       $where .= " and pilot_id = $rvar_pilot";
     }
-    $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route where logbook.id = flight_route.logbook_id $where group by airport order by visits desc";
+    $sql = "select airport, count(distinct logbook_id) as visits from logbook, flight_route where logbook.id = flight_route.logbook_id and airport <> 'Lcl' $where group by airport order by visits desc";
     if ($count > 0) {
       $sql .= " limit $count";
     }
