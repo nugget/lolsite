@@ -51,6 +51,11 @@ a.digitdec {
 td.integer {
   text-align: right;
 }
+td.decimal {
+  border-left: 1px dashed #777777;
+  text-align: right;
+  width: 1px;
+}
 div.headerright {
   position: absolute;
   right: 4px;
@@ -177,11 +182,6 @@ div#logbook td {
   border-top: 1px solid #000000;
   border-left: 1px solid #000000;
   padding: 0px 2px 0px 2px;
-}
-div#logbook td.decimal {
-  border-left: 1px dashed #777777;
-  text-align: left;
-  width: 10px;
 }
 div#logbook td.hidden {
   border-left: 0px;

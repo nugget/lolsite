@@ -15,11 +15,14 @@
  $firststats = pilot_firststats($rvar_pilot);
  $solostats = pilot_solostats($rvar_pilot);
  $xcstats   = pilot_xcstats($rvar_pilot);
+ $ifrstats  = pilot_ifrstats($rvar_pilot);
  $pplstats  = pilot_certstats($rvar_pilot,'Private');
  $comstats  = pilot_certstats($rvar_pilot,'Commercial');
  $cfistats  = pilot_certstats($rvar_pilot,'CFI');
  $atpstats  = pilot_certstats($rvar_pilot,'ATP');
  $gliderstats  = pilot_certstats($rvar_pilot,'Glider');
+
+ $certlist = pilot_certlist($rvar_pilot);
 
 ?>
 
@@ -57,6 +60,17 @@
            <td><?php print $xcstats['date']; ?></td>
            <td class="integer"><?php print $xcstats['flights']; ?></td>
            <?php print split_decimal($xcstats['hours']); ?>
+         </tr>
+         <?php } ?>
+
+         <?php if($ifrstats['date']) { ?>
+         <tr onMouseOver=this.style.backgroundColor="#ffffff"
+             onMouseOut=this.style.backgroundColor=""
+             onclick="window.location.href='<?php print "detail_logbook.php?id=$ifrstats[id]" ?>'" >
+           <td>First IFR Flight</td>
+           <td><?php print $ifrstats['date']; ?></td>
+           <td class="integer"><?php print $ifrstats['flights']; ?></td>
+           <?php print split_decimal($ifrstats['hours']); ?>
          </tr>
          <?php } ?>
 
@@ -125,7 +139,7 @@
 
          <tr>
            <th style="text-align: right;">Certifications</th>
-           <td><?php print pilot_certlist($rvar_pilot); ?></td>
+           <td><?php for($i=0; $i<count($certlist); $i++) { print $certlist[$i] . " "; } ?></td>
          </tr>
 
        </table>

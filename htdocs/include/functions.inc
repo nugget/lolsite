@@ -304,7 +304,7 @@
   }
 
   function pilot_solostats($pilot_id) {
-    $sql = "select id, date from logbook where pilot_id = $pilot_id and type_pic > 0 order by date limit 1";
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and conditions_actualinst > 0 order by date limit 1";
     $firstsolo = lol_fetch_array(lol_query($sql));
     if($firstsolo) {
       $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < '$firstsolo[date]' and id <> $firstsolo[id]";
@@ -312,6 +312,17 @@
      return array_merge($firstsolo,$solostats);
     }
   }
+
+  function pilot_ifrstats($pilot_id) {
+    $sql = "select id, date from logbook where pilot_id = $pilot_id and type_pic > 0 order by date limit 1";
+    $first = lol_fetch_array(lol_query($sql));
+    if($first) {
+      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < '$first[date]' and id <> $first[id]";
+     $stats = lol_fetch_array(lol_query($sql));
+     return array_merge($first,$stats);
+    }
+  }
+
 
   function pilot_certstats($pilot_id,$certname) {
     $sql = "select count(name) as name, min(issued) as date from certifications where pilot_id = $pilot_id and issued > 0 and name = '$certname'";
@@ -323,7 +334,49 @@
     }
   }
 
+  function pilot_medical($pilot_id) {
+    $sql = "select m.date, m.class, p.dob from medical m, pilot p where m.pilot_id = $pilot_id and p.pilot_id = $pilot_id order by m.date desc limit 1";
+    $medical = lol_fetch_array(lol_query($sql));
+
+    list($i_yyyy,$i_mm,$i_dd) = split ('/', $medical['date']);
+    list($n_yyyy,$n_mm,$n_dd) = split ('/', strftime("%Y/%m%d",time()));
+    $issued = sprintf("%04d%02d",$i_yyyy,$i_mm);
+    $rightnow = sprintf("%04d%02d",$n_yyyy,$n_mm);
+
+    if($rightnow > $issued + 12) {
+      $medical['class'] = 3;
+    }
+    if($medical['class'] == 1) {
+      $certname = "First-class (ATP)";
+      if($rightnow > $issued + 6) {
+        $name = "First-class (Commercial)";
+      }
+      $event = "Becomes third-class on";
+      $expires = sprintf("%04d%02d",$i_yyyy+1,$n_mm);
+    } 
+    if($medical['class'] == 2) {
+      $certname = "Second-class";
+      $event = "Becomes third-class on";
+      $expires = sprintf("%04d%02d",$i_yyyy+1,$n_mm);
+    } 
+    if($medical['class'] == 3) {
+      $certname = "Third-class";
+      if(!$expires) {
+        $event = "Expires on";
+        
+      }
+    }
+  }
+
   function pilot_certlist($pilot_id) {
+    $sql = "select distinct name from certifications where pilot_id = $pilot_id and issued > 0 order by issued";
+    if($sqlresponse = lol_query($sql)) {
+      $list = array();
+      while($line = lol_fetch_array($sqlresponse)) {
+        $list[] = $line['name'];
+      }
+      return $list;
+    }
   }
 
   function pilot_search($search) {
