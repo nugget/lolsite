@@ -36,6 +36,8 @@ while(<FILE>) {
     $schema = $1;
   } elsif( $buf =~ /^AIRCRAFT\t(.*)$/) {
     craft_aircraft($1);
+  } elsif( $buf =~ /^AIRPORTS\t(.*)$/) {
+    craft_airports($1);
   } elsif( $buf =~ /^MEDICAL\t(.*)$/) {
     craft_medical($1);
   } elsif( $buf =~ /^LOGBOOK\t(.*)$/) {
@@ -182,7 +184,38 @@ sub craft_aircraft {
     $tailwheel = int $tailwheel ? 'true' : 'false';
   }
 
-  dosql("INSERT INTO aircraft (ident, pilot_id, makemodel, aircraft_class, complex, high_perf, tailwheel, home_field, image_url, link_url, detail) VALUES ('$ident',$pilot_id,'$makemodel',$aircraft_class,$complex,$high_perf,$tailwheel,'$home_field','$image_url','$link_url','$detail')");
+  dosql("INSERT INTO aircraft (ident, pilot_id, makemodel, aircraft_class, complex, high_perf, tailwheel, home_field, image_url, link_url) VALUES ('$ident',$pilot_id,'$makemodel',$aircraft_class,$complex,$high_perf,$tailwheel,'$home_field','$image_url','$link_url')");
+  if(length($detail)>0) {
+    dosql("INSERT INTO aircraft_comments (aircraft_ident, pilot_id, date, global, private, detail) VALUES ('$ident',$pilot_id,now(),1,0,'$detail')");
+  }
+}
+
+sub craft_airports {
+  my ($buf) = @_;
+  chomp($buf);
+
+  my($ident,$fullname,$city,$timezone,$tower,$image_url,$link_url,$detail);
+
+  if($schema == 0.00) {
+    die "Unknown schema version!\n";
+  } else {
+    ($ident,
+     $fullname,
+     $city,
+     $timezone,
+     $tower,
+     $image_url,
+     $link_url,
+     $detail)
+     = split /\t/, $buf;
+  }
+
+  $tower = int $tower;
+
+  dosql("INSERT INTO airports (ident, pilot_id, fullname, city, timezone, tower, image_url, link_url) VALUES ('$ident',$pilot_id,'$fullname','$city','$timezone',$tower,'$image_url','$link_url')");
+  if(length($detail)>0) {
+    dosql("INSERT INTO airport_comments (airport_ident, pilot_id, date, global, private, detail) VALUES ('$ident',$pilot_id,now(),1,0,'$detail')");
+  }
 }
 
 sub craft_medical {

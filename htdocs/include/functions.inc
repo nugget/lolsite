@@ -250,6 +250,9 @@
     }
   }
 
+  function pilot_certlist($pilot_id) {
+  }
+
   function pilot_search($search) {
     $sql = "select id from pilot where username like '%$search%' or displayname like '%$search%'";
     if($sqlresponse = lol_query($sql)) {
@@ -402,7 +405,8 @@
     $filler['tower'] = 0;
     $filler['detail'] = '';
 
-    $sql = "select * from airports where ident = '$ident' and (pilot_id = 0 or pilot_id = $pilot)";
+    # old way $sql = "select * from airports where ident = '$ident' and (pilot_id = 0 or pilot_id = $pilot)";
+    $sql = "select * from airports where ident = '$ident'";
     $detail = lol_fetch_array(lol_query($sql));
 
     $sql = "select count(id) as visits, min(date) as first_visit, max(date) as last_visit from logbook";
@@ -419,6 +423,14 @@
 
     $sql = "select count(*) as record_exists from airports where ident = '$ident'";
     $recs = lol_fetch_array(lol_query($sql));
+
+    $sql = "select date,pilot_id,detail from airport_comments where airport_ident = '$ident' and ((global = 1 and private = 0) or (pilot_id = $pilot)) order by date";
+    if($sqlresponse = lol_query($sql)) {
+      while($line = lol_fetch_array($sqlresponse)) {
+        $filler['detail'] = $filler['detail'] . "$line[2]\n<hr />";
+      }
+    }
+
    
     return array_merge($filler,$detail,$totals, $recs);
   }
@@ -551,7 +563,6 @@
       $detail['complex'] = '';
       $detail['high_perf'] = '';
       $detail['tailwheel'] = '';
-      $detail['detail'] = '';
       $detail['image_url'] = '';
       $detail['link_url'] = '';
       $detail['classcode'] = '????';
@@ -559,6 +570,15 @@
     }
     $sql = "SELECT count(id) as flights, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook WHERE ident = '$detail[ident]' and pilot_id = $pilot";
     $totals = lol_fetch_array(lol_query($sql));
+
+    $detail['detail'] = '';
+    $sql = "select date,pilot_id,detail from aircraft_comments where aircraft_ident = '$ident' and ((global = 1 and private = 0) or (pilot_id = $pilot)) order by date";
+    if($sqlresponse = lol_query($sql)) {
+      while($line = lol_fetch_array($sqlresponse)) {
+        $detail['detail'] = $detail['detail'] . "<strong>" . pilot_name($line[1]) . "</strong>: $line[2]\n<br />";
+      }
+    }
+
     return array_merge($detail,$totals);
   }
 

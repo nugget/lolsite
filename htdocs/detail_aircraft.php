@@ -35,10 +35,10 @@
  <table>
   <tr>
    <th rowspan="7" class="link" width="1%">
-     <?php if($line['image_url'] != '') { print "<img src=\"" . $line['image_url'] . "\" /><br />"; } ?>
+     <?php if($line['image_url'] != '') { print "<img width=\"128\" src=\"" . $line['image_url'] . "\" /><br />"; } ?>
      [<a href="http://162.58.35.241/acdatabase/NNumSQL.asp?NNumbertxt=<?php print $identlink; ?>">FAA</a>]
      <?php if($line['link_url'] != '') { print "[<a href=\"" . $line['link_url'] . "\">Link</a>]"; } ?>
-     <?php if($line['total_hours'] > 0) { print "[<a href=\"display_logbook.php?ident=" . $line['ident'] . "\">Log</a>]"; } ?>
+     <?php if($line['total_hours'] > 0) { print "[<a href=\"display_logbook.php?ident=" . $line['ident'] . "&pilot=" . $rvar_pilot . "\">Log</a>]"; } ?>
    </th>
    <th>Ident</th>
    <th>Equipment</th>

@@ -5,36 +5,38 @@
 
   include "include/init.inc";
 
-  if(strlen($rvar_lol_username)>0 and strlen($rvar_lol_password)>0) {
-    if(isset($rvar_register)) {
-      if(array_key_exists('phpbb_database',$GLOBALS)) {
-        if(list($phpbb_host,$phpbb_port,$phpbb_user,$phpbb_password) = split(":",$GLOBALS['phpbb_database'])) {
-          if($phph = @mysql_connect("$phpbb_host:$phpbb_port",$phpbb_user,$phpbb_passwd)) {
-            // Here goes the phpbb stuff.
+  if(isset($rvar_lol_username) and isset($rvar_lol_password)) {
+    if(strlen($rvar_lol_username)>0 and strlen($rvar_lol_password)>0) {
+      if(isset($rvar_register)) {
+        if(array_key_exists('phpbb_database',$GLOBALS)) {
+          if(list($phpbb_host,$phpbb_port,$phpbb_user,$phpbb_password) = split(":",$GLOBALS['phpbb_database'])) {
+            if($phph = @mysql_connect("$phpbb_host:$phpbb_port",$phpbb_user,$phpbb_passwd)) {
+              // Here goes the phpbb stuff.
+            }
           }
-        }
-      } else {
-        if(!username_exists($rvar_lol_username)) {
-          if($id = add_user($rvar_lol_username,$rvar_lol_password)) {
-            $rvar_login = "Login";
-          } else {
-            $notice_title = "Unable to create new user";
-            $notice_text = "Unable to create a new user account.  Sorry.";
+        } else {
+          if(!username_exists($rvar_lol_username)) {
+            if($id = add_user($rvar_lol_username,$rvar_lol_password)) {
+              $rvar_login = "Login";
+            } else {
+              $notice_title = "Unable to create new user";
+              $notice_text = "Unable to create a new user account.  Sorry.";
+            }
           }
         }
       }
-    }
-    if(isset($rvar_login)) {
-      $rvar_lol_passhash=md5($rvar_lol_password);
-      if($pilot_id = is_user()) {
-        setcookie("lol_username",$rvar_lol_username,time()+86400);
-        setcookie("lol_passhash",$rvar_lol_passhash,time()+86400);
-        header("Location: " . $GLOBALS['baseurl'] . "/pilot.php?pilot=$pilot_id");
+      if(isset($rvar_login)) {
+        $rvar_lol_passhash=md5($rvar_lol_password);
+        if($pilot_id = is_user()) {
+          setcookie("lol_username",$rvar_lol_username,time()+86400);
+          setcookie("lol_passhash",$rvar_lol_passhash,time()+86400);
+          header("Location: " . $GLOBALS['baseurl'] . "/pilot.php?pilot=$pilot_id");
+        }
+  
+        $notice_title = "Login Incorrect";
+        $notice_text  = "The login credentials you supplied were not valid.
+                         Please enter a valid username and password.";
       }
-
-      $notice_title = "Login Incorrect";
-      $notice_text  = "The login credentials you supplied were not valid.
-                       Please enter a valid username and password.";
     }
   }
 
