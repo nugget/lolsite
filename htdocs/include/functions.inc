@@ -7,7 +7,11 @@
       if($GLOBALS['dbtype'] == 'mysql') {
         return mysql_query($querystring);
       } else {
-        return pg_query($querystring);
+        $r = pg_query($querystring);
+        if (!$r) {
+          print "SQL: $querystring<br>";
+        }
+        return $r;
       }
     }
   }
@@ -220,11 +224,21 @@
     }
   }
 
+  function pilot_firststats($pilot_id) {
+    $sql = "select id, date from logbook where pilot_id = $pilot_id order by id limit 1";
+    $first = lol_fetch_array(lol_query($sql));
+    if ($first) {
+      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and id = $first[id]";
+     $stats = lol_fetch_array(lol_query($sql));
+     return array_merge($first,$stats);
+    }
+  }
+
   function pilot_xcstats($pilot_id) {
     $sql = "select id, date from logbook where pilot_id = $pilot_id and type_xc > 0 order by date limit 1";
     $first = lol_fetch_array(lol_query($sql));
     if($first) {
-      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < \"$first[1]\" and id <> $first[0]";
+      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < '$first[date]' and id <> $first[id]";
      $stats = lol_fetch_array(lol_query($sql));
      return array_merge($first,$stats);
     }
@@ -234,7 +248,7 @@
     $sql = "select id, date from logbook where pilot_id = $pilot_id and type_pic > 0 order by date limit 1";
     $firstsolo = lol_fetch_array(lol_query($sql));
     if($firstsolo) {
-      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < \"$firstsolo[1]\" and id <> $firstsolo[0]";
+      $sql = "select count(id) as flights, sum(type_dual) as hours from logbook where pilot_id = $pilot_id and date < '$firstsolo[date]' and id <> $firstsolo[id]";
      $solostats = lol_fetch_array(lol_query($sql));
      return array_merge($firstsolo,$solostats);
     }
@@ -243,8 +257,8 @@
   function pilot_certstats($pilot_id,$certname) {
     $sql = "select count(name) as name, min(issued) as date from certifications where pilot_id = $pilot_id and issued > 0 and name = '$certname'";
     $first = lol_fetch_array(lol_query($sql));
-    if($first) {
-       $sql = "select count(id) as flights, max(id) as id, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as hours from logbook where pilot_id = $pilot_id and date < \"$first[1]\"";
+    if($first['name']) {
+       $sql = "select count(id) as flights, max(id) as id, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(case when type_dual=type_pic then type_pic else 0 end))) as hours from logbook where pilot_id = $pilot_id and date < '$first[date]'";
        $stats = lol_fetch_array(lol_query($sql));
        return array_merge($first,$stats);
     }
@@ -424,7 +438,7 @@
     $sql = "select count(*) as record_exists from airports where ident = '$ident'";
     $recs = lol_fetch_array(lol_query($sql));
 
-    $sql = "select date,pilot_id,detail from airport_comments where airport_ident = '$ident' and ((global = 1 and private = 0) or (pilot_id = $pilot)) order by date";
+    $sql = "select date,pilot_id,detail from airport_comments where airport_ident = '$ident' and (((case when global then 1 else 0 end) = 1 and (case when private then 1 else 0 end)= 0) or (pilot_id = $pilot)) order by date";
     if($sqlresponse = lol_query($sql)) {
       while($line = lol_fetch_array($sqlresponse)) {
         $filler['detail'] = $filler['detail'] . "$line[2]\n<hr />";
@@ -572,7 +586,7 @@
     $totals = lol_fetch_array(lol_query($sql));
 
     $detail['detail'] = '';
-    $sql = "select date,pilot_id,detail from aircraft_comments where aircraft_ident = '$ident' and ((global = 1 and private = 0) or (pilot_id = $pilot)) order by date";
+    $sql = "select date,pilot_id,detail from aircraft_comments where aircraft_ident = '$ident' and (((case when global then 1 else 0 end) = 1 and (case when private then 1 else 0 end) = 0) or (pilot_id = $pilot)) order by date";
     if($sqlresponse = lol_query($sql)) {
       while($line = lol_fetch_array($sqlresponse)) {
         $detail['detail'] = $detail['detail'] . "<strong>" . pilot_name($line[1]) . "</strong>: $line[2]\n<br />";
