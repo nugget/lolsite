@@ -115,8 +115,8 @@ if (@$nodelist) {
             next if $a->getTagName =~ /^(comment)$/;
             push @values, [$a->getTagName, $a->getFirstChild ? $a->getFirstChild->getNodeValue : ''];
         }
-        $s = $db->prepare("insert into aircraft (ident,pilot_id,".(join ',', map $$_[0], @values).") values (?,?,".(join ',', map '?', @values).")");
-        $s->execute($ident, 0, (map $$_[1], @values));
+        $s = $db->prepare("insert into aircraft (ident,".(join ',', map $$_[0], @values).") values (?,".(join ',', map '?', @values).")");
+        $s->execute($ident, (map $$_[1], @values));
     }
 }
 
