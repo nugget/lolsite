@@ -113,9 +113,9 @@ INSERT INTO rating VALUES (NULL,'1','First-class',128);
 INSERT INTO rating VALUES (NULL,'2','Second-class',128);
 INSERT INTO rating VALUES (NULL,'3','Third-class',128);
 
-INSERT INTO rating VALUES (NULL,'ASEL','Airplane, Single-engine land',(4+8+16));
+INSERT INTO rating VALUES (NULL,'ASEL','Airplane, Single-engine land',(2+4+8+16));
 INSERT INTO rating VALUES (NULL,'AMEL','Airplane, Multiengine land',(4+8+16));
-INSERT INTO rating VALUES (NULL,'ASES','Airplane, Single-engine sea',(4+8+16));
+INSERT INTO rating VALUES (NULL,'ASES','Airplane, Single-engine sea',(2+4+8+16));
 INSERT INTO rating VALUES (NULL,'AMES','Airplane, Multiengine sea',(4+8+16));
 
 INSERT INTO rating VALUES (NULL,'HELI','Rotorcraft, Helicopter',(4+8+16+32));
@@ -127,9 +127,9 @@ INSERT INTO rating VALUES (NULL,'Airship','Lighter-than-air, Airship',(4+8+16));
 INSERT INTO rating VALUES (NULL,'Balloon','Lighter-than-air, Balloon',(4+8+16));
 INSERT INTO rating VALUES (NULL,'Aircraft','Aircraft',(4+8+16));
 
-INSERT INTO rating VALUES (NULL,'IFR-A','Instrument Airplane',(4+8+32));
-INSERT INTO rating VALUES (NULL,'IFR-H','Instrument Helicopter',(4+8+32));
-INSERT INTO rating VALUES (NULL,'IFR-H','Instrument Powered-lift',(4+8+32));
+INSERT INTO rating VALUES (NULL,'IA','Instrument Airplane',(4+8+32));
+INSERT INTO rating VALUES (NULL,'IH','Instrument Helicopter',(4+8+32));
+INSERT INTO rating VALUES (NULL,'IP','Instrument Powered-lift',(4+8+32));
 
 INSERT INTO rating VALUES (NULL,'ASE','Airplane, Single-engine',32);
 INSERT INTO rating VALUES (NULL,'AME','Airplane, Multiengine',32);
@@ -197,7 +197,6 @@ INSERT INTO endorsement VALUES (NULL,'IPC','Instrument proficiency check',NULL,'
 CREATE TABLE aircraft (
   id serial NOT NULL,
   ident varchar(10) NOT NULL,
-  pilot_id integer NOT NULL,
   makemodel varchar(100) NOT NULL,
   aircraft_class integer NOT NULL,
   complex boolean NOT NULL default false,
