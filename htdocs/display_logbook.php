@@ -83,9 +83,9 @@
   <table>
    <tr>
     <th colspan="20">
-     <?php if($rvar_page > 1) { print "<a href=\"?pilot=$pilot&page=" . ($rvar_page - 1) . "\">Prev</a>"; } ?>
+     <?php if($rvar_page > 1) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page - 1) . "\">Prev</a>"; } ?>
      Page <?php print $rvar_page; ?> of <?php print $pages; ?>
-     <?php if($rvar_page < $pages) { print "<a href=\"?pilot=$pilot&page=" . ($rvar_page + 1) . "\">Next</a>"; } ?>
+     <?php if($rvar_page < $pages) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page + 1) . "\">Next</a>"; } ?>
     </th>
    </tr>
    <tr>
