@@ -8,23 +8,23 @@
 #
 
 use strict;
-require DBI::DBD;
-require DBD::mysql;
+require DBI;
+use Digest::MD5 qw(md5_hex);
 
 $ENV{PATH} = '/bin:/usr/bin:/usr/local/bin';
 
 my $schema = 0.00;
 
-my $dbh = DBI->connect("DBI:mysql:database=lolsite;host=localhost","lolsite","lspasswd");
-usage() if(!$dbh);
+my $dbh = DBI->connect("DBI:Pg:dbname=lol", "lolsite");
+usage("database connection error") if(!$dbh);
 
-my $sth = $dbh->prepare("select id from pilot where username = '$ARGV[0]' and password = md5('$ARGV[1]')");
+my $sth = $dbh->prepare("select id from pilot where username = '$ARGV[0]' and password = '".md5_hex($ARGV[1])."'");
 $sth->execute;
 my $ref = $sth->fetchrow_hashref();
 my $pilot_id = int $ref->{'id'};
-usage() if(!$pilot_id);
+usage("pilot not found") if(!$pilot_id);
 
-open FILE, $ARGV[2] or usage();
+open FILE, $ARGV[2] or usage("could not open $ARGV[2]");
 while(<FILE>) {
   my $buf = $_;
   chomp($buf);
@@ -116,8 +116,15 @@ sub craft_logbook {
   $type_sic = sprintf("%3.1f",$type_sic);
   $cost = sprintf("%4.1f",$cost);
 
-  dosql("INSERT INTO logbook VALUES " .
-        "(NULL,$pilot_id,'$date','$ident','$route','$passengers'," .
+  dosql("INSERT INTO logbook (
+            pilot_id, date, ident, route, passengers,
+            remarks, landings_day, landings_night, instrument_approach,
+            conditions_night,
+            conditions_actualinstr, conditions_simulinstr,
+            type_xc, type_cfi, type_dual, type_pic, type_sic,
+            detail, url, cost
+        ) VALUES " .
+        "($pilot_id,'$date','$ident','$route','$passengers'," .
         "'$remarks',$landings_day,$landings_night,$instrument_approach," .
         "$conditions_night," .
         "$conditions_actualinstr,$conditions_simulinstr," .
@@ -166,12 +173,12 @@ sub craft_aircraft {
      = split /\t/, $buf;
   }
 
-  $complex = int $complex;
-  $high_perf = int $high_perf;
-  $retract = int $retract;
-  $tailwheel = int $tailwheel;
+  $complex = int $complex ? 'true' : 'false';
+  $high_perf = int $high_perf ? 'true' : 'false';
+  $retract = int $retract ? 'true' : 'false';
+  $tailwheel = int $tailwheel ? 'true' : 'false';
 
-  dosql("INSERT INTO aircraft VALUES (NULL,'$ident',$pilot_id,'$makemodel',$aircraft_class,$complex,$high_perf,$tailwheel,'$home_field','$image_url','$link_url','$detail')");
+  dosql("INSERT INTO aircraft (ident, pilot_id, makemodel, aircraft_class, complex, high_perf, tailwheel, home_field, image_url, link_url, detail) VALUES ('$ident',$pilot_id,'$makemodel',$aircraft_class,$complex,$high_perf,$tailwheel,'$home_field','$image_url','$link_url','$detail')");
 }
 
 sub craft_medical {
@@ -189,7 +196,7 @@ sub craft_medical {
      = split /\t/, $buf;
   }
 
-  dosql("INSERT INTO medical VALUES (NULL,$pilot_id,'$date','$class','$name')");
+  dosql("INSERT INTO medical (pilot_id, date, class, name) VALUES ($pilot_id,'$date','$class','$name')");
 }
 
 sub craft_ratings {
@@ -206,7 +213,7 @@ sub craft_ratings {
      = split /\t/, $buf;
   }
 
-  dosql("INSERT INTO ratings VALUES (NULL,$pilot_id,'$name','$issued')");
+  dosql("INSERT INTO ratings (pilot_id, name, issued) VALUES ($pilot_id,'$name','$issued')");
 }
 
 sub craft_certifications {
@@ -224,7 +231,7 @@ sub craft_certifications {
      = split /\t/, $buf;
   }
 
-  dosql("INSERT INTO certifications VALUES (NULL,$pilot_id,'$name','$issued','$certificate')");
+  dosql("INSERT INTO certifications (pilot_id, name, issued, details) VALUES ($pilot_id,'$name','$issued','$certificate')");
 }
 
 sub craft_passengers {
@@ -244,7 +251,7 @@ sub craft_passengers {
      = split /\t/, $buf;
   }
 
-  dosql("INSERT INTO passengers VALUES (NULL, '$alias',$pilot_id,'$fullname','$image_url','$link_url','$detail')");
+  dosql("INSERT INTO passengers (alias, pilot_id, fullname, image_url, link_url, detail) VALUES ('$alias',$pilot_id,'$fullname','$image_url','$link_url','$detail')");
 }
 
 sub dosql {
@@ -256,5 +263,6 @@ sub dosql {
 sub usage {
   print "Script to import a lolbackup.tsv file from the old, single-user version of lol\n\n";
   print "usage: lol-import.pl username password lolbackup.tsv\n\n";
+  print "error: $_[0]\n" if $_[0];
   exit;
 }
