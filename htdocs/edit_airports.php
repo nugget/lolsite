@@ -2,7 +2,7 @@
  $title = "airport: Edit";
  $cvs="\$Id$";
 
- include "init.inc";
+ include "include/init.inc";
 
  #if(isset($rvar_scrape)) {
  #  header("Location: scrape_airports.php?ident=$rvar_ident");
@@ -53,16 +53,16 @@
         "timezone='$rvar_timezone',tower=$rvar_tower, " .
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where ident = '$rvar_ident'";
    }
-   $sql_response = mysql_query($sql);
+   $sql_response = pg_query($sql);
 
    $target = "airport.php?ident=$rvar_ident&pilot=$rvar_pilot";
    header("Location: $target");
 
-   include "foot.inc";
+   include "include/foot.inc";
    exit;
  }
 
- include "head.inc";
+ include "include/head.inc";
 
 ?>
 
@@ -121,5 +121,5 @@
  </form>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

@@ -2,7 +2,7 @@
  $title = "passenger: Edit";
  $cvs="\$Id$";
 
- include "init.inc";
+ include "include/init.inc";
 
  if(!isset($rvar_id)) {
    $error_title = "No ID Specified";
@@ -44,14 +44,14 @@
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where id = $rvar_id";
    }
 
-   $sql_response = mysql_query($sql);
+   $sql_response = pg_query($sql);
 
    $target = "detail_pax.php?alias=$alias&pilot=$rvar_pilot";
    header("Location: $target");
    exit;
  }
 
- include "head.inc";
+ include "include/head.inc";
 
 ?>
 
@@ -63,8 +63,8 @@
 
  if($rvar_id != 0) {
    $sql = "SELECT * FROM passengers WHERE id = $rvar_id";
-   $sqlresponse = mysql_query($sql);
-   $line = mysql_fetch_array($sqlresponse);
+   $sqlresponse = pg_query($sql);
+   $line = pg_fetch_array($sqlresponse);
  }
 
 ?>
@@ -106,5 +106,5 @@
  </form>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

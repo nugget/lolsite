@@ -5,7 +5,7 @@
 ErrorDocument 403 "Restricted Airspace"
 ErrorDocument 404 "Negative Contact --  I do not have the URL in sight"
 
-php_value include_path .:./include
+#php_value include_path .:./include
 
 <Files "*.inc">
  Order Deny,Allow

@@ -24,22 +24,18 @@
   }
 
   // at this point we have enough to connect to the database
-  if(!$dbh = @mysql_connect("$dbhost:$dbport",$dbuser,$dbpasswd)) {
+  if(!$dbh = pg_connect("dbname=$dbname user=$dbuser password=$dbpasswd")) {
     print "<html><head><title>Error</title><body><h1>unable to connect to the database server</h1></body></html>";
-    exit;
-  }
-  if(!@mysql_select_db($dbname)) {
-    print "<html><head><title>Error</title><body><h1>unable to connect to the lol database</h1></body></html>";
     exit;
   }
 
   // we're connected, let's populate our config variables
   $sql = "select * from settings";
-  if(!$sqlresponse=mysql_query($sql)) {
+  if(!$sqlresponse=pg_query($sql)) {
     print "<html><head><title>Error</title><body><h1>unable to retrieve site settings</h1></body></html>";
     exit;
   }
-  while ($buf = mysql_fetch_array($sqlresponse)) {
+  while ($buf = pg_fetch_array($sqlresponse)) {
     $GLOBALS[$buf['setting']] = $buf['value'];
   }
 

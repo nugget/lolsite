@@ -3,7 +3,7 @@
  $cvs="\$Id$";
  $keywords="logbook online";
 
- include "init.inc";
+ include "include/init.inc";
 
  if(!isset($rvar_id)) {
    $error_title = "No ID Specified";
@@ -53,7 +53,7 @@
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where id = $rvar_id";
    }
 
-   $sql_response = mysql_query($sql);
+   $sql_response = pg_query($sql);
 
    $target = "detail_aircraft.php?ident=$rvar_ident&pilot=$rvar_pilot";
    header("Location: $target");
@@ -65,7 +65,7 @@
    $error_text = "Hwaaaaaaaaa!";
  }
 
- include "head.inc";
+ include "include/head.inc";
 
  $classlist = "<select name=\"aircraft_class\">";
  for($i=1;$i<count($GLOBALS['classcode']);$i++) {
@@ -131,5 +131,5 @@
  </form>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

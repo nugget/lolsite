@@ -7,9 +7,9 @@
 
     if(isset($rvar_lol_username) and isset($rvar_lol_passhash)) {
       $sql = "select id from pilot where username = '$rvar_lol_username' and password = '$rvar_lol_passhash'";
-      if($id = mysql_fetch_array(mysql_query($sql))) {
+      if($id = pg_fetch_array(pg_query($sql))) {
         $sql = "update pilot set last_login = now() where id = " . $id['id'];
-        if(mysql_query($sql)) {
+        if(pg_query($sql)) {
           return $id['id'];
         }
       }
@@ -22,7 +22,7 @@
 
     if(isset($rvar_lol_username) and isset($rvar_lol_passhash)) {
       $sql = "select id,admin from pilot where username = '$rvar_lol_username' and password = '$rvar_lol_passhash'";
-      if($id = mysql_fetch_array(mysql_query($sql))) {
+      if($id = pg_fetch_array(pg_query($sql))) {
         if($id['admin']) {
           return $id['id'];
         }
@@ -38,7 +38,7 @@
     }
     if(isset($rvar_lol_username) and isset($rvar_lol_passhash)) {
       $sql = "select id from pilot where username = '$rvar_lol_username' and password = '$rvar_lol_passhash'";
-      if($id = mysql_fetch_array(mysql_query($sql))) {
+      if($id = pg_fetch_array(pg_query($sql))) {
         if($id['id'] == $rvar_pilot) {
           return $id['id'];
         }
@@ -51,7 +51,7 @@
     global $rvar_pilot;
     if(isset($rvar_pilot)) {
       $sql = "select id from pilot where id = $rvar_pilot";
-      if(mysql_fetch_array(mysql_query($sql))) {
+      if(pg_fetch_array(pg_query($sql))) {
         return TRUE;
       }
     }
@@ -60,19 +60,19 @@
 
   function username_exists($username) {
     $sql = "select id from pilot where username = '$username'";
-    if($id = mysql_fetch_array(mysql_query($sql))) {
+    if($id = pg_fetch_array(pg_query($sql))) {
       return $id['id'];
     }
     return FALSE;
   }
 
   function add_user($username,$password) {
-    $sql = "insert into pilot (username,password) values ('$username',md5('$password'))";
-    if(mysql_query($sql)) {
-      $sql = "select id,admin from pilot where username = '$username' and password = md5('$password')";
-      if($id = mysql_fetch_array(mysql_query($sql))) {
+    $sql = "insert into pilot (username,password) values ('$username','".md5($password)."')";
+    if(pg_query($sql)) {
+      $sql = "select id,admin from pilot where username = '$username' and password = '".md5($password)."'";
+      if($id = pg_fetch_array(pg_query($sql))) {
         if($id['id'] == 1) {
-          mysql_query("update pilot set admin = 1 where id = " . $id['id']);
+          pg_query("update pilot set admin = true where id = " . $id['id']);
         }
         return $id['id'];
       }
@@ -158,14 +158,14 @@
   // Data functions
 
   function pilot_hours($pilot_id) {
-    $count = mysql_fetch_row(mysql_query("select sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) from logbook where pilot_id = $pilot_id"));
+    $count = pg_fetch_row(pg_query("select sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) from logbook where pilot_id = $pilot_id"));
     $count = $count[0];
     return $count;
   }
 
   function pilot_name($pilot_id) {
     $sql = "select username, displayname from pilot where id = $pilot_id";
-    $pinfo = mysql_fetch_array(mysql_query($sql));
+    $pinfo = pg_fetch_array(pg_query($sql));
     if(isset($pinfo{'displayname'})) {
       return $pinfo{'displayname'};
     } else {
@@ -175,9 +175,9 @@
 
   function pilot_search($search) {
     $sql = "select id from pilot where username like '%$search%' or displayname like '%$search%'";
-    if($sqlresponse = mysql_query($sql)) {
+    if($sqlresponse = pg_query($sql)) {
       $list = array();
-      while($line = mysql_fetch_array($sqlresponse)) {
+      while($line = pg_fetch_array($sqlresponse)) {
         $list[] = $line['id'];
       }
       return $list;
@@ -215,7 +215,7 @@
 
   function class_time($class,$logid) {
     $sql = "select aircraft_class from aircraft, logbook where aircraft.ident = logbook.ident and aircraft.pilot_id = logbook.pilot_id";
-    $buf = mysql_fetch_array(mysql_query($sql));
+    $buf = pg_fetch_array(pg_query($sql));
     $aircraft_class = (int) $buf['aircraft_class'];
     $hours = logbook_hours($logid);
     if($class == class_lookup($aircraft_class)) {
@@ -227,7 +227,7 @@
 
   function logbook_hours($logid) {
     $sql = "select type_cfi, type_dual, type_pic, type_sic from logbook where id = $logid";
-    if($line = mysql_fetch_array(mysql_query($sql))) {
+    if($line = pg_fetch_array(pg_query($sql))) {
       $duration = (int) $line['type_cfi']+$line['type_dual']+$line['type_pic']+$line['type_sic'];
       if($line['type_dual'] == $line['type_pic']) {
         $duration = (int) $duration - $line['type_dual'];
@@ -240,22 +240,22 @@
 
   function logbook_pilot($logid) {
     $sql = "select pilot_id from logbook where id = $logid";
-    if($line = mysql_fetch_array(mysql_query($sql))) {
+    if($line = pg_fetch_array(pg_query($sql))) {
       return (int) $line['pilot_id'];
     }
   }
 
   function logbook_detail($logid) {
     $sql = "select * from logbook where id = $logid";
-    $line = mysql_fetch_array(mysql_query($sql));
+    $line = pg_fetch_array(pg_query($sql));
     return $line;
   }
 
   function logbook_recent() {
     $sql = "select id from logbook order by date desc limit 10";
-    if($sqlresponse = mysql_query($sql)) {
+    if($sqlresponse = pg_query($sql)) {
       $list = array();
-      while($line = mysql_fetch_array($sqlresponse)) {
+      while($line = pg_fetch_array($sqlresponse)) {
         $list[] = $line['id'];
       }
       return $list;
@@ -266,14 +266,14 @@
     global $rvar_pilot;
     if(isset($rvar_pilot)) {
       $sql = "select makemodel from aircraft where ident = '$ident' and pilot_id = $rvar_pilot";
-      if($line = mysql_fetch_array(mysql_query($sql))) {
+      if($line = pg_fetch_array(pg_query($sql))) {
         return $line['makemodel'];
       }
     }
   }
 
   function airport_exists($ident) {
-    $buf = mysql_fetch_array(mysql_query("select count(ident) as num from airports where ident = '$ident'"));
+    $buf = pg_fetch_array(pg_query("select count(ident) as num from airports where ident = '$ident'"));
     $buf = $buf['num'];
     if($buf > 0) {
       return TRUE;
@@ -290,8 +290,8 @@
     if(isset($rvar_pilot)) {
       $sql = $sql . " where pilot_id = $rvar_pilot";
     }
-    $sqlresponse = mysql_query($sql);
-    while($line = mysql_fetch_array($sqlresponse)) {
+    $sqlresponse = pg_query($sql);
+    while($line = pg_fetch_array($sqlresponse)) {
       $buf = $buf . " " . $line['route'];
     }
     $buf = " " . strtoupper($buf) . " ";
@@ -322,16 +322,16 @@
     $filler['detail'] = '';
 
     $sql = "select * from airports where ident = '$ident' and (pilot_id = 0 or pilot_id = $pilot)";
-    $detail = mysql_fetch_array(mysql_query($sql));
+    $detail = pg_fetch_array(pg_query($sql));
 
-    $sql = "select count(id) as visits, min(date) first_visit, max(date) as last_visit from logbook where concat(' ',route,' ') like '% $ident %'";
+    $sql = "select count(id) as visits, min(date) as first_visit, max(date) as last_visit from logbook where ' '||route||' ' like '% $ident %'";
     if($pilot > 0) {
       $sql = $sql . " and pilot_id = $pilot";
     }
-    $totals = mysql_fetch_array(mysql_query($sql));
+    $totals = pg_fetch_array(pg_query($sql));
 
     $sql = "select count(*) as record_exists from airports where ident = '$ident'";
-    $recs = mysql_fetch_array(mysql_query($sql));
+    $recs = pg_fetch_array(pg_query($sql));
    
     return array_merge($filler,$detail,$totals, $recs);
   }
@@ -339,7 +339,7 @@
   function airport_name($ident) {
     $ident = strtoupper($ident);
     $sql = "select ident, fullname from airports where ident = '$ident' or ident = 'K$ident'";
-    if($line = mysql_fetch_array(mysql_query($sql))) {
+    if($line = pg_fetch_array(pg_query($sql))) {
       if(isset($line['fullname'])) {
         return $line['fullname'] . " (" . $line['ident'] . ")";
       } else {
@@ -351,8 +351,8 @@
   }
 
   function airport_visits($ident,$pilot) {
-    $sql = "select count(id) as visits from logbook where concat(' ',route,' ') like '% $ident %' or concat(' ',route,' ') like '% k$ident %'";
-    if($line = mysql_fetch_array(mysql_query($sql))) {
+    $sql = "select count(id) as visits from logbook where ' '||route||' ' like '% $ident %' or ' '||route||' ' like '% k$ident %'";
+    if($line = pg_fetch_array(pg_query($sql))) {
       return $line['visits'];
     }
     return 0;
@@ -381,8 +381,8 @@
     if(isset($rvar_pilot)) {
       $sql = $sql . " and pilot_id = " . (int) $rvar_pilot;
     }
-    if($sqlresponse = mysql_query($sql)) {
-      while($line = mysql_fetch_array($sqlresponse)) {
+    if($sqlresponse = pg_query($sql)) {
+      while($line = pg_fetch_array($sqlresponse)) {
         $list[] = $line['ident'];
       }
     }
@@ -391,8 +391,8 @@
     if(isset($rvar_pilot)) {
       $sql = $sql . " and pilot_id = " . (int) $rvar_pilot;
     }
-    if($sqlresponse = mysql_query($sql)) {
-      while($line = mysql_fetch_array($sqlresponse)) {
+    if($sqlresponse = pg_query($sql)) {
+      while($line = pg_fetch_array($sqlresponse)) {
         $list[] = $line['ident'];
       }
     }
@@ -423,7 +423,7 @@
     if($pilot > 0) {
       $sql = $sql . " and pilot_id = $pilot";
     }
-    if($line = mysql_fetch_array(mysql_query($sql))) {
+    if($line = pg_fetch_array(pg_query($sql))) {
       return $line['flights'];
     }
     return 0;
@@ -431,13 +431,13 @@
 
   function aircraft_id($ident,$pilot) {
     $sql = "select id from aircraft where ident = '$ident' and pilot_id = $pilot";
-    if($line = mysql_fetch_array(mysql_query($sql))) {
+    if($line = pg_fetch_array(pg_query($sql))) {
       return $line['id'];
     }
   }
   function aircraft_key($id) {
     $sql = "select ident,pilot_id from aircraft where id = $id";
-    return mysql_fetch_array(mysql_query($sql));
+    return pg_fetch_array(pg_query($sql));
   }
 
   function aircraft_detail($ident,$pilot) {
@@ -445,8 +445,8 @@
       $pilot=0;
     }
     $sql = "select * from aircraft where ident = '$ident' and pilot_id = $pilot";
-    $sqlresponse = mysql_query($sql);
-    if($buf = mysql_fetch_array($sqlresponse)) {
+    $sqlresponse = pg_query($sql);
+    if($buf = pg_fetch_array($sqlresponse)) {
       $detail = $buf;
       $detail['classcode'] = class_lookup($detail['aircraft_class']);
       $detail['classname'] = class_longname($detail['aircraft_class']);
@@ -465,8 +465,8 @@
       $detail['classcode'] = '????';
       $detail['classname'] = 'Unknown';
     }
-    $sql = "SELECT count(id) as flights, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE ident = '$detail[ident]' and pilot_id = $pilot";
-    $totals = mysql_fetch_array(mysql_query($sql));
+    $sql = "SELECT count(id) as flights, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook WHERE ident = '$detail[ident]' and pilot_id = $pilot";
+    $totals = pg_fetch_array(pg_query($sql));
     return array_merge($detail,$totals);
   }
 
@@ -478,8 +478,8 @@
     if(isset($rvar_pilot)) {
       $sql = $sql . " where pilot_id = $rvar_pilot";
     }
-    $sqlresponse = mysql_query($sql);
-    while($line = mysql_fetch_array($sqlresponse)) {
+    $sqlresponse = pg_query($sql);
+    while($line = pg_fetch_array($sqlresponse)) {
       $buf = $buf . " " . $line['passengers'];
     }
     $buf = " " . strtolower($buf) . " ";
@@ -507,11 +507,11 @@
   }
 
   function pax_flights($alias,$pilot) {
-    $sql = "select count(id) as flights from logbook where concat(' ',passengers,' ') like '% $alias %'";
+    $sql = "select count(id) as flights from logbook where ' '||passengers||' ' like '% $alias %'";
     if($pilot > 0) {
       $sql = $sql . " and pilot_id = $pilot";
     }
-    if($line = mysql_fetch_array(mysql_query($sql))) {
+    if($line = pg_fetch_array(pg_query($sql))) {
       return $line['flights'];
     }
     return 0;
@@ -527,24 +527,24 @@
     $filler['pilot_id'] = $pilot;
 
     $sql = "select * from passengers where alias = '$alias' and pilot_id = $pilot";
-    if($sqlresponse=mysql_query($sql)) {
-      $line = mysql_fetch_array($sqlresponse);
+    if($sqlresponse=pg_query($sql)) {
+      $line = pg_fetch_array($sqlresponse);
     }
 
-    $wherebuf = "where concat(' ',passengers,' ') like '% $alias %' and pilot_id = $pilot";
+    $wherebuf = "where ' '||passengers||' ' like '% $alias %' and pilot_id = $pilot";
     if($whereclause) {
       $wherebuf = $wherebuf . " and " . $whereclause;
     }
 
-    $sql = "SELECT count(id) as flights, sum(landings_day+landings_night) as landings, min(date) as first_flight, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook $wherebuf";
-    if($sqlresponse=mysql_query($sql)) {
-      $totals = mysql_fetch_array($sqlresponse);
+    $sql = "SELECT count(id) as flights, sum(landings_day+landings_night) as landings, min(date) as first_flight, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook $wherebuf";
+    if($sqlresponse=pg_query($sql)) {
+      $totals = pg_fetch_array($sqlresponse);
     }
 
     $segments = 0;
     $sql = "select route from logbook $wherebuf";
-    $sqlresponse = mysql_query($sql);
-    while($segs = mysql_fetch_array($sqlresponse)) {
+    $sqlresponse = pg_query($sql);
+    while($segs = pg_fetch_array($sqlresponse)) {
       $hops = preg_split("/ +/",$segs['route'],-1,PREG_SPLIT_NO_EMPTY);
       $segments = $segments + count($hops)-1;
     }
@@ -558,12 +558,12 @@
     $lastyear = date("Y") - 1;
     $status = "&nbsp;";
         
-    $paxalias = "concat(' ',passengers,' ') like '% $alias %' and pilot_id=$pilot";
+    $paxalias = "' '||passengers||' ' like '% $alias %' and pilot_id=$pilot";
         
-    $sql = "select count(id) as flights, sum(landings_day+landings_night) as segments, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE $paxalias and date >= '$thisyear-01-01'";
-    $yeartotals = mysql_fetch_array(mysql_query($sql));
-    $sql = "select count(id) as flights, sum(landings_day+landings_night) as segments, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook WHERE $paxalias and date >= '$lastyear-01-01' and date <= '$lastyear-12-31'";
-    $lasttotals = mysql_fetch_array(mysql_query($sql));
+    $sql = "select count(id) as flights, sum(landings_day+landings_night) as segments, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook WHERE $paxalias and date >= '$thisyear-01-01'";
+    $yeartotals = pg_fetch_array(pg_query($sql));
+    $sql = "select count(id) as flights, sum(landings_day+landings_night) as segments, sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) as total_hours from logbook WHERE $paxalias and date >= '$lastyear-01-01' and date <= '$lastyear-12-31'";
+    $lasttotals = pg_fetch_array(pg_query($sql));
         
     $flights = larger($yeartotals['flights'],$lasttotals['flights']);
     $segments = larger($yeartotals['segments'],$lasttotals['segments']);
@@ -585,7 +585,7 @@
     $filler['alias'] = '';
     $filler['id'] = 0;
     $sql = "select alias,pilot_id from passengers where id = $id";
-    $line = mysql_fetch_array(mysql_query($sql));
+    $line = pg_fetch_array(pg_query($sql));
     return array_merge($filler,$line);
   }
 

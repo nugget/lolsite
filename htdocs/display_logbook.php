@@ -1,14 +1,14 @@
 <?php
  $title = "logbook";
 
- include "init.inc";
+ include "include/init.inc";
 
  if(!isset($rvar_pilot)) {
    $error_title = "No pilot specified";
    $error_text = "You must specify a pilot in order to view a logbook!";
  }
 
- include "head.inc";
+ include "include/head.inc";
 
  if(is_mine()) {
    ?>
@@ -30,6 +30,7 @@
  <div id="logbook">
   <table>
    <tr>
+    <th rowspan="2">Flight</th>
     <th rowspan="2">Date</th>
     <th rowspan="2">Aircraft</th>
     <th colspan="3">Route of Flight</th>
@@ -74,14 +75,15 @@
  if($whereclause <> '') {
    $sql = $sql . " WHERE $whereclause";
  }
- $sql = $sql . " ORDER BY 'date'";
- $sqlresponse = mysql_query($sql);
+ $sql = $sql . " ORDER BY date, id";
+ $sqlresponse = pg_query($sql);
 
  $class = "";
 
- while ($line = mysql_fetch_array($sqlresponse)) {
+ $flightnum = 1;
+ while ($line = pg_fetch_array($sqlresponse)) {
 
-  $ident = mysql_fetch_row(mysql_query("SELECT makemodel FROM aircraft WHERE ident = '".$line['ident']."';"));
+  $ident = pg_fetch_row(pg_query("SELECT makemodel FROM aircraft WHERE ident = '".$line['ident']."';"));
   $ident = $ident[0];
 
   if( $class != "odd" ) {
@@ -96,6 +98,7 @@
   <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
+   <td class="integer"><?php echo $flightnum++; ?></td>
    <td nowrap="nowrap"><?php echo $line['date']; ?></td>
    <td><?php echo $line['ident']; ?></td>
  
@@ -136,7 +139,7 @@
 
 ?>
    <tr class="totals">
-    <td colspan="5">&nbsp;</td>
+    <td colspan="6">&nbsp;</td>
     <?php split_decimal($total_duration); ?>
     <td class="integer"><?php print $total_landings_day; ?></td>
     <td class="integer"><?php print $total_landings_night; ?></td>
@@ -151,5 +154,5 @@
 
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

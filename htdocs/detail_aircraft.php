@@ -1,7 +1,7 @@
 <?php
  $title = "Aircraft Detail";
 
- include "init.inc";
+ include "include/init.inc";
 
  if(!isset($rvar_ident)) {
    $error_title = "Huh?";
@@ -9,7 +9,7 @@
  }
  $line = aircraft_detail($rvar_ident,$rvar_pilot);
 
- include "head.inc";
+ include "include/head.inc";
 
  $identlink = $line['ident'];
  if(preg_match("/^N/",$identlink)) {
@@ -81,5 +81,5 @@
  </div>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

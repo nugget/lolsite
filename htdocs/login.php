@@ -3,7 +3,7 @@
   $cvs="\$Id$";
   $keywords="logbook online";
 
-  include "init.inc";
+  include "include/init.inc";
 
   if(isset($rvar_lol_username) and isset($rvar_lol_password)) {
     if(isset($rvar_register)) {
@@ -38,7 +38,7 @@
     }
   }
 
-  include "head.inc";
+  include "include/head.inc";
 
 ?>
 
@@ -78,6 +78,6 @@
 
 <?php
 
-  include "foot.inc";
+  include "include/foot.inc";
 
 ?>

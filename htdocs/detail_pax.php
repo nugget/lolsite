@@ -3,14 +3,15 @@
 
  $year = date("Y");
 
- include "init.inc";
+ include "include/init.inc";
  if(!isset($rvar_alias)) {
    $error_title = "No ID supplied";
    $error_text = "No can do!";
  }
  $line = pax_detail($rvar_alias,$rvar_pilot,"");
+ $alias = $rvar_alias;
 
- include "head.inc";
+ include "include/head.inc";
 
  if(is_mine()) {
    ?>
@@ -102,5 +103,5 @@
  </div>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

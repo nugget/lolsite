@@ -1,7 +1,7 @@
 <?php
  $title = "logbook: Edit";
 
- include "init.inc";
+ include "include/init.inc";
 
  if(!isset($rvar_id)) {
    $error_title = "No ID Specified";
@@ -39,7 +39,7 @@
    if($rvar_id == 0) {
      # new logbiook entry
      $sql = "INSERT INTO logbook VALUES " .
-        "(NULL,$rvar_pilot,'$rvar_date','$rvar_ident','$rvar_route','$rvar_passengers'," .
+        "(default,$rvar_pilot,'$rvar_date','$rvar_ident','$rvar_route','$rvar_passengers'," .
         "'$rvar_remarks',$rvar_landings_day,$rvar_landings_night,$rvar_instrument_approach," .
         "$rvar_conditions_night," .
         "$rvar_conditions_actualinstr,$rvar_conditions_simulinstr," .
@@ -57,7 +57,7 @@
         "type_sic=$rvar_type_sic, detail='$rvar_detail', url='$rvar_url', cost=$rvar_cost WHERE id = $rvar_id";
    }
 
-   $sql_response = mysql_query($sql);
+   $sql_response = pg_query($sql);
 
    if($rvar_id > 0) {
      $target = "detail_logbook.php?id=$rvar_id";
@@ -68,7 +68,7 @@
    exit;
  }
 
- include "head.inc";
+ include "include/head.inc";
 
 ?>
 
@@ -159,5 +159,5 @@
  </form>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

@@ -3,14 +3,14 @@
 
  $thisyear = date("Y");
 
- include "init.inc";
+ include "include/init.inc";
 
  if(!isset($rvar_pilot)) {
    $error_title = "No pilot specified";
    $error_text = "You must specify a pilot in order to view a logbook!";
  }
 
- include "head.inc";
+ include "include/head.inc";
 
  $paxlist = pax_search("");
  usort($paxlist,"pax_cmp");
@@ -95,5 +95,5 @@
  </div>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

@@ -1,7 +1,7 @@
 <?php
  $title = "Airport Detail";
 
- include "init.inc";
+ include "include/init.inc";
 
  if(!isset($rvar_ident)) {
    $error_title ="No Airport Specified";
@@ -10,7 +10,7 @@
  $line = airport_detail($rvar_ident);
  $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
 
- include "head.inc";
+ include "include/head.inc";
 
  if(is_mine()) {
    if(is_user()) {
@@ -87,5 +87,5 @@
  </div>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

@@ -1,6 +1,6 @@
 <?php
  $title = "Logbook Detail";
- include "init.inc";
+ include "include/init.inc";
 
  if(isset($rvar_id)) {
    $rvar_id = (int) $rvar_id;
@@ -10,10 +10,10 @@
    $notice_text = "You must supply a logbook id.";
  }
 
- include "head.inc";
+ include "include/head.inc";
 
  if(!isset($rvar_id)) {
-   include "foot.inc";
+   include "include/foot.inc";
    exit;
  }
 
@@ -32,10 +32,10 @@
 
 <?php
  $sql = "SELECT * FROM logbook WHERE id = $rvar_id";
- $sqlresponse = mysql_query($sql);
+ $sqlresponse = pg_query($sql);
 
  $num = '';
- while ($line = mysql_fetch_array($sqlresponse)) {
+ while ($line = pg_fetch_array($sqlresponse)) {
 
     $equipment = aircraft_equipment($line['ident']);
 
@@ -156,5 +156,5 @@
  </div>
 
 <?
- include "foot.inc";
+ include "include/foot.inc";
 ?>

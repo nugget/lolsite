@@ -3,7 +3,7 @@
   $cvs="\$Id$";
   $keywords="logbook online";
 
-  include "init.inc";
+  include "include/init.inc";
 
   if(isset($rvar_psearch)) {
     $pilotdesc = "Pilots Matching [$rvar_psearch]";
@@ -25,7 +25,7 @@
   usort($airportlist,"airport_cmp");
   $airportlist = array_slice($airportlist,0,10);
 
-  include "head.inc";
+  include "include/head.inc";
 
   $flightslist = logbook_recent();
 
@@ -62,7 +62,7 @@
           $buf2 = airport_detail($airportlist[$i]);
           print "<tr>";
           print "<td><a href=\"airport.php?ident=$airportlist[$i]\">" . airport_name($airportlist[$i]) . "</a></td>";
-          print "<td class=\"integer\">$buf2[1]</td>";
+          print "<td class=\"integer\">$buf2[visits]</td>";
           print "</tr>";
         }
         print "</table>\n";
@@ -96,6 +96,6 @@
 
 <?php
 
-  include "foot.inc";
+  include "include/foot.inc";
 
 ?>

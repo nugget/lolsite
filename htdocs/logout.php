@@ -1,7 +1,7 @@
 <?php
   $cvs="\$Id$";
  
-  include "init.inc";
+  include "include/init.inc";
 
   setcookie("lol_username");
   setcookie("lol_passhash");
