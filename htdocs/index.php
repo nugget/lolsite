@@ -84,16 +84,16 @@
       if(isset($flightslist)) {
         print "<table>\n<tr><th>Date</th><th>Pilot</th><th>Route</th><th colspan=\"2\">Hours</th></tr>";
         for($i=0; $i<count($flightslist); $i++) {
-          $buf3 = logbook_detail($flightslist[$i]);
-          $detaillink = "detail_logbook.php?id=$flightslist[$i]";
+          $buf3 = $flightslist[$i];
+          $detaillink = $buf3['url']."detail_logbook.php?id=$buf3[logbook_id]";
           ?>
           <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
                                      onMouseOut=this.style.backgroundColor=""
                                      onclick="window.location.href='<?php print $detaillink; ?>'" >
            <td><?php print $buf3['date']; ?></td>
-           <td><?php print pilot_name($buf3['pilot_id']); ?></td>
+           <td><?php print $buf3['username']; ?></td>
            <td><?php print $buf3['route']; ?></td>
-           <?php print split_decimal(logbook_hours($flightslist[$i])); ?>
+           <?php print split_decimal($buf3['hours']); ?>
           </tr>
           <?php
         }

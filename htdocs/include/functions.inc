@@ -548,11 +548,16 @@
   }
 
   function logbook_recent() {
-    $sql = "select id from logbook order by date desc, id desc limit 10";
+    $sql = "
+        select
+            rf.peer_tag, rf.username, rf.logbook_id, rf.date, rf.route, rf.hours, p.url
+        from recent_flight rf
+            left join peers p on rf.peer_tag = p.tag
+        order by date desc limit 10";
     if($sqlresponse = lol_query($sql)) {
       $list = array();
       while($line = lol_fetch_array($sqlresponse)) {
-        $list[] = $line['id'];
+        $list[] = $line;
       }
       return $list;
     }

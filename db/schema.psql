@@ -15,7 +15,7 @@ INSERT INTO settings VALUES ('mastersite','http://www.slacker.com/lol/');
 INSERT INTO settings VALUES ('publish','no');
 INSERT INTO settings VALUES ('subscribe','no');
 INSERT INTO settings VALUES ('open_registration','yes');
-INSERT INTO settings VALUES ('schema','5');
+INSERT INTO settings VALUES ('schema','6');
 INSERT INTO settings VALUES ('baseurl','/lol');
 INSERT INTO settings VALUES ('error_reporting','0');
 
@@ -321,3 +321,44 @@ CREATE VIEW pilot_hours AS
         GROUP BY p.username
     UNION
     SELECT peer_tag, username, hours FROM peer_pilot;
+
+--
+-- List of recent flights from other sites
+--
+CREATE TABLE peer_flight (
+  peer_tag varchar(20) NOT NULL,
+  pilot varchar(20) NOT NULL,
+  logbook_id integer NOT NULL,
+  date date NOT NULL,
+  route varchar(100),
+  hours decimal(9,2)
+);
+
+--
+-- Function to return flight route as a space-separated string for a flight
+--
+CREATE OR REPLACE FUNCTION flight_route_str(integer) RETURNS varchar AS '
+DECLARE
+    a record;
+    route varchar;
+BEGIN
+    FOR a IN SELECT airport FROM flight_route WHERE logbook_id = $1 ORDER BY sequence LOOP
+        IF route IS NULL THEN
+            route = a.airport;
+        ELSE
+            route = route || '' '' || a.airport;
+        END IF;
+    END LOOP;
+    RETURN route;
+END;
+' LANGUAGE plpgsql;
+
+--
+-- Combined view of flight summary info for local and remote
+--
+CREATE VIEW recent_flight AS
+    SELECT NULL as peer_tag, p.username, l.id as logbook_id, l.date, flight_route_str(l.id) as route, l.type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end) as hours
+        FROM pilot p, logbook l
+        WHERE p.id = l.pilot_id
+    UNION
+    SELECT peer_tag, pilot, logbook_id, date, route, hours FROM peer_flight;

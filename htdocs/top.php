@@ -37,8 +37,10 @@
     <?php
       $flightslist = logbook_recent();
       for ($i = 0; $i < count($flightslist); $i++) {
-        $buf = logbook_detail($flightslist[$i]);
-        print "<flight pilot=\"".pilot_name($buf['pilot_id'])."\" date=\"$buf[date]\" route=\"$buf[route]\" hours=\"".logbook_hours($flightslist[$i])."\" />\n";
+        $buf = $flightslist[$i];
+        if (!$buf['peer_tag']) {
+          print "<flight pilot=\"$buf[username]\" logbook_id=\"$buf[logbook_id]\" date=\"$buf[date]\" route=\"$buf[route]\" hours=\"$buf[hours]\" />\n";
+        }
       }
     ?>
   </flights>

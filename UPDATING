@@ -1,0 +1,6 @@
+Schema version 5 to version 6
+
+- run "createlang plpgsql <dbname>" as pgsql superuser to enable use of the plpgsql stored procedure language
+- create the peer_flight table
+- create the flight_route_str function
+- create the recent_flight view

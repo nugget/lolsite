@@ -1,4 +1,4 @@
 <?php
   $GLOBALS['lolversion'] = "0.2.0";
-  $GLOBALS['target_schema'] = "4";
+  $GLOBALS['target_schema'] = "6";
 ?>

@@ -45,5 +45,13 @@ sub fetch {
         $s->execute($tag, $pilot->getAttribute('name'), $pilot->getAttribute('hours'));
         $n++;
     }
+
+    $s = $db->prepare("delete from peer_flight where peer_tag = ?");
+    $s->execute($tag);
+    foreach my $flight (@{$top->getDocumentElement->getElementsByTagName('flights')}[0]->getElementsByTagName('flight')) {
+        my $s = $db->prepare("insert into peer_flight (peer_tag, pilot, logbook_id, date, route, hours) values (?, ?, ?, ?, ?, ?)");
+        $s->execute($tag, $flight->getAttribute('pilot'), $flight->getAttribute('logbook_id'), $flight->getAttribute('date'), $flight->getAttribute('route'), $flight->getAttribute('hours'));
+    }
+
     return $n;
 }
