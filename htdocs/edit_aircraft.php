@@ -34,15 +34,15 @@
  if(isset($rvar_aircraft_class)) {
    # I see data, we need to insert/update as required.
    $rvar_aircraft_class = (int) $rvar_aircraft_class;
-   if(!isset($rvar_complex)) { $rvar_complex = 0; } else { $rvar_complex = 1; }
-   if(!isset($rvar_high_perf)) { $rvar_high_perf = 0; } else { $rvar_high_perf = 1; }
-   if(!isset($rvar_tailwheel)) { $rvar_tailwheel = 0; } else { $rvar_tailwheel = 1; }
+   if(!isset($rvar_complex)) { $rvar_complex = 'false'; } else { $rvar_complex = 'true'; }
+   if(!isset($rvar_high_perf)) { $rvar_high_perf = 'false'; } else { $rvar_high_perf = 'true'; }
+   if(!isset($rvar_tailwheel)) { $rvar_tailwheel = 'false'; } else { $rvar_tailwheel = 'true'; }
    $rvar_ident = strtoupper($rvar_ident);
    $rvar_home_field = strtoupper($rvar_home_field);
    if($rvar_id == 0) {
      # new logbiook entry
      $sql = "INSERT INTO aircraft VALUES " .
-        "(NULL,'$rvar_ident', $rvar_pilot, '$rvar_makemodel', $rvar_aircraft_class, " .
+        "(default,'$rvar_ident', $rvar_pilot, '$rvar_makemodel', $rvar_aircraft_class, " .
         "$rvar_complex,$rvar_high_perf,$rvar_tailwheel, '$rvar_home_field', " .
         "'$rvar_image_url','$rvar_link_url','$rvar_detail')";
    } else {
@@ -99,9 +99,9 @@
   <tr>
    <td><input type="text" name="home_field" size="11" value="<?php print $line['home_field']; ?>" /></td>
    <td colspan="2">
-    Complex: <input name="complex" type="checkbox" value="1" <?php if($line['complex']>0) { print "checked=\"checked\""; } ?> />
-    High Performance: <input name="high_perf" type="checkbox" value="1" <?php if($line['high_perf']>0) { print "checked=\"checked\""; } ?> />
-    Tailwheel: <input name="tailwheel" type="checkbox" value="1" <?php if($line['tailwheel']>0) { print "checked=\"checked\""; } ?> />
+    Complex: <input name="complex" type="checkbox" value="true" <?php if($line['complex'] == 't') { print "checked=\"checked\""; } ?> />
+    High Performance: <input name="high_perf" type="checkbox" value="true" <?php if($line['high_perf'] == 't') { print "checked=\"checked\""; } ?> />
+    Tailwheel: <input name="tailwheel" type="checkbox" value="true" <?php if($line['tailwheel'] == 't') { print "checked=\"checked\""; } ?> />
    </td>
   </tr>
 
