@@ -42,10 +42,9 @@ sub create_db() {
 
 sub apache_conf() {
     my $pwd = `pwd`;
+    chomp $pwd;
 
-print "\nSuggested Apache Configuration:
-
-Place the following suggested configuration in your apache httpd.conf
+print "Place the following suggested configuration in your apache httpd.conf
 file to enable /lol/ on your webserver:
 
   Alias /lol/ \"$pwd/\"
