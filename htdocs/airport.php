@@ -5,8 +5,8 @@
 
  if(isset($rvar_ident)) {
    if(!$line = airport_detail($rvar_ident)) {
-     $notice_title ="Airport not in Database";
-     $notice_text = "$rvar_ident is not in the lol database yet.";
+     $error_title ="Airport not in Database";
+     $error_text = "$rvar_ident is not in the lol database yet.";
    } else {
      $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
    }

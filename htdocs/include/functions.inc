@@ -479,7 +479,10 @@
     $filler['id'] = 0;
     $filler['detail'] = '';
     $filler['image_url'] = '';
+    $filler['link_url'] = '';
     $filler['fullname'] = '';
+    $filler['alias'] = $alias;
+    $filler['pilot_id'] = $pilot;
 
     $sql = "select * from passengers where alias = '$alias' and pilot_id = $pilot";
     if($sqlresponse=mysql_query($sql)) {
@@ -491,7 +494,7 @@
       $wherebuf = $wherebuf . " and " . $whereclause;
     }
 
-    $sql = "SELECT count(id) as flights, sum(landings_day+landings_night) as landings, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook $wherebuf";
+    $sql = "SELECT count(id) as flights, sum(landings_day+landings_night) as landings, min(date) as first_flight, max(date) as last_flight, sum(type_cfi+type_sic+type_dual+type_pic-(type_pic*(type_dual=type_pic))) as total_hours from logbook $wherebuf";
     if($sqlresponse=mysql_query($sql)) {
       $totals = mysql_fetch_array($sqlresponse);
     }
@@ -534,6 +537,14 @@
       }
     }
     return $status;
+  }
+
+  function pax_key($id) {
+    $filler['alias'] = '';
+    $filler['id'] = 0;
+    $sql = "select alias,pilot_id from passengers where id = $id";
+    $line = mysql_fetch_array(mysql_query($sql));
+    return array_merge($filler,$line);
   }
 
 ?>

@@ -12,14 +12,6 @@
 
  include "head.inc";
 
- if(is_mine()) {
-   ?>
-   <div id="buttonbar">
-    <form action="edit_pax.php"><input type="hidden" value="<?php print 0; ?>" name="id"><input type="submit" value="Add New Entry"></form>
-   </div>
-   <?php
- }
-
  $paxlist = pax_search("");
  usort($paxlist,"pax_cmp");
 
@@ -57,12 +49,7 @@
   $line = pax_detail($alias,$rvar_pilot,"");
   $year = pax_detail($alias,$rvar_pilot,"date >= '$thisyear-01-01' and date <= '$thisyear-12-31'");
 
-  $id = $line['id'];
-  if($id > 0) {
-    $detaillink="detail_pax.php?id=$id";
-  } else {
-    $detaillink="";
-  }
+  $detaillink="detail_pax.php?alias=$alias&pilot=$rvar_pilot";
 
   $features = "&nbsp;";
   if($line['image_url']) {

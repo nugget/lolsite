@@ -43,9 +43,9 @@
   $line = airport_detail($ident);
 
   if($line['ident']) {
-    $detaillink="airport.php?ident=" . $line['ident'];
+    $detaillink="airport.php?pilot=$rvar_pilot&ident=" . $line['ident'];
   } else {
-    $detaillink="airport.php?ident=" . $ident;
+    $detaillink="airport.php?pilot=$rvar_pilot&ident=" . $ident;
   }
   if($line['image_url']) {
     $features = "Image";

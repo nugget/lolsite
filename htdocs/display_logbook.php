@@ -63,7 +63,7 @@
    if($whereclause <> '') {
      $whereclause = $whereclause . " and ";
    }
-   $whereclause = "(logbook.passengers like '%$rvar_pax%')";
+   $whereclause = $whereclause . "(logbook.passengers like '%$rvar_pax%')";
  }
 
  $sql = "SELECT * FROM logbook";
