@@ -375,7 +375,13 @@
     $sql = "select * from airports where ident = '$ident' and (pilot_id = 0 or pilot_id = $pilot)";
     $detail = lol_fetch_array(lol_query($sql));
 
-    $sql = "select count(id) as visits, min(date) as first_visit, max(date) as last_visit from logbook where ' '||route||' ' like '% $ident %'";
+    $sql = "select count(id) as visits, min(date) as first_visit, max(date) as last_visit from logbook";
+    if($GLOBALS['dbtype'] == 'mysql') {
+      $sql = $sql . " WHERE concat(' ',route,' ') like '% $ident %'";
+    } else {
+      $sql = $sql . " WHERE ' '||route||' ' like '% $ident %'";
+    }
+
     if($pilot > 0) {
       $sql = $sql . " and pilot_id = $pilot";
     }
