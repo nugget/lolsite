@@ -158,6 +158,9 @@ div#logbook table.embedded {
 div#logbook tr.even {
   background-color: #88ff88;
 }
+div#logbook tr.totals {
+  background-color: #ffffff;
+}
 div#logbook th {
   background-color: #55dd55;
   font-size: small;

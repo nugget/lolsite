@@ -21,6 +21,10 @@
    </div>
    <?php
  }
+
+ $total_duration = 0;
+ $total_landings_day = 0;
+ $total_landings_night = 0;
 ?>
 
  <div id="logbook">
@@ -116,6 +120,10 @@
 
    $duration = logbook_hours($line['id']);
    split_decimal($duration);
+   $total_duration = $total_duration + $duration;
+
+   $total_landings_day += $line['landings_day'];
+   $total_landings_night += $line['landings_night'];
 
    ?> 
    <td class="integer"><?php echo $line['landings_day']; ?></td>
@@ -127,6 +135,16 @@
  };
 
 ?>
+   <tr class="totals">
+    <td colspan="5">&nbsp;</td>
+    <?php split_decimal($total_duration); ?>
+    <td class="integer"><?php print $total_landings_day; ?></td>
+    <td class="integer"><?php print $total_landings_night; ?></td>
+    <td colspan="3">&nbsp;</td>
+   </tr>
+
+
+   </tr>
 
   </table>
  </div>
