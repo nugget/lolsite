@@ -5,8 +5,13 @@
 
 use DBI;
 
-$db = DBI->connect("DBI:Pg:dbname=lol", "lolsite");
+my $dbtype = 'mysql';
+
+my $db = DBI->connect("DBI:Pg:dbname=lol", "lolsite") if($dbtype eq 'psql');
+my $db = DBI->connect("DBI:mysql:lolsite;host=localhost","lolsite","lspasswd") if($dbtype eq 'mysql');
+
 die unless $db;
+
 $s = $db->prepare("select id, route from logbook");
 $s->execute;
 while (@a = $s->fetchrow) {
