@@ -3,6 +3,10 @@
 
  include "include/init.inc";
 
+ # run the redirect, after which we can safely assume that $rvar_pilot is a username.
+ pilot_id_redirect($rvar_pilot);
+ $rvar_pilot = pilot_lookup($rvar_pilot);
+
  if(!isset($rvar_pilot)) {
    $error_title = "No pilot specified";
    $error_text = "You must specify a pilot in order to view a logbook!";

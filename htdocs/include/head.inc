@@ -53,12 +53,12 @@
 
      <?php if(is_valid()) print "&nbsp;"; ?>
 
-     <?php if(is_valid()) print "<a href=\"pilot.php?pilot=$rvar_pilot\">" . pilot_name($rvar_pilot)  . "'s lol</a>"; ?>
-     <?php if(is_valid()) print "<a href=\"display_logbook.php?pilot=$rvar_pilot\">Logbook</a>"; ?>
-     <?php if(is_valid()) print "<a href=\"display_aircraft.php?pilot=$rvar_pilot\">Aircraft</a>"; ?>
-     <?php if(is_valid()) print "<a href=\"display_airports.php?pilot=$rvar_pilot\">Airports</a>"; ?>
-     <?php if(is_valid()) print "<a href=\"display_pax.php?pilot=$rvar_pilot\">Passengers</a>"; ?>
-     <?php if(is_valid()) print "<a href=\"certs.php?pilot=$rvar_pilot\">Certs</a>"; ?>
+     <?php if(is_valid()) print "<a href=\"pilot.php?pilot=$pilot_name\">" . $pilot_name . "'s lol</a>"; ?>
+     <?php if(is_valid()) print "<a href=\"display_logbook.php?pilot=$pilot_name\">Logbook</a>"; ?>
+     <?php if(is_valid()) print "<a href=\"display_aircraft.php?pilot=$pilot_name\">Aircraft</a>"; ?>
+     <?php if(is_valid()) print "<a href=\"display_airports.php?pilot=$pilot_name\">Airports</a>"; ?>
+     <?php if(is_valid()) print "<a href=\"display_pax.php?pilot=$pilot_name\">Passengers</a>"; ?>
+     <?php if(is_valid()) print "<a href=\"certs.php?pilot=$pilot_name\">Certs</a>"; ?>
    </div>
 
 <?php
