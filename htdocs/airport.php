@@ -29,8 +29,8 @@
        ?>
        <div id="buttonbar">
         <form action="edit_airports.php">
-         <input type="hidden" value="<php print $rvar_pilot; ?>" name="pilot">
-         <input type="hidden" value="<php print $line['ident']; ?>" name="ident">
+         <input type="hidden" value="<?php print $rvar_pilot; ?>" name="pilot">
+         <input type="hidden" value="<?php print $line['ident']; ?>" name="ident">
          <input type="submit" value="Edit Airport"></form>
        </div>
        <?php
@@ -71,7 +71,9 @@
   <tr>
    <td><?php print $line['timezone']; ?>&nbsp;</td>
    <td colspan="6">
-    Tower-Controlled: <?php print yesno($line['tower']); ?>
+     <?php if($line['airspace']<>'') { print "Class " . $line['airspace']; }; ?>
+     <?php if($line['tower']=='t') { print ", tower controlled"; }; ?>
+     &nbsp;
    </td>
   </tr>
 

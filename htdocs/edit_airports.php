@@ -43,14 +43,14 @@
    if(!airport_exists($rvar_ident)) {
      # new logbook entry
      $sql = "INSERT INTO airports VALUES " .
-        "('$rvar_ident',$rvar_pilot,'$rvar_fullname', '$rvar_city', " .
+        "('$rvar_ident',$rvar_pilot,'$rvar_fullname', '$rvar_airspace', '$rvar_city', " .
         "'$rvar_timezone',$rvar_tower, " .
         "'$rvar_image_url','$rvar_link_url','$rvar_detail')";
    } else {
      # editing an old entry
      $sql = "UPDATE airports SET " .
         "pilot_id=$rvar_pilot, fullname='$rvar_fullname', city='$rvar_city', " .
-        "timezone='$rvar_timezone',tower=$rvar_tower, " .
+        "timezone='$rvar_timezone',tower=$rvar_tower, airspace='$rvar_airspace'," .
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where ident = '$rvar_ident'";
    }
    $sql_response = lol_query($sql);
@@ -83,12 +83,14 @@
 
   <tr>
    <th>Timezone</th>
-   <th colspan="2">Attributes</th>
+   <th>Airspace Class</th>
+   <th>Attributes</th>
   </tr>
 
   <tr>
    <td><input type="text" name="timezone" size="11" value="<?php print $line['timezone']; ?>"></td>
-   <td colspan="2">
+   <td><input type="text" name="airspace" size="1" value="<?php print $line['airspace']; ?>"></td>
+   <td>
     Tower Controlled: <input name="tower" type="checkbox" value="true" <?php if($line['tower']=='t') { print "checked=\"checked\""; } ?>/>
    </td>
   </tr>

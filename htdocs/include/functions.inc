@@ -608,6 +608,7 @@
     $filler['image_url'] = '';
     $filler['link_url'] = '';
     $filler['fullname'] = '';
+    $filler['airspace'] = '';
     $filler['city'] = '';
     $filler['timezone'] = '';
     $filler['tower'] = 0;
@@ -627,7 +628,11 @@
     $sql = "select count(*) as record_exists from airports where ident = '$ident'";
     $recs = lol_fetch_array(lol_query($sql));
 
-    $sql = "select date,pilot_id,detail from airport_comments where airport_ident = '$ident' and (((case when global then 1 else 0 end) = 1 and (case when private then 1 else 0 end)= 0) or (pilot_id = $pilot)) order by date";
+    $orclause = '';
+    if($pilot > 0) {
+      $orclause = " or (pilot_id = $pilot)";
+    }
+    $sql = "select date,pilot_id,detail from airport_comments where airport_ident = '$ident' and (((case when global then 1 else 0 end) = 1 and (case when private then 1 else 0 end)= 0) $orclause) order by date";
     if($sqlresponse = lol_query($sql)) {
       while($line = lol_fetch_array($sqlresponse)) {
         $filler['detail'] = $filler['detail'] . "$line[2]\n<hr />";
