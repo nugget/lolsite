@@ -14,10 +14,6 @@ $Id$
 - Little modules that people can use on their web sites to have
   a few stats in an "about me" page or something
 
-- feature in statistics page or related page of "my flying history"
-  that did some sort of stats based on significant event snapshots.
-  "When I solo'd, I had foo hours, etc..." like logbook totals.
-
 - filters on logbook display to restrict to matching flights.
   (robust search?)
 
@@ -30,3 +26,11 @@ $Id$
 - Default today's date in new logbook entries (dbaker)
 
 - Drop-down fields of recent airports and aircraft for new logbook entries (dbaker)
+
+- Friends list to restrict display of imported multisite data
+
+- Merge passengers and pilots together
+
+- Nicknames for passengers per-pilot
+
+- Automatic distance calculations
