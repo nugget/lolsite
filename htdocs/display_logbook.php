@@ -27,27 +27,6 @@
  $total_landings_night = 0;
 ?>
 
- <div id="logbook">
-  <table>
-   <tr>
-    <th rowspan="2">Flight</th>
-    <th rowspan="2">Date</th>
-    <th rowspan="2">Aircraft</th>
-    <th colspan="3">Route of Flight</th>
-    <th rowspan="2" colspan="2">Duration of Flight</th>
-    <th colspan="2">Landings</th>
-    <th rowspan="2"># of<br />Pax</th>
-    <th rowspan="2" colspan="2" width="100%">Remarks, Procedures, Maneuvers</th>
-   </tr>
-
-   <tr>
-    <th>From</th>
-    <th>Enroute</th>
-    <th>To</th> 
-    <th>D</th>
-    <th>N</th>
-   </tr>
-
 
 <?php
  $whereclause = "pilot_id = $rvar_pilot";
@@ -71,6 +50,10 @@
    $whereclause = $whereclause . "(logbook.passengers like '%$rvar_pax%')";
  }
 
+ $sql = "SELECT count(launch_type) FROM logbook WHERE $whereclause";
+ $r = pg_fetch_row(pg_query($sql));
+ $launch = $r[0] > 0;
+
  $sql = "SELECT * FROM logbook";
  if($whereclause <> '') {
    $sql = $sql . " WHERE $whereclause";
@@ -78,8 +61,35 @@
  $sql = $sql . " ORDER BY date, id";
  $sqlresponse = pg_query($sql);
 
- $class = "";
+?>
 
+ <div id="logbook">
+  <table>
+   <tr>
+    <th rowspan="2">Flight</th>
+    <th rowspan="2">Date</th>
+    <th rowspan="2">Aircraft</th>
+    <?php if ($launch) echo '<th colspan="2">Launch</th>'; ?>
+    <?php if ($launch) echo '<th colspan="2">Altitude</th>'; ?>
+    <th colspan="3">Route of Flight</th>
+    <th rowspan="2" colspan="2">Duration of Flight</th>
+    <th colspan="2">Landings</th>
+    <th rowspan="2"># of<br />Pax</th>
+    <th rowspan="2" colspan="2" width="100%">Remarks, Procedures, Maneuvers</th>
+   </tr>
+
+   <tr>
+    <?php if ($launch) echo '<th>A</th><th>G</th>'; ?>
+    <?php if ($launch) echo '<th>Release</th><th>Maximum</th>'; ?>
+    <th>From</th>
+    <th>Enroute</th>
+    <th>To</th> 
+    <th>D</th>
+    <th>N</th>
+   </tr>
+
+<?php
+ $class = "";
  $flightnum = 1;
  while ($line = pg_fetch_array($sqlresponse)) {
 
@@ -103,6 +113,29 @@
    <td><?php echo $line['ident']; ?></td>
  
    <?php
+
+    if ($launch) {
+        if ($line['launch_type'] == 'A') {
+            echo '<td align="center">&#x2022;</td>';
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+        if ($line['launch_type'] == 'G') {
+            echo '<td align="center">&#x2022;</td>';
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+        if ($line['alt_release'] > 0) {
+            echo "<td class=\"integer\">$line[alt_release]</td>";
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+        if ($line['alt_maximum'] > 0) {
+            echo "<td class=\"integer\">$line[alt_maximum]</td>";
+        } else {
+            echo '<td>&nbsp;</td>';
+        }
+    }
 
     $hops = preg_split("/ +/",$line['route'],-1,PREG_SPLIT_NO_EMPTY);
 
@@ -139,7 +172,7 @@
 
 ?>
    <tr class="totals">
-    <td colspan="6">&nbsp;</td>
+    <td colspan="<?php echo $launch ? 10 : 6; ?>">&nbsp;</td>
     <?php split_decimal($total_duration); ?>
     <td class="integer"><?php print $total_landings_day; ?></td>
     <td class="integer"><?php print $total_landings_night; ?></td>
