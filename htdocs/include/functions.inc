@@ -469,7 +469,12 @@
     } else {
       $routewhere = "' '||route||' '";
     }
-    $sql = "select count(id) as visits from logbook where $routewhere like '% $ident %' or $routewhere like '% k$ident %'";
+    if($pilot > 0) {
+      $wherepilot = "pilot_id = $pilot and ";
+    } else {
+      $wherepilot = '';
+    }
+    $sql = "select count(id) as visits from logbook where $wherepilot ($routewhere like '% $ident %' or $routewhere like '% k$ident %')";
     if($line = lol_fetch_array(lol_query($sql))) {
       return $line['visits'];
     }
