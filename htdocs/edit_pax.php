@@ -34,8 +34,10 @@
    # I see data, we need to insert/update as required.
    if($rvar_id == 0) {
      # new logbook entry
-     $sql = "INSERT INTO passengers VALUES " .
-        "(NULL,'$alias', $rvar_pilot, '$rvar_fullname', " .
+     $sql = "INSERT INTO passengers
+            (alias, pilot_id, is_pilot, fullname,
+            image_url, link_url, detail) VALUES " .
+        "('$alias', $rvar_pilot, 0, '$rvar_fullname', " .
         "'$rvar_image_url','$rvar_link_url','$rvar_detail')";
    } else {
      # editing an old entry
