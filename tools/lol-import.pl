@@ -14,8 +14,10 @@ use Digest::MD5 qw(md5_hex);
 $ENV{PATH} = '/bin:/usr/bin:/usr/local/bin';
 
 my $schema = 0.00;
+my $dbtype = 'mysql';
 
-my $dbh = DBI->connect("DBI:Pg:dbname=lol", "lolsite");
+my $dbh = DBI->connect("DBI:Pg:dbname=lol", "lolsite") if($dbtype eq 'psql');
+my $dbh = DBI->connect("DBI:mysql:lolsite;host=localhost","lolsite","lspasswd") if($dbtype eq 'mysql');
 usage("database connection error") if(!$dbh);
 
 my $sth = $dbh->prepare("select id from pilot where username = '$ARGV[0]' and password = '".md5_hex($ARGV[1])."'");
@@ -173,10 +175,12 @@ sub craft_aircraft {
      = split /\t/, $buf;
   }
 
-  $complex = int $complex ? 'true' : 'false';
-  $high_perf = int $high_perf ? 'true' : 'false';
-  $retract = int $retract ? 'true' : 'false';
-  $tailwheel = int $tailwheel ? 'true' : 'false';
+  if($dbtype eq 'psql') {
+    $complex = int $complex ? 'true' : 'false';
+    $high_perf = int $high_perf ? 'true' : 'false';
+    $retract = int $retract ? 'true' : 'false';
+    $tailwheel = int $tailwheel ? 'true' : 'false';
+  }
 
   dosql("INSERT INTO aircraft (ident, pilot_id, makemodel, aircraft_class, complex, high_perf, tailwheel, home_field, image_url, link_url, detail) VALUES ('$ident',$pilot_id,'$makemodel',$aircraft_class,$complex,$high_perf,$tailwheel,'$home_field','$image_url','$link_url','$detail')");
 }
