@@ -16,6 +16,17 @@
 
 ?>
 
+<div id="logbook">
+ <table>
+  <tr>
+   <th>Class Color Legend</th>
+   <td><font color="blue"><strong>Bravo (i.e. LAX, ATL, IAH)</strong></font></td>
+   <td><font color="purple"><strong>Charlie (i.e. JAX, AUS, OKC) </strong></font></td>
+   <td><font color="blue">Delta (i.e. VNY, GNV, CLL) </font></td>
+  </tr>
+ </table>
+</div>
+
  <div id="logbook">
   <table>
    <tr>
@@ -39,18 +50,32 @@
 
   $line = airport_detail($ident);
 
+   if ($line['airspace'] == "D") {
+    $classStyleOpen = "<font color=\"blue\">";
+    $classStyleClose = "</font>";
+   } elseif ($line['airspace'] == "B") {
+    $classStyleOpen = "<font color=\"blue\"><strong>";
+    $classStyleClose = "</font></strong>";
+   } elseif ($line['airspace'] == "C") {
+    $classStyleOpen = "<font color=\"purple\"><strong>";
+    $classStyleClose = "</strong></font>";
+   } else {
+    $classStyleOpen = "";
+    $classStyleClose = "";
+   }
+
   if($line['ident']) {
     $detaillink="airport.php?pilot=$rvar_pilot&ident=" . $line['ident'];
   } else {
     $detaillink="airport.php?pilot=$rvar_pilot&ident=" . $ident;
   }
   if($line['image_url']) {
-    $features = "Image";
+    $features = "<img src=\"images/image.gif\" height=\"15\" width=\"64\"/>";
   } else {
     $features = "&nbsp;";
   }
   if($line['fullname']) {
-    $name = $line['fullname'] . " (" . $ident . ")";
+    $name = $classStyleOpen . $line['fullname'] . " (" . $ident . ")" . $classStyleClose;
   } else {
     $name = $ident;
   }
