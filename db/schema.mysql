@@ -14,7 +14,7 @@ CREATE TABLE settings (
 INSERT INTO settings VALUES ('mastersite','http://www.slacker.com/lol/');
 INSERT INTO settings VALUES ('public','no');
 INSERT INTO settings VALUES ('open_registration','yes');
-INSERT INTO settings VALUES ('schema','1');
+INSERT INTO settings VALUES ('schema','2');
 INSERT INTO settings VALUES ('baseurl','/lol');
 INSERT INTO settings VALUES ('error_reporting','0');
 
@@ -134,14 +134,17 @@ CREATE TABLE logbook (
   landings_day int(3) NOT NULL default 0,
   landings_night int(3) NOT NULL default 0,
   instrument_approach int(3) NOT NULL default 0,
-  conditions_night decimal(3,1) NOT NULL default 0,
-  conditions_actualinstr decimal(3,1) NOT NULL default 0,
-  conditions_simulinstr decimal(3,1) NOT NULL default 0,
-  type_xc decimal(3,1) NOT NULL default 0,
-  type_cfi decimal(3,1) NOT NULL default 0,
-  type_dual decimal(3,1) NOT NULL default 0,
-  type_pic decimal(3,1) NOT NULL default 0,
-  type_sic decimal(3,1) NOT NULL default 0,
+  conditions_night decimal(3,2) NOT NULL default 0,
+  conditions_actualinstr decimal(3,2) NOT NULL default 0,
+  conditions_simulinstr decimal(3,2) NOT NULL default 0,
+  type_xc decimal(3,2) NOT NULL default 0,
+  type_cfi decimal(3,2) NOT NULL default 0,
+  type_dual decimal(3,2) NOT NULL default 0,
+  type_pic decimal(3,2) NOT NULL default 0,
+  type_sic decimal(3,2) NOT NULL default 0,
+  launch_type varchar(1),
+  alt_release int(5),
+  alt_maximum int(5)
   detail text,
   url text,
   cost decimal(5,2) NOT NULL default 0,

@@ -14,7 +14,7 @@ CREATE TABLE settings (
 INSERT INTO settings VALUES ('mastersite','http://www.slacker.com/lol/');
 INSERT INTO settings VALUES ('public','no');
 INSERT INTO settings VALUES ('open_registration','yes');
-INSERT INTO settings VALUES ('schema','1');
+INSERT INTO settings VALUES ('schema','2');
 INSERT INTO settings VALUES ('baseurl','/lol');
 INSERT INTO settings VALUES ('error_reporting','0');
 
