@@ -87,7 +87,7 @@
     $class = "even";
   }
 
-  $detaillink="display_detail.php?id=" . $line['id'];
+  $detaillink="detail_logbook.php?id=" . $line['id'];
 ?>
 
   <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"
