@@ -59,7 +59,7 @@
         <tr>
          <th colspan="2">
            <input name="login" type="submit" value="Login" />
-           <input name="register" type="submit" value="New User" />
+           <input name="register" type="submit" value="Register" />
          </th>
         </tr>
         <tr>
