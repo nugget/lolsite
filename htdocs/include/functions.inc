@@ -457,7 +457,7 @@
     if ($line) {
       $line['route'] = '';
       if (array_key_exists('id', $line)) {
-        $rq = lol_query("select * from flight_route where logbook_id = $line[id]");
+        $rq = lol_query("select * from flight_route where logbook_id = $line[id] order by sequence");
         while ($route = lol_fetch_array($rq)) {
           $line['route'] .= $route['airport'] . ' ';
         }
