@@ -922,4 +922,9 @@
     return array_merge($filler,$line);
   }
 
+  function xml_escape($s) {
+    $escape = array('&' => '&amp;', '<' => '&lt;', '>' => '&gt;');
+    return preg_replace("/([&<>])/e", "\$escape['\\1']", $s);
+  }
+
 ?>
