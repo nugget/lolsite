@@ -38,7 +38,7 @@
  <?php
 
  for($i=0; $i<count($certlist); $i++) {
-   $ratings = certificate_ratings($certlist[$i]['id']);
+   $ratings = certificate_ratings($rvar_pilot,$certlist[$i]['certificate_code']);
    $ratinglist = "";
    if(count($ratings)>0) {
      for($j=0; $j<count($ratings); $j++) {

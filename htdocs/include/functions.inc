@@ -188,7 +188,7 @@
   // Data functions
 
   function logbook_launches($whereclause) {
-    $launches = lol_fetch_row(lol_query("SELECT count(launch_type) FROM logbook WHERE $whereclause"));
+    $launches = lol_fetch_row(lol_query("SELECT count(launch_type) FROM logbook WHERE $whereclause and launch_type <> ''"));
     $launches = $launches[0];
     return $launches;
   }
@@ -446,8 +446,8 @@
     return $line;
   }
 
-  function certificate_ratings($code) {
-    $sql = "select pr.id, pr.rating_code as code, r.name, pr.rating_type_code, pr.issued from pilot_rating pr, pilot_certificate pc, rating r where pc.id = '$code' and pr.certificate_code = pc.certificate_code and r.code = pr.rating_code order by r.id";
+  function certificate_ratings($pilot_id,$code) {
+    $sql = "select pr.id, pr.rating_code as code, r.name, pr.rating_type_code, pr.issued from pilot_rating pr, pilot_certificate pc, rating r where pc.pilot_id = $pilot_id and pr.certificate_code = '$code' and pr.certificate_code = pc.certificate_code and r.code = pr.rating_code order by r.id";
     if($sqlresponse = lol_query($sql)) {
       $list = array();
       while($line = lol_fetch_array($sqlresponse)) {

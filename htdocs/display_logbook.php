@@ -75,13 +75,15 @@
 
 ?>
 
- <p>
-   <?php if($rvar_page > 1) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page - 1) . "\">Prev</a>"; } ?>
-   Page <?php print $rvar_page; ?> of <?php print $pages; ?>
-   <?php if($rvar_page < $pages) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page + 1) . "\">Next</a>"; } ?>
- </p>
  <div id="logbook">
   <table>
+   <tr>
+    <th colspan="20">
+     <?php if($rvar_page > 1) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page - 1) . "\">Prev</a>"; } ?>
+     Page <?php print $rvar_page; ?> of <?php print $pages; ?>
+     <?php if($rvar_page < $pages) { print "<a href=\"?pilot=$rvar_pilot&page=" . ($rvar_page + 1) . "\">Next</a>"; } ?>
+    </th>
+   </tr>
    <tr>
     <th rowspan="2">Flight</th>
     <?php if(!isset($rvar_pilot)) { print "<th rowspan=\"2\">Pilot</th>"; } ?>
@@ -201,7 +203,7 @@
 
 ?>
    <tr class="totals">
-    <td colspan="<?php echo $launch ? 10 : 6; ?>">Page totals:</td>
+    <td colspan="<?php echo $launch ? 10 : 6; ?>">Page <?php print $rvar_page; ?> of <?php print $pages; ?> totals:</td>
     <?php split_decimal($total_duration); ?>
     <td class="integer"><?php print $total_landings_day; ?></td>
     <td class="integer"><?php print $total_landings_night; ?></td>
