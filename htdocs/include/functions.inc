@@ -208,14 +208,26 @@
     }
   }
 
-  function pilot_lookup($name) {
-    $sql = "select id from pilot where username = '$name'";
-    $r = lol_fetch_row(lol_query($sql));
+  function pilot_id_redirect($pilot) {
+    if($pilot = (int) $pilot) {
+      $url = "?" . $_SERVER['QUERY_STRING'];
+      $url = preg_replace("/pilot=$pilot/","pilot=".pilot_lookup($pilot),$url);
+      header("Location: $url");
+    }   
+  }   
+    
+  function pilot_lookup($pilot) {
+    if((int) $pilot > 0) {
+      $sql = "select username from pilot where id = $pilot";
+    } else {
+      $sql = "select id from pilot where username = '$pilot'";
+    }
+    $r = lol_fetch_row(lol_query($sql)); 
     if ($r) {
       return $r[0];
-    }
+    }   
     return 0;
-  }
+  }     
 
   function pilot_hours($pilot_id,$days) {
     $sql = "select sum(type_cfi+type_sic+type_dual+type_pic-(case when type_dual=type_pic then type_pic else 0 end)) from logbook where pilot_id = $pilot_id";
