@@ -295,6 +295,17 @@
     return $count;
   }
 
+  function pilot_approaches($pilot_id,$days) {
+    $sql = "select (sum(instrument_approach)) from logbook where pilot_id = $pilot_id";
+    if($days > 0) {
+      $lowbound = time()-(86400*$days);
+      $sql = $sql . " and date >= '" . strftime("%Y-%m-%d",$lowbound) . "'";
+    }
+    $count = lol_fetch_row(lol_query($sql));
+    $count = $count[0];
+    return $count;
+  }
+
   function pilot_landings($pilot_id,$days,$type) {
     if($type == 'D') {
       $fields = 'landings_day';

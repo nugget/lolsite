@@ -239,6 +239,12 @@
            <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,365,'N'); ?></td>
            <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,0,'N'); ?></td>
          </tr>
+         <tr>
+           <td>Approaches</td>
+           <td class="integer" colspan="2"><?php print pilot_approaches($rvar_pilot,90); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_approaches($rvar_pilot,365); ?></td>
+           <td class="integer" colspan="2"><?php print pilot_approaches($rvar_pilot,0); ?></td>
+         </tr>
 
        </table>
       </div>
