@@ -15,7 +15,7 @@
        $error_text = "You must specify a pilot in order to add a new airplane entry.";
      }
      $title = "airplane: Add";
-     $ident = "";
+     $ident = $rvar_ident;
    } else {
      $key = aircraft_key($rvar_id);
      if(isset($key['pilot_id'])) {
@@ -53,14 +53,9 @@
         "image_url='$rvar_image_url', link_url='$rvar_link_url', detail='$rvar_detail' where id = $rvar_id";
    }
 
-   print "<p>$sql</p>";
    $sql_response = mysql_query($sql);
 
-   if($rvar_id > 0) {
-     $target = "detail_aircraft.php?id=$rvar_id";
-   } else {
-     $target = "display_aircraft.php?pilot=$rvar_pilot";
-   }
+   $target = "detail_aircraft.php?ident=$rvar_ident&pilot=$rvar_pilot";
    header("Location: $target");
    exit;
  }

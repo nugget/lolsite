@@ -410,6 +410,7 @@
       $detail['classcode'] = class_lookup($detail['aircraft_class']);
       $detail['classname'] = class_longname($detail['aircraft_class']);
     } else {
+      $detail['id'] = 0;
       $detail['ident'] = $ident;
       $detail['makemodel'] = '';
       $detail['aircraft_class'] = '';

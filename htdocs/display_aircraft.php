@@ -10,18 +10,6 @@
 
  include "head.inc";
 
- if(is_mine()) {
-   ?>
-   <div id="buttonbar">
-    <form action="edit_aircraft.php">
-     <input type="hidden" value="0" name="id">
-     <input type="hidden" value="<?php print $rvar_pilot; ?>" name="pilot">
-     <input type="submit" value="Add Entry">
-    </form>
-   </div>
-   <?php
- }
-
  $aircraftlist = aircraft_search("");
  usort($aircraftlist,"aircraft_cmp");
 
@@ -59,17 +47,22 @@
       $class = "even";
     }
 
-    if(isset($line['id'])) {
-      $detaillink="detail_aircraft.php?id=" . $line['id'];
-    } else {
-      $detaillink="";
-    }
+    $detaillink="detail_aircraft.php?ident=" . $line['ident'] . "&pilot=" . $rvar_pilot;
+
     $features = "&nbsp;";
     if(isset($line['image_url'])) {
       if($line['image_url']) {
         $features = "Image";
       }
     }
+
+    if(strpos($line['detail'],"\n")) {
+      $line['detail'] = substr($line['detail'],0,strpos($line['detail'],"\n"));
+    }
+    if(strlen($line['detail'])>60) {
+      $line['detail'] = substr($line['detail'],0,60) . "...";
+    }
+
 ?>
 
   <tr class="<?php print $class; ?>" onMouseOver=this.style.backgroundColor="#ffffff"

@@ -146,7 +146,8 @@
   </tr>
 <?php
    if($line['detail']) {
-     print "<tr><th colspan=\"16\">Details</th></tr><tr><td colspan=\"16\">$line[detail]</td></tr>\n";
+     $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
+     print "<tr><th colspan=\"18\">Details</th></tr><tr><td colspan=\"18\">$line[detail]</td></tr>\n";
    }
  };
 

@@ -3,14 +3,11 @@
 
  include "init.inc";
 
- if(!isset($rvar_id)) {
+ if(!isset($rvar_ident)) {
    $error_title = "Huh?";
    $error_text = "Hwaaaaaaaaa!";
- } else {
-   $line = aircraft_key($id);
-   $line = aircraft_detail($line['ident'],$line['pilot_id']);
-   $rvar_pilot = $line['pilot_id'];
  }
+ $line = aircraft_detail($rvar_ident,$rvar_pilot);
 
  include "head.inc";
 
@@ -22,10 +19,16 @@
  if(is_mine()) {
    ?>
    <div id="buttonbar">
-    <form action="edit_aircraft.php"><input type="hidden" value="<?php print $rvar_id; ?>" name="id"><input type="submit" value="Edit Entry"></form>
+    <form action="edit_aircraft.php">
+     <input type="hidden" value="<?php print $line['id']; ?>" name="id">
+     <input type="hidden" value="<?php print $rvar_pilot; ?>" name="pilot">
+     <input type="hidden" value="<?php print $rvar_ident; ?>" name="ident">
+     <input type="submit" value="Edit Entry">
    </div>
    <?php
  }
+
+ $line['detail'] = preg_replace("/\n/","<br />",$line['detail']);
 
 ?>
  <div id="logbook">
