@@ -112,6 +112,7 @@ if (@$nodelist) {
         my @values;
         foreach my $a ($n->getChildNodes) {
             next unless $a->getNodeType == XML::DOM::ELEMENT_NODE;
+            next if $a->getTagName =~ /^(comment)$/;
             push @values, [$a->getTagName, $a->getFirstChild ? $a->getFirstChild->getNodeValue : ''];
         }
         $s = $db->prepare("insert into aircraft (ident,pilot_id,".(join ',', map $$_[0], @values).") values (?,?,".(join ',', map '?', @values).")");
@@ -131,6 +132,7 @@ if (@$nodelist) {
         my @values;
         foreach my $a ($n->getChildNodes) {
             next unless $a->getNodeType == XML::DOM::ELEMENT_NODE;
+            next if $a->getTagName =~ /^(comment)$/;
             push @values, [$a->getTagName, $a->getFirstChild ? $a->getFirstChild->getNodeValue : ''];
         }
         $s = $db->prepare("insert into airports (ident,pilot_id,".(join ',', map $$_[0], @values).") values (?,?,".(join ',', map '?', @values).")");
