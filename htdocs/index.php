@@ -12,6 +12,7 @@
 
   <p> is_user() = <?php print is_user(); ?></p>
   <p> is_admin() = <?php print is_admin(); ?></p>
+  <p> is_mine() = <?php print is_mine(); ?></p>
 
 <?php
 

@@ -73,8 +73,6 @@
   // optional but worthwhile casting on significant rvars
   if(isset($rvar_pilot)) $rvar_pilot = (int) $rvar_pilot;
 
-  $rvar_pilot = 1;
-
   include("functions.inc");
 
 ?>

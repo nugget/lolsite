@@ -31,6 +31,23 @@
     return FALSE;
   }
 
+  function is_mine() {
+    global $rvar_pilot, $rvar_lol_username, $rvar_lol_passhash;
+    if(!isset($rvar_pilot)) {
+      return FALSE;
+    }
+    if(isset($rvar_lol_username) and isset($rvar_lol_passhash)) {
+      $sql = "select id from pilot where username = '$rvar_lol_username' and password = '$rvar_lol_passhash'";
+      if($id = mysql_fetch_array(mysql_query($sql))) {
+        if($id['id'] == $rvar_pilot) {
+          return $id['id'];
+        }
+      }
+    }
+    return FALSE;
+  }
+
+
   function username_exists($username) {
     $sql = "select id from pilot where username = '$username'";
     if($id = mysql_fetch_array(mysql_query($sql))) {
@@ -54,7 +71,7 @@
   }
 
 
-  // Formatting functions
+  // Formatting and display functions
 
   function split_decimal($num) {
     $buf = sprintf("%4.1f",$num);
@@ -70,6 +87,28 @@
     print "</td>";
   }
 
+  function display_hobbs($hours) {
+
+    if(!array_key_exists('hobbsfmt',$GLOBALS)) {
+      $GLOBALS[hobbsfmt] = "%04.1f";
+    }
+
+    $buf = "<p class=\"gaugetitle\">HOBBS METER</p><p class=\"gauge\">";
+
+    $hoursstr = sprintf($GLOBALS[hobbsfmt],$hours);
+    $hobbsified = "";
+    $style = "digit";
+    for($i=0; $i<strlen($hoursstr); $i++) {
+      $c = substr($hoursstr,$i,1);
+      if($c == '.') {
+        $style = "digitdec";
+      } else {
+        $hobbsified = "$hobbsified<a class=\"$style\">$c</a>";
+      }
+    }
+    $buf = $buf . $hobbsified . "</p>\n";
+    return $buf;
+}
 
   // Math functions
 

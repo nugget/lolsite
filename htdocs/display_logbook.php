@@ -4,7 +4,18 @@
  include "init.inc";
  include "head.inc";
 
- if(is_admin()) {
+ if(!isset($rvar_pilot)) {
+   ?>
+   <div class="warning">
+     <h2>No pilot specified</h2>
+     <p>You must specify a pilot in order to view a logbook!</p>
+   </div>
+   <?php
+   include "foot.inc";
+   exit;
+ }
+
+ if(is_mine()) {
    ?>
    <div id="buttonbar">
     <form action="edit_entry.php"><input type="hidden" value="0" name="id"><input type="submit" value="Add Entry"></form>

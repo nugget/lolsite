@@ -11,4 +11,3 @@ php_value include_path .:./include
  Order Deny,Allow
  Deny from All
 </Files>
-

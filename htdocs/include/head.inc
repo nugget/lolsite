@@ -33,6 +33,11 @@
      </p>
    </div>
    <div class="headerright">
+     <?php
+       if(isset($rvar_pilot)) {
+         print "<p>pilot is " . $rvar_pilot . "</p>";
+       }
+     ?>
    </div>
 
 
