@@ -142,5 +142,6 @@ sub escape {
     local $_ = $_[0];
     s/&/&amp;/g;
     s/</&lt;/g;
+    s/°/&amp;deg;/g; # hack hack
     return $_;
 }
