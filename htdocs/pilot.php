@@ -221,6 +221,13 @@
          </tr>
 
          <tr>
+           <td>Night Hours</td>
+           <?php split_decimal(pilot_night($rvar_pilot,90)); ?>
+           <?php split_decimal(pilot_night($rvar_pilot,365)); ?>
+           <?php split_decimal(pilot_night($rvar_pilot,0)); ?>
+         </tr>
+
+         <tr>
            <td>Landings (Day)</td>
            <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,90,'D'); ?></td>
            <td class="integer" colspan="2"><?php print pilot_landings($rvar_pilot,365,'D'); ?></td>

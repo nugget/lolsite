@@ -262,6 +262,17 @@
     return $count;
   }
 
+  function pilot_night($pilot_id,$days) {
+    $sql = "select sum(conditions_night) from logbook where pilot_id = $pilot_id";
+    if($days > 0) {
+      $lowbound = time()-(86400*$days);
+      $sql = $sql . " and date >= '" . strftime("%Y-%m-%d",$lowbound) . "'";
+    }
+    $count = lol_fetch_row(lol_query($sql));
+    $count = $count[0];
+    return $count;
+  }
+
   function pilot_ifr($pilot_id,$days) {
     $sql = "select (sum(conditions_simulinstr)+sum(conditions_actualinstr)) from logbook where pilot_id = $pilot_id";
     if($days > 0) {
