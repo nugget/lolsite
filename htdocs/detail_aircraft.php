@@ -37,6 +37,7 @@
    <th rowspan="7" class="link" width="1%">
      <?php if($line['image_url'] != '') { print "<img width=\"128\" src=\"" . $line['image_url'] . "\" /><br />"; } ?>
      [<a class="sidebar" href="http://162.58.35.241/acdatabase/NNumSQL.asp?NNumbertxt=<?php print $identlink; ?>">FAA</a>]
+     [<a class="sidebar" href="http://flightaware.com/live/flight/<?php print $line['ident']; ?>">Track</a>]
      <?php if($line['link_url'] != '') { print "[<a href=\"" . $line['link_url'] . "\">Link</a>]"; } ?>
      <?php if($line['total_hours'] > 0) { print "[<a class=\"sidebar\" href=\"display_logbook.php?ident=" . $line['ident'] . "&pilot=" . $pilot_name . "\">Log</a>]"; } ?>
    </th>
