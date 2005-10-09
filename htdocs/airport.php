@@ -47,6 +47,7 @@
      <?php if($line['image_url'] != '') { print "<img src=\"" . $line['image_url'] . "\" /><br />"; } ?>
      <?php if($line['link_url'] != '') { print "[<a class=\"sidebar\" href=\"" . $line['link_url'] . "\">Link</a>]"; } ?>
      <?php if(!strpos($line['link_url'],"airnav.com")) { print "[<a class=\"sidebar\" href=\"http://www.airnav.com/airport/" . $line['ident'] . "\">AirNav</a>]"; } ?>
+     <?php if(!strpos($line['link_url'],"airnav.com")) { print "[<a class=\"sidebar\" href=\"http://flightaware.com/live/airport/" . $line['ident'] . "\">FlightAware</a>]"; } ?>
      <?php print "[<a class=\"sidebar\" href=\"display_logbook.php?pilot=$pilot_name&route=" . $line['ident'] . "\">Log</a>]";  ?>
    </th>
    <th>Ident</th>
