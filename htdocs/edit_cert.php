@@ -53,7 +53,7 @@
 
    if(isset($rvar_rating_code)) {
      $sql = "INSERT INTO pilot_rating VALUES " .
-        "(default,$rvar_pilot,'$rvar_code','$rvar_rating_code','','$rvar_issued',true)";
+        "(default,$rvar_pilot,'$rvar_code','$rvar_rating_code',null,'$rvar_issued',true)";
      $sql_response = lol_query($sql);
    }
 
