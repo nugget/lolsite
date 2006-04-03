@@ -46,8 +46,8 @@
    <th rowspan="7" class="link" width="1%">
      <?php if($line['image_url'] != '') { print "<img src=\"" . $line['image_url'] . "\" /><br />"; } ?>
      <?php if($line['link_url'] != '') { print "[<a class=\"sidebar\" href=\"" . $line['link_url'] . "\">Link</a>]"; } ?>
-     <?php if(!strpos($line['link_url'],"airnav.com")) { print "[<a class=\"sidebar\" href=\"http://www.airnav.com/airport/" . $line['ident'] . "\">AirNav</a>]"; } ?>
-     <?php if(!strpos($line['link_url'],"airnav.com")) { print "[<a class=\"sidebar\" href=\"http://flightaware.com/live/airport/" . $line['ident'] . "\">FlightAware</a>]"; } ?>
+     <?php if(!strpos($line['link_url'],"flightaware.com/resources")) { print "[<a class=\"sidebar\" href=\"http://flightaware.com/resources/airport/" . $line['ident'] . "\">Info</a>]"; } ?>
+     <?php if(!strpos($line['link_url'],"flightaware.com/live")) { print "[<a class=\"sidebar\" href=\"http://flightaware.com/live/airport/" . $line['ident'] . "\">Tracking</a>]"; } ?>
      <?php print "[<a class=\"sidebar\" href=\"display_logbook.php?pilot=$pilot_name&route=" . $line['ident'] . "\">Log</a>]";  ?>
    </th>
    <th>Ident</th>
